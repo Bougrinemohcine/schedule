@@ -145,12 +145,23 @@
                         <th>{{ $day }}</th>
                         <!-- Loop through each seance part -->
                         @foreach ($seances_part as $seance_part)
-                            <!-- Display the schedule data for each day and seance part -->
+    <!-- Display the schedule data for each day and seance part -->
                             <td data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
                                 data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
-                                data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases">
+                                data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases"
                                 @foreach ($AllSeances as $AllSeance)
                                     @if ($AllSeance->day == $day_of_week && $AllSeance->dure_sission == $seance_part)
+                                        @php
+                                            $color = '';
+                                            if ($AllSeance->status_sission === 'Pending') {
+                                                $color = 'yellow';
+                                            } elseif ($AllSeance->status_sission === 'Accepted') {
+                                                $color = 'green';
+                                            } elseif ($AllSeance->status_sission === 'Cancelled') {
+                                                $color = 'red';
+                                            }
+                                        @endphp
+                                        style="color: {{ $color }}"
                                         {{ $AllSeance->sission_type }} <br>
                                         {{ $AllSeance->group->group_name }} <br>
                                         {{ $AllSeance->class_room->class_name }}
@@ -158,6 +169,7 @@
                                 @endforeach
                             </td>
                         @endforeach
+
                     </tr>
                 @endforeach
             </tbody>
@@ -584,6 +596,7 @@
                 }) :
                 XLSX.writeFile(wb, fn || ('Schedule.' + (type || 'xlsx')));
         }
+
     </script>
 
 

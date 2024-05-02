@@ -134,12 +134,11 @@
                 @endphp
                @foreach ($formateurs as $formateur)
                <tr>
-
-                   <td>{{ $formateur->user_name }}
-                        @if ($seance && $seance->where('user_id',$formateur->id)->where('status_sission',['Cancelled','Pending'])->count() > 0)
-                            <button wire:click="AccepteAll({{ $formateur->id }})" aria-label="Close" type="button" class="btn btn-success">Accepte {{ $formateur->id }}</button>
-                        @endif
-                   </td>
+                <td>{{ $formateur->user_name }}
+                    @if ($allseances && $allseances->where('user_id', $formateur->id)->whereIn('status_sission', ['Cancelled', 'Pending'])->count() > 0)
+                        <button wire:click="AccepteAll({{ $formateur->id }})" aria-label="Close" type="button" class="btn btn-success">Accepte {{ $formateur->id }}</button>
+                    @endif
+                </td>
                    @foreach ($dayWeek as $day)
                        @foreach (['MatinSE1', 'MatinSE2', 'AmidiSE3', 'AmidiSE4'] as $sessionType)
                            @php

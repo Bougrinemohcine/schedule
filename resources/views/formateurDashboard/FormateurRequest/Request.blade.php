@@ -3,15 +3,17 @@
 
 
     <div class="button-container-calendar">
-        <label class="left-arrow" id="previous"  style="display: none;"></label>
+        <label class="left-arrow" id="previous" style="display: none;"></label>
 
-        <form id="emploi-form" action="{{ route('DemanderEmploi') }}"  method="GET">
+        <form id="emploi-form" action="{{ route('DemanderEmploi') }}" method="GET">
             @csrf
             <select id='date-select' class="form-select" onchange="submitForm()">
-                <option>Select date emploi</option>
-                @foreach( $main_emplois as $Main_emploi)
-                    <option value="{{ $Main_emploi->id }}">{{$Main_emploi->datestart  }} to {{$Main_emploi->dateend }}</option>
+                @foreach ($main_emplois as $Main_emploi)
+                    <option @if ($Main_emploi->id == $emploiID) selected="selected" @endif value="{{ $Main_emploi->id }}">
+                        {{ $Main_emploi->datestart }} - {{ $Main_emploi->dateend }}
+                    </option>
                 @endforeach
+
             </select>
             <input type="hidden" id="emploiID" name="emploiID">
         </form>
@@ -91,7 +93,7 @@
     <div id="tbl_exporttable_to_xls_1" class="table-responsive">
         <table id="tbl_exporttable_to_xls" style="overflow: scroll" class="col-md-12">
             <thead>
-              <!-- Header row for seance parts -->
+                <!-- Header row for seance parts -->
                 <tr>
                     <th rowspan="2">Days/Seance</th>
                     <!-- Loop through days part -->
@@ -117,44 +119,45 @@
                         <!-- Display the day -->
                         @php
                             switch ($day_of_week) {
-                                case "Mon":
-                                    $day = "Lundi";
+                                case 'Mon':
+                                    $day = 'Lundi';
                                     break;
-                                case "Tue":
-                                    $day = "Mardi";
+                                case 'Tue':
+                                    $day = 'Mardi';
                                     break;
-                                case "Wed":
-                                    $day = "Mercredi";
+                                case 'Wed':
+                                    $day = 'Mercredi';
                                     break;
-                                case "Thu":
-                                    $day = "Jeudi";
+                                case 'Thu':
+                                    $day = 'Jeudi';
                                     break;
-                                case "Fri":
-                                    $day = "Vendredi";
+                                case 'Fri':
+                                    $day = 'Vendredi';
                                     break;
-                                case "Sat":
-                                    $day = "Samedi";
+                                case 'Sat':
+                                    $day = 'Samedi';
                                     break;
                                 default:
                                     $day = $day_of_week;
                                     break;
                             }
                         @endphp
-                    <th>{{ $day }}</th>
+                        <th>{{ $day }}</th>
                         <!-- Loop through each seance part -->
-                            @foreach ($seances_part as $seance_part)
-                                <!-- Display the schedule data for each day and seance part -->
-                                <td data-emploi="{{$emploiID}}" data-part="{{$day_part}}" data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
-                                    data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases">
-                                    @foreach ($AllSeances as $AllSeance)
-                                        @if ($AllSeance->day == $day_of_week && $AllSeance->dure_sission == $seance_part)
-                                            {{ $AllSeance->sission_type }} <br>
-                                            {{ $AllSeance->group->group_name }} <br>
-                                            {{ $AllSeance->class_room->class_name }}
-                                        @endif
-                                    @endforeach
-                                </td>
-                            @endforeach
+                        @foreach ($seances_part as $seance_part)
+                            <!-- Display the schedule data for each day and seance part -->
+                            <td data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
+                                data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases">
+                                @foreach ($AllSeances as $AllSeance)
+                                    @if ($AllSeance->day == $day_of_week && $AllSeance->dure_sission == $seance_part)
+                                        {{ $AllSeance->sission_type }} <br>
+                                        {{ $AllSeance->group->group_name }} <br>
+                                        {{ $AllSeance->class_room->class_name }}
+                                    @endif
+                                @endforeach
+                            </td>
+                        @endforeach
                     </tr>
                 @endforeach
             </tbody>
@@ -282,6 +285,15 @@
     {{-- end modal --}}
 
     <script>
+        var emploi = {{ $emploiID }};
+        function submitForm() {
+            document.getElementById("emploi-form").submit();
+        }
+        document.getElementById('date-select').addEventListener('change', function() {
+            document.getElementById('emploiID').value = this.value;
+            submitForm();
+        });
+
         function toggleTables() {
             var table1 = document.getElementById("tbl_exporttable_to_xls_1");
             var table2 = document.getElementById("tbl_exporttable_to_xls_2");
@@ -300,6 +312,7 @@
             var daysOfWeek = @json($days_of_week);
             var daysPart = @json($days_part);
             var seancesPart = @json($seances_part);
+            var seancesPemploiart = @json($emploiID);
 
             var clickedCell;
             var FlashMsg = document.createElement("div");
@@ -307,7 +320,7 @@
             var selectedData = [];
 
             var mainEmplois = @json($main_emplois);
-            var emploiID = @json($emploiID);
+            var emploiID = emploi;
             console.log(emploiID);
             var currentIndex = 0;
 
@@ -330,8 +343,8 @@
 
 
             function afficherIDEmploi(index) {
-                var emploiID = mainEmplois[index].id;
-                console.log("ID de l'emploi actuel from funct:", emploiID);
+                // var emploiID = mainEmplois[index].id;
+                // console.log("ID de l'emploi actuel from funct:", emploiID);
 
                 $.ajax({
                     type: 'GET',
@@ -419,7 +432,7 @@
                 });
             });
 
-            var emploi = {{ $emploiID }};
+
 
             cells.forEach(function(cell) {
                 cell.addEventListener("click", function() {
@@ -446,7 +459,7 @@
                         var dayOfWeek = clickedCell.dataset.day;
                         var seancePart = clickedCell.dataset.seance;
                         var dayPart = (seancePart == "SE1" || seancePart == "SE2") ?
-                                "Matin" : "Amidi";
+                            "Matin" : "Amidi";
                         var emploi = clickedCell.dataset.emploi;
                         console.log(dayOfWeek);
                         console.log(seancePart);
@@ -571,13 +584,6 @@
                 }) :
                 XLSX.writeFile(wb, fn || ('Schedule.' + (type || 'xlsx')));
         }
-        function submitForm() {
-        document.getElementById("emploi-form").submit();
-        }
-        document.getElementById('date-select').addEventListener('change', function() {
-            document.getElementById('emploiID').value = this.value;
-            submitForm();
-        });
     </script>
 
 

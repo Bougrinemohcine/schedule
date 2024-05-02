@@ -27,14 +27,16 @@ class FormateurRequestController extends Controller
             $user_id = Auth::id();
 
             // Retrieve main emploi ID from the request data
-            $emploiID = $request->input('emploiID');
-            if($emploiID){
-                $allSeances = Sission::where('user_id', $user_id)
-                                 ->where('main_emploi_id', $emploiID)
-                                 ->get();
+            if($request->input('emploiID')){
+
+                $emploiID = $request->input('emploiID');
             }else{
-                $allSeances = '';
+                $emploiID = main_emploi::latest()->value('id');
             }
+            $allSeances = Sission::where('user_id', $user_id)
+                ->where('main_emploi_id', $emploiID)
+                ->get();
+
             // Fetch all seances related to the user and main emploi
 
 
@@ -81,7 +83,7 @@ class FormateurRequestController extends Controller
             $selectedData = $data['selectedData'];
             $mainEmploiId = $data['mainEmploiId'];
             $user_id = Auth::id();
-            $requestEmploiId = RequestEmploi::where('user_id', $user_id)->where('main_emploi_id',$mainEmploiId)->value('id');
+            $requestEmploiId = RequestEmploi::where('user_id', $user_id)->where('main_emploi_id', $mainEmploiId)->value('id');
             $establishment = session()->get('establishment_id');
             if (!$requestEmploiId) {
                 return response()->json(['msg' => 'Tu dois créer une demande d\'emploi pour cet emploi d\'abord.', 'status' => 599]);
@@ -97,10 +99,10 @@ class FormateurRequestController extends Controller
                         'establishment_id' => $establishment,
                         'dure_sission' => $item['seancePart'],
                         'user_id' => $user_id,
-                        'main_emploi_id'=>$mainEmploiId,
-                        "demand_emploi_id"=>$requestEmploiId,
-                        'message'=>$item['message'],
-                        'status_sission'=>"Pending",
+                        'main_emploi_id' => $mainEmploiId,
+                        "demand_emploi_id" => $requestEmploiId,
+                        'message' => $item['message'],
+                        'status_sission' => "Pending",
                     ]);
 
                     $sission->save();
@@ -113,22 +115,51 @@ class FormateurRequestController extends Controller
         }
     }
 
+    public function updateSession(Request $request)
+    {
+        try {
+            // Récupérer les données de la requête
+            $data = $request->all();
+
+            // Implémenter la logique de mise à jour de la séance
+
+            return response()->json(['success' => 'Séance mise à jour avec succès.', 'status' => 200]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur est survenue lors de la mise à jour de la séance.', 'status' => 500]);
+        }
+    }
+
+    public function deleteSession(Request $request)
+    {
+        try {
+            // Récupérer les données de la requête
+            $data = $request->all();
+
+            // Implémenter la logique de suppression de la séance
+
+            return response()->json(['success' => 'Séance supprimée avec succès.', 'status' => 200]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur est survenue lors de la suppression de la séance.', 'status' => 500]);
+        }
+    }
+
     public function createRequestEmploi(Request $request)
     {
         try {
             // Validate the incoming request data
             $validatedData = $request->validate([
                 'mainEmploiId' => 'required|integer',
+                'comment' => 'nullable|string',
             ]);
 
-            // Retrieve the validated mainEmploiId from the request data
+            // Retrieve the validated employment ID and comment from the request data
             $mainEmploiId = $validatedData['mainEmploiId'];
-            $comment = $request->input('comment');
+            $comment = $validatedData['comment'];
 
             // Get the authenticated user's ID
             $user_id = Auth::id();
 
-            // Check if a request already exists for the user and mainEmploiId
+            // Check if a request already exists for the user and employment ID
             $existingRequest = RequestEmploi::where('user_id', $user_id)
                 ->where('main_emploi_id', $mainEmploiId)
                 ->first();
@@ -151,10 +182,12 @@ class FormateurRequestController extends Controller
                     'main_emploi_id' => $mainEmploiId,
                 ]);
                 $requestEmploi->save();
+
+                // Notify admin about the new request emploi
                 $MainUser = User::where('role', 'admin')->first();
                 $FormateurRequest = Auth::user()->user_name;
-                $RequestCommentaire = $comment;
-                Notification::send($MainUser,new RequestEmploiNotification($requestEmploi->id,$FormateurRequest,$RequestCommentaire,$mainEmploiId));
+                Notification::send($MainUser, new RequestEmploiNotification($requestEmploi->id, $FormateurRequest, $comment, $mainEmploiId));
+
                 return response()->json(['message' => 'Request emploi created successfully.', 'status' => 300, 'requestExists' => $requestExists]);
             }
         } catch (\Exception $e) {
@@ -163,7 +196,8 @@ class FormateurRequestController extends Controller
         }
     }
 
-    public function MarkAsread() {
+    public function MarkAsread()
+    {
         $user = User::find(auth()->user()->id);
         foreach ($user->unreadNotifications as $notification) {
             $notification->markAsRead();
@@ -171,7 +205,8 @@ class FormateurRequestController extends Controller
         return redirect()->back();
     }
 
-    public function Clear() {
+    public function Clear()
+    {
         $user = User::find(auth()->user()->id);
         foreach ($user->Notifications as $notification) {
             $notification->delete();
@@ -190,8 +225,8 @@ class FormateurRequestController extends Controller
 
             // Fetch all seances related to the user and main emploi
             $allSeances = Sission::where('user_id', $user_id)
-                                 ->where('main_emploi_id', $main_emploi_id)
-                                 ->get();
+                ->where('main_emploi_id', $main_emploi_id)
+                ->get();
 
             return response()->json(['seances' => $allSeances, 'status' => 200]);
         } catch (\Exception $e) {

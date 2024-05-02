@@ -457,7 +457,7 @@ public function Accepte()
 
         $this->checkValues = Setting::where('userId', Auth::id())->get() ;
         $seance = $this->findSeance()->first();
-        $allseances = sission::all();
+        $allseances = sission::where('main_emploi_id',session()->get('id_main_emploi'))->get();
 
         return view('livewire.emploi-tout-formateurs',['seance' => $seance,'allseances'=>$allseances]);
     }

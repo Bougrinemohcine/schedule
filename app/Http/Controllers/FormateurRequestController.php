@@ -77,43 +77,51 @@ class FormateurRequestController extends Controller
     }
 
     public function submitAllData(Request $request)
-    {
-        try {
-            $data = $request->all();
-            $selectedData = $data['selectedData'];
-            $mainEmploiId = $data['mainEmploiId'];
-            $user_id = Auth::id();
-            $requestEmploiId = RequestEmploi::where('user_id', $user_id)->where('main_emploi_id', $mainEmploiId)->value('id');
-            $establishment = session()->get('establishment_id');
-            if (!$requestEmploiId) {
-                return response()->json(['msg' => 'Tu dois créer une demande d\'emploi pour cet emploi d\'abord.', 'status' => 599]);
-            } else {
-                foreach ($selectedData as $item) {
-                    $sission = new sission([
-                        'day' => $item['day'],
-                        'day_part' => $item['dayPart'],
-                        'sission_type' => $item['type'],
-                        'group_id' => $item['group'],
-                        'module_id' => $item['module'],
-                        'class_room_id' => $item['class'],
-                        'establishment_id' => $establishment,
-                        'dure_sission' => $item['seancePart'],
-                        'user_id' => $user_id,
-                        'main_emploi_id' => $mainEmploiId,
-                        "demand_emploi_id" => $requestEmploiId,
-                        'message' => $item['message'],
-                        'status_sission' => "Pending",
-                    ]);
-
-                    $sission->save();
-                    Log::info('Sission created:', ['data' => $item]);
+{
+    try {
+        $data = $request->all();
+        $selectedData = $data['selectedData'];
+        $mainEmploiId = $data['mainEmploiId'];
+        $user_id = Auth::id();
+        $requestEmploiId = RequestEmploi::where('user_id', $user_id)->where('main_emploi_id', $mainEmploiId)->value('id');
+        $establishment = session()->get('establishment_id');
+        if (!$requestEmploiId) {
+            return response()->json(['msg' => 'Tu dois créer une demande d\'emploi pour cet emploi d\'abord.', 'status' => 599]);
+        } else {
+            foreach ($selectedData as $item) {
+                // Check if seanceId is set
+                if (isset($item['seanceId'])) {
+                    // Delete the existing session with seanceId
+                    Sission::where('id', $item['seanceId'])->delete();
                 }
-                return response()->json(['sucess' => 'Toutes les données ont été soumises avec succès.', 'status' => 200]);
+
+                // Create a new session
+                $sission = new sission([
+                    'day' => $item['day'],
+                    'day_part' => $item['dayPart'],
+                    'sission_type' => $item['type'],
+                    'group_id' => $item['group'],
+                    'module_id' => $item['module'],
+                    'class_room_id' => $item['class'],
+                    'establishment_id' => $establishment,
+                    'dure_sission' => $item['seancePart'],
+                    'user_id' => $user_id,
+                    'main_emploi_id' => $mainEmploiId,
+                    "demand_emploi_id" => $requestEmploiId,
+                    'message' => $item['message'],
+                    'status_sission' => "Pending",
+                ]);
+
+                $sission->save();
+                Log::info('Sission created:', ['data' => $item]);
             }
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error occurred while processing request.', 'status' => 500, 'error' => $e->getMessage()]);
+            return response()->json(['sucess' => 'Toutes les données ont été soumises avec succès.', 'status' => 200]);
         }
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error occurred while processing request.', 'status' => 500, 'error' => $e->getMessage()]);
     }
+}
+
 
     public function updateSession(Request $request)
     {

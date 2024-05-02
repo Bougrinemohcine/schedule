@@ -128,21 +128,22 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"
-                    data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 @if ($isCaseEmpty)
-                <button id="SaveAndUpdate" data-bs-dismiss="modal" type="submit" class="btn btn-primary">
-                 Save
-                </button>
-             @else
-                <button id="SaveAndUpdate" data-bs-dismiss="modal" type="submit" class="btn btn-success ">
-                 Update
-                </button>
-                <button data-bs-dismiss="modal" wire:click="DeleteSession" aria-label="Close" type="button"  class="btn btn-danger">supprimer</button>
-                <button data-bs-dismiss="modal" wire:click="Canceled" aria-label="Close" type="button"  class="btn btn-danger">Canceled</button>
-                <button data-bs-dismiss="modal" wire:click="Accepte" aria-label="Close" type="button"  class="btn btn-success">Accepte</button>
-             @endif
+                    <button id="SaveAndUpdate" data-bs-dismiss="modal" type="submit" class="btn btn-primary">Save</button>
+                    @else
+                    <button id="SaveAndUpdate" data-bs-dismiss="modal" type="submit" class="btn btn-success">Update</button>
+
+                    <button data-bs-dismiss="modal" wire:click="DeleteSession" aria-label="Close" type="button" class="btn btn-danger">Delete</button>
+                    @if ($seance && $seance->status_sission != 'Accepted')
+                    <button data-bs-dismiss="modal" wire:click="Accepte" aria-label="Close" type="button" class="btn btn-success">Accepte</button>
+                    @endif
+                    @if ($seance && $seance->status_sission != 'Cancelled')
+                        <button data-bs-dismiss="modal" wire:click="Canceled" aria-label="Close" type="button" class="btn btn-danger">Cancel</button>
+                    @endif
+                @endif
             </div>
+
         </form>
 </div>
     </div>

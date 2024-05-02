@@ -359,7 +359,6 @@
 
     <!-- App js -->
     <script src="{{ asset('/assets/js/app.js') }}"></script>
-    <script src="{{ asset('/assets/js/app.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>

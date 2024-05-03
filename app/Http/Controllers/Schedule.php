@@ -118,54 +118,10 @@ class Schedule extends Controller
     }
 
     // return all demandes
-    public function AllRequest(Request $request ){
-        
-        try {
-            // Retrieve the authenticated user's ID
-            $user_id = Auth::id(); 
-            $formateurs = User::where('role','formateur')->get();
-            // Retrieve main emploi ID from the request data
-            $main_emploi_id = $request['main_emploi_id'];
-            // dd($main_emploi_id);
-            // Fetch all seances related to the user and main emploi
-            $allSeances = Sission::where('user_id', $user_id)
-                                //  ->where('main_emploi_id', $main_emploi_id)
-                                 ->get();
-    
-            // Fetch groups list associated with the formateur
-            $groupsList = formateur_has_group::where('formateur_id', $user_id)->get();
-    
-            // Fetch modules list associated with the formateur
-            $modulesList = module_has_formateur::where('formateur_id', $user_id)->get();
-    
-            // Fetch all classrooms associated with the establishment
-            $classRooms = class_room::where('id_establishment', session()->get('establishment_id'))->get();
-    
-            // Fetch all main emplois
-            $mainEmplois = main_emploi::all();
-    
-            // Define lists of seances types, days of week, days part, and seances part
-            $seancesType = ["PRESENTIELLE", "TEAMS", "EFM"];
-            $daysOfWeek = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
-            $daysPart = ["Matin", "A.Midi"];
-            $seancesPart = ["SE1", "SE2", "SE3", "SE4"];
-    
-            return view('adminDashboard.Main.AllRequest', [
-                'main_emplois' => $mainEmplois,
-                'days_of_week' => $daysOfWeek,
-                'days_part' => $daysPart,
-                'seances_part' => $seancesPart,
-                'GroupsList' => $groupsList,
-                'modulesList' => $modulesList,
-                'class_rooms' => $classRooms,
-                'seances_type' => $seancesType,
-                'AllSeances' => $allSeances,
-                'formateurs' => $formateurs
-            ]);
-        } catch (\Exception $e) {
-            // Handle any exceptions
-            return response()->json(['message' => 'Error occurred while processing request.', 'status' => 500, 'error' => $e->getMessage()]);
-        }
+    public function AllRequest(){
+        return view('adminDashboard.Main.AllRequest');
+
     }
+      
 
 }

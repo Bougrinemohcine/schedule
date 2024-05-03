@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Formateur|Dashboard </title>
+    <title> Formateur | Dashboard </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
@@ -345,6 +345,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
+   
     <script src="{{ asset('/assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('/assets/libs/metismenu/metisMenu.min.js') }}"></script>
@@ -366,12 +367,13 @@
 
 
     <script>
-        $(document).ready(function() {
-            $('#vertical-menu-toggle').click(function() {
-                $('.vertical-menu').toggleClass('hide-menu');
-                $('.main-content').toggleClass('expanded');
-            });
-        });
+       $(document).ready(function() {
+    $('#vertical-menu-toggle').click(function() {
+        $('.vertical-menu').toggleClass('hide-menu');
+    });
+});
+
+
     </script>
 
 </body>

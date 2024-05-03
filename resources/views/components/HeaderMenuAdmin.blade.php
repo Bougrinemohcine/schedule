@@ -438,27 +438,7 @@
     </script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script>
-        Pusher.logToConsole = true;
-        var pusher = new Pusher('69820da6887a3d9f8088', {
-            cluster: 'mt1'
-        });
-        var channel = pusher.subscribe('my-channel');
-        channel.bind('request-submitted', function(data) {
-            if (data && data.user_id && data.comment) {
-                toastr.success('New Request Created', 'Formateur: ' + data.user_id + '<br>MainEmploiId: ' + data
-                    .main_emploi_id + '<br>Commentaire: ' + data
-                    .comment, {
-                        timeOut: 0,
-                        extendedTimeOut: 0,
-                    });
-            } else {
-                console.error('Invalid data structure received:', data);
-            }
-        });
-
-
-</script>
+ 
 
 
 

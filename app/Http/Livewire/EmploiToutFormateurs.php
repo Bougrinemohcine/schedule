@@ -87,7 +87,7 @@ class EmploiToutFormateurs extends Component
     public function updateCaseStatus($isEmpty )
     {
         $this->isCaseEmpty = $isEmpty;
-
+        
     }
 
 
@@ -98,6 +98,7 @@ class EmploiToutFormateurs extends Component
     $day_part = substr($idcase, 3, 5);
     $user_id = substr($idcase, 11);
     $dure_sission = substr($idcase,8,3);
+
 
   sission::where([
     'main_emploi_id' => session()->get('id_main_emploi'),
@@ -113,71 +114,6 @@ class EmploiToutFormateurs extends Component
 
 
 }
-
-public function Accepte()
-{
-    $idcase = $this->receivedVariable;
-    $day = substr($idcase, 0, 3);
-    $day_part = substr($idcase, 3, 5);
-    $dure_sission = substr($idcase, 8, 3);
-
-    $session = sission::where([
-        'main_emploi_id' => session()->get('id_main_emploi'),
-        'day' => $day,
-        'day_part' => $day_part,
-        'user_id' => $this->formateurId,
-        'dure_sission' => $dure_sission,
-    ])->first(); // Use first() to get a single instance
-
-    if ($session) {
-        $session->status_sission = 'Accepted';
-        $session->save();
-        $this->alert('success', 'Session accepted successfully.', [
-            'position' => 'center',
-            'timer' => 3000,
-            'toast' => true,
-        ]);
-    } else {
-        $this->alert('error', 'Session not found.', [
-            'position' => 'center',
-            'timer' => 3000,
-            'toast' => true,
-        ]);
-    }
-}
-
-    public function Canceled()
-    {
-        $idcase = $this->receivedVariable;
-        $day = substr($idcase, 0, 3);
-        $day_part = substr($idcase, 3, 5);
-        $dure_sission = substr($idcase, 8, 3);
-
-        $session = sission::where([
-            'main_emploi_id' => session()->get('id_main_emploi'),
-            'day' => $day,
-            'day_part' => $day_part,
-            'user_id' => $this->formateurId,
-            'dure_sission' => $dure_sission,
-        ])->first(); // Use first() to get a single instance
-
-        if ($session) {
-            $session->status_sission = 'Cancelled';
-            $session->save();
-            $this->alert('success', 'Session Cancelled successfully.', [
-                'position' => 'center',
-                'timer' => 3000,
-                'toast' => true,
-            ]);
-        } else {
-            $this->alert('error', 'Session not found.', [
-                'position' => 'center',
-                'timer' => 3000,
-                'toast' => true,
-            ]);
-        }
-    }
-
 
     public function UpdateSession()
     {
@@ -311,51 +247,6 @@ public function Accepte()
 
     }
 
-    public function findSeance()
-    {
-        $idcase = $this->receivedVariable;
-        $day = substr($idcase, 0, 3);
-        $day_part = substr($idcase, 3, 5);
-        $user_id = substr($idcase, 11);
-        $dure_sission = substr($idcase, 8, 3);
-
-        $seance = sission::where([
-            'main_emploi_id' => session()->get('id_main_emploi'),
-            'day' => $day,
-            'day_part' => $day_part,
-            'user_id' => $user_id,
-            'dure_sission' => $dure_sission
-        ])->get();
-
-        return $seance;
-    }
-
-        public function AccepteAll($formateurID)
-    {
-        // Find all sessions for the current formateur and main_emploi
-        $sissions = Sission::where([
-            'user_id' => $formateurID,
-            'main_emploi_id' => session()->get('id_main_emploi')
-        ])->get();
-
-        // Update the status of each session to "Accepted"
-        foreach ($sissions as $sission) {
-            $sission->status_sission = 'Accepted';
-            $sission->save();
-        }
-
-        // Show a success message
-        $this->alert('success', 'All sessions accepted successfully.', [
-            'position' => 'center',
-            'timer' => 3000,
-            'toast' => true,
-        ]);
-
-        // Refresh the page
-        $this->render();
-    }
-
-
 
     public function render()
     {
@@ -456,9 +347,8 @@ public function Accepte()
 
 
         $this->checkValues = Setting::where('userId', Auth::id())->get() ;
-        $seance = $this->findSeance()->first();
-        $allseances = sission::where('main_emploi_id',session()->get('id_main_emploi'))->get();
 
-        return view('livewire.emploi-tout-formateurs',['seance' => $seance,'allseances'=>$allseances]);
+
+        return view('livewire.emploi-tout-formateurs');
     }
 }

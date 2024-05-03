@@ -33,6 +33,7 @@
 
     <h2>Schedule Table</h2>
 
+
     <div class="table-responsive">
         <h3 style="margin: auto ; width :fit-content;">Emploi Global hebdomadaire</h3>
         @if($tableEmploi[0]->toutFormateur == '1')
@@ -134,11 +135,7 @@
                 @endphp
                @foreach ($formateurs as $formateur)
                <tr>
-                <td>{{ $formateur->user_name }}
-                    @if ($allseances && $allseances->where('user_id', $formateur->id)->whereIn('status_sission', ['Cancelled', 'Pending'])->count() > 0)
-                        <button wire:click="AccepteAll({{ $formateur->id }})" aria-label="Close" type="button" class="btn btn-success">Accepte {{ $formateur->id }}</button>
-                    @endif
-                </td>
+                   <td>{{ $formateur->user_name }}</td>
                    @foreach ($dayWeek as $day)
                        @foreach (['MatinSE1', 'MatinSE2', 'AmidiSE3', 'AmidiSE4'] as $sessionType)
                            @php
@@ -159,22 +156,10 @@
                                        $salleValue = $sission->class_name ;
                                        $typeValue = $sission->sission_type ;
                                        $ModelValue = $sission->module_name ;
-                                    if ($sission->status_sission) {
-                                        # code...
-                                        if ($sission->status_sission === 'Pending') {
-                                             $bgc = 'yellow';
-                                        }elseif ($sission->status_sission === 'Accepted') {
-                                             $bgc = 'green';
-                                        }elseif ($sission->status_sission === 'Cancelled') {
-                                             $bgc = 'red';
-                                        }else {
-                                         $bgc = 'white';
-                                        }
-                                    }
                                    @endphp
                                @endif
                            @endforeach
-                           <td style="color: {{ isset($bgc) ? $bgc : 'black' }}"  wire:click="updateCaseStatus({{ $foundSession ? 'false' : 'true' }})"
+                           <td wire:click="updateCaseStatus({{ $foundSession ? 'false' : 'true' }})"
                                colspan="1" rowspan="1"  data-bs-toggle="modal"  data-bs-target="#exampleModal"
                                class="TableCases" id="{{ $day.$sessionType.$formateur->id }}">
                                @if ($foundSession)

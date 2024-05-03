@@ -146,7 +146,7 @@
                         <!-- Loop through each seance part -->
 
                         @foreach ($seances_part as $seance_part)
-                        @php $seanceFound = false; @endphp
+                            @php $seanceFound = false; @endphp
                             @foreach ($AllSeances as $AllSeance)
                                 @php
                                     $color = '';
@@ -160,19 +160,24 @@
                                 @endphp
                                 @if ($AllSeance->day == $day_of_week && $AllSeance->dure_sission == $seance_part)
                                     @php $seanceFound = true; @endphp
-                                    <td data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}" data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}" data-seanceId="{{ $AllSeance->id }}" data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases" style="color: {{ $color }}">
+                                    <td data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
+                                        data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
+                                        data-seanceId="{{ $AllSeance->id }}" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal" class="Cases"
+                                        style="color: {{ $color }}">
                                         {{ $AllSeance->sission_type }} <br>
                                         {{ $AllSeance->group->group_name }} <br>
                                         {{ $AllSeance->class_room->class_name }}
                                     </td>
                                 @endif
                             @endforeach
-                        @if (!$seanceFound)
-                            <td data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}" data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
-                                data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases">
-                            </td>
-                        @endif
-                    @endforeach
+                            @if (!$seanceFound)
+                                <td data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
+                                    data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases">
+                                </td>
+                            @endif
+                        @endforeach
 
 
                     </tr>
@@ -303,6 +308,7 @@
 
     <script>
         var emploi = {{ $emploiID }};
+
         function submitForm() {
             document.getElementById("emploi-form").submit();
         }
@@ -475,8 +481,10 @@
 
                         var dayOfWeek = clickedCell.dataset.day;
                         var seancePart = clickedCell.dataset.seance;
-                        var seanceIds = clickedCell.dataset.seanceid || ''; // Use an empty string as a default value
-                        console.log(seanceIds); // Check if the `seanceIds` value is displayed in the console
+                        var seanceIds = clickedCell.dataset.seanceid ||
+                        ''; // Use an empty string as a default value
+                        console.log(
+                        seanceIds); // Check if the `seanceIds` value is displayed in the console
 
                         var dayPart = (seancePart == "SE1" || seancePart == "SE2") ?
                             "Matin" : "Amidi";
@@ -605,7 +613,6 @@
                 }) :
                 XLSX.writeFile(wb, fn || ('Schedule.' + (type || 'xlsx')));
         }
-
     </script>
 
 

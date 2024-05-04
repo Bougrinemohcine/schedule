@@ -297,15 +297,56 @@
         @if($selectedType === 'Group')
                 @foreach ($groups as $group)
                         <tr>
-                            <td>{{$group->group_name}}</td>
+                            <td>{{$group->group_name}}
+                                @if ($allseances && $allseances->where('group_id', $group->id)->whereIn('status_sission', ['Cancelled', 'Pending'])->count() > 0)
+                                    <button wire:click="AccepteAllGR({{ $group->id }})" aria-label="Close" type="button" class="btn btn-success">Accepte {{ $group->id }}</button>
+                                @endif
+                            </td>
                             @foreach ($dayWeek as $day)
                                 @foreach (['MatinSE1', 'MatinSE2', 'AmidiSE3', 'AmidiSE4'] as $sessionType)
-                                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases"  wire:click="getidCase('{{ $day.$sessionType.$group->id }}')"  id="{{$day.$sessionType.$group->id }}"  >
-                                        @foreach ($sissions as $sission)
-                                            @if ($sission->day === $day && $sission->group_id === $group->id && $sission->day_part === substr($sessionType, 0, 5) && $sission->dure_sission === substr($sessionType, 5))
-                                                {{ $sission->sission_type }}<br />{{ $sission->class_name }}<br />{{ $sission->user_name }} <br />{{ preg_replace('/^\d+/' , ' ' , $sission->module_name )}}
-                                            @endif
-                                        @endforeach
+                                    @php
+                                    $foundSession = false;
+                                    $formateurs = [];
+                                    $salleValue ;
+                                    $typeValue ;
+                                    $ModelValue ;
+                                    @endphp
+                                    @foreach ($sissions as $sission)
+                                        @if ($sission->day === $day &&
+                                                $sission->group_id === $group->id &&
+                                                $sission->day_part === substr($sessionType, 0, 5) &&
+                                                $sission->dure_sission === substr($sessionType, 5))
+                                            @php
+                                                $foundSession = true;
+                                                $formateurs[] = $sission->user_name;
+                                                $salleValue = $sission->class_name ;
+                                                $typeValue = $sission->sission_type ;
+                                                $ModelValue = $sission->module_name ;
+                                                if ($sission->status_sission) {
+                                                    # code...
+                                                    if ($sission->status_sission === 'Pending') {
+                                                        $bgc = 'yellow';
+                                                    }elseif ($sission->status_sission === 'Accepted') {
+                                                        $bgc = 'green';
+                                                    }elseif ($sission->status_sission === 'Cancelled') {
+                                                        $bgc = 'red';
+                                                    }else {
+                                                    $bgc = 'white';
+                                                    }
+                                                }
+                                            @endphp
+                                        @endif
+                                    @endforeach
+                                    <td style="color: {{ isset($bgc) ? $bgc : 'black' }}"
+                                        wire:click="updateCaseStatus({{ $foundSession ? 'false' : 'true' }},'{{ $day.$sessionType.$group->id }}')"
+                                        colspan="1" rowspan="1" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                        class="Cases" id="{{$day.$sessionType.$group->id }}">
+                                        @if ($foundSession)
+                                            {{ $typeValue }}<br>
+                                            {{ $salleValue }}<br>
+                                            {{ implode(' - ', $formateurs) }}<br>
+                                            {{ preg_replace('/^\d/', ' ', $ModelValue) }}
+                                        @endif
                                     </td>
                                 @endforeach
                             @endforeach
@@ -314,65 +355,64 @@
        {{-- FOR FORMATEUR --}}
        @else
             @foreach ($formateurs as $formateur)
-            <tr>
-                <td>{{ $formateur->user_name }}
-                    @if ($allseances && $allseances->where('user_id', $formateur->id)->whereIn('status_sission', ['Cancelled', 'Pending'])->count() > 0)
-                        <button wire:click="AccepteAll({{ $formateur->id }})" aria-label="Close" type="button" class="btn btn-success">Accepte {{ $formateur->id }}</button>
-                    @endif
-                </td>
-                   @foreach ($dayWeek as $day)
-                       @foreach (['MatinSE1', 'MatinSE2', 'AmidiSE3', 'AmidiSE4'] as $sessionType)
-                           @php
-                               $foundSession = false;
-                               $groupes = [];
-                               $salleValue ;
-                               $typeValue ;
-                               $ModelValue ;
-                           @endphp
-                           @foreach ($sissions as $sission)
-                               @if ($sission->day === $day &&
-                                    $sission->user_id === $formateur->id &&
-                                    $sission->day_part === substr($sessionType, 0, 5) &&
-                                    $sission->dure_sission === substr($sessionType, 5))
-                                   @php
-                                       $foundSession = true;
-                                       $groupes[] = $sission->group_name;
-                                       $salleValue = $sission->class_name ;
-                                       $typeValue = $sission->sission_type ;
-                                       $ModelValue = $sission->module_name ;
-                                    if ($sission->status_sission) {
-                                        # code...
-                                        if ($sission->status_sission === 'Pending') {
-                                             $bgc = 'yellow';
-                                        }elseif ($sission->status_sission === 'Accepted') {
-                                             $bgc = 'green';
-                                        }elseif ($sission->status_sission === 'Cancelled') {
-                                             $bgc = 'red';
-                                        }else {
-                                         $bgc = 'white';
+                <tr>
+                    <td>{{ $formateur->user_name }}
+                        @if ($allseances && $allseances->where('user_id', $formateur->id)->whereIn('status_sission', ['Cancelled', 'Pending'])->count() > 0)
+                            <button wire:click="AccepteAll({{ $formateur->id }})" aria-label="Close" type="button" class="btn btn-success">Accepte {{ $formateur->id }}</button>
+                        @endif
+                    </td>
+                    @foreach ($dayWeek as $day)
+                        @foreach (['MatinSE1', 'MatinSE2', 'AmidiSE3', 'AmidiSE4'] as $sessionType)
+                            @php
+                                $foundSession = false;
+                                $groupes = [];
+                                $salleValue ;
+                                $typeValue ;
+                                $ModelValue ;
+                            @endphp
+                            @foreach ($sissions as $sission)
+                                @if ($sission->day === $day &&
+                                        $sission->user_id === $formateur->id &&
+                                        $sission->day_part === substr($sessionType, 0, 5) &&
+                                        $sission->dure_sission === substr($sessionType, 5))
+                                    @php
+                                        $foundSession = true;
+                                        $groupes[] = $sission->group_name;
+                                        $salleValue = $sission->class_name ;
+                                        $typeValue = $sission->sission_type ;
+                                        $ModelValue = $sission->module_name ;
+                                        if ($sission->status_sission) {
+                                            # code...
+                                            if ($sission->status_sission === 'Pending') {
+                                                $bgc = 'yellow';
+                                            }elseif ($sission->status_sission === 'Accepted') {
+                                                $bgc = 'green';
+                                            }elseif ($sission->status_sission === 'Cancelled') {
+                                                $bgc = 'red';
+                                            }else {
+                                            $bgc = 'white';
+                                            }
                                         }
-                                    }
-                                   @endphp
-                               @endif
-                           @endforeach
-                           <td style="color: {{ isset($bgc) ? $bgc : 'black' }}"
-                           wire:click="updateCaseStatus({{ $foundSession ? 'false' : 'true' }},'{{$day.$sessionType.$formateur->id}}')"
-                           colspan="1" rowspan="1" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                           class="TableCases" id="{{ $day.$sessionType.$formateur->id }}">
-                           @if ($foundSession)
-                               {{ $typeValue }}<br>
-                               {{ $salleValue }}<br>
-                               {{ implode(' - ', $groupes) }}<br>
-                               {{ preg_replace('/^\d/', ' ', $ModelValue) }}
-                           @endif
-                       </td>
+                                    @endphp
+                                @endif
+                            @endforeach
+                            <td style="color: {{ isset($bgc) ? $bgc : 'black' }}"
+                            wire:click="updateCaseStatus({{ $foundSession ? 'false' : 'true' }},'{{$day.$sessionType.$formateur->id}}')"
+                            colspan="1" rowspan="1" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            class="TableCases" id="{{ $day.$sessionType.$formateur->id }}">
+                            @if ($foundSession)
+                                {{ $typeValue }}<br>
+                                {{ $salleValue }}<br>
+                                {{ implode(' - ', $groupes) }}<br>
+                                {{ preg_replace('/^\d/', ' ', $ModelValue) }}
+                            @endif
+                        </td>
 
-                       @endforeach
-                   @endforeach
+                        @endforeach
+                    @endforeach
 
                 </tr>
-                @endforeach
-                {{-- @include('livewire.RequestModule') --}}
+            @endforeach
         @endif
 
 

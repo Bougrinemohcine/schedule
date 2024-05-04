@@ -85,24 +85,7 @@ public $isCaseEmpty = true;
     }
 
 
-    public function findSeance()
-    {
-        $idcase = $this->receivedVariable;
-        $day = substr($idcase, 0, 3);
-        $day_part = substr($idcase, 3, 5);
-        $user_id = substr($idcase, 11);
-        $dure_sission = substr($idcase, 8, 3);
 
-        $seance = sission::where([
-            'main_emploi_id' => session()->get('id_main_emploi'),
-            'day' => $day,
-            'day_part' => $day_part,
-            'user_id' => $user_id,
-            'dure_sission' => $dure_sission
-        ])->get();
-
-        return $seance;
-    }
 
 
 
@@ -111,15 +94,27 @@ public $isCaseEmpty = true;
         $idcase = $this->receivedVariable;
         $day = substr($idcase, 0, 3);
         $day_part = substr($idcase, 3, 5);
+        $group_id = substr($idcase, 11);
+        $user_id = substr($idcase, 11);
         $dure_sission = substr($idcase, 8, 3);
+        if (is_numeric($user_id)) {
 
-        $session = sission::where([
-            'main_emploi_id' => session()->get('id_main_emploi'),
-            'day' => $day,
-            'day_part' => $day_part,
-            'user_id' => $this->formateurId,
-            'dure_sission' => $dure_sission,
-        ])->first(); // Use first() to get a single instance
+            $session = sission::where([
+                'main_emploi_id' => session()->get('id_main_emploi'),
+                'day' => $day,
+                'day_part' => $day_part,
+                'user_id' => $this->formateurId,
+                'dure_sission' => $dure_sission,
+            ])->first(); // Use first() to get a single instance
+        }else{
+            $session = sission::where([
+                'main_emploi_id' => session()->get('id_main_emploi'),
+                'day' => $day,
+                'day_part' => $day_part,
+                'group_id' => $group_id,
+                'dure_sission' => $dure_sission,
+            ])->first();
+        }
 
         if ($session) {
             $session->status_sission = 'Cancelled';
@@ -144,14 +139,27 @@ public $isCaseEmpty = true;
     $day = substr($idcase, 0, 3);
     $day_part = substr($idcase, 3, 5);
     $dure_sission = substr($idcase, 8, 3);
+    $group_id = substr($idcase, 11);
+    $user_id = substr($idcase, 11);
 
-    $session = sission::where([
-        'main_emploi_id' => session()->get('id_main_emploi'),
-        'day' => $day,
-        'day_part' => $day_part,
-        'user_id' => $this->formateurId,
-        'dure_sission' => $dure_sission,
-    ])->first(); // Use first() to get a single instance
+    if (is_numeric($user_id)) {
+        $session = sission::where([
+            'main_emploi_id' => session()->get('id_main_emploi'),
+            'day' => $day,
+            'day_part' => $day_part,
+            'user_id' => $this->formateurId,
+            'dure_sission' => $dure_sission,
+        ])->first();
+    }else{
+
+        $session = sission::where([
+            'main_emploi_id' => session()->get('id_main_emploi'),
+            'day' => $day,
+            'day_part' => $day_part,
+            'group_id' => $group_id,
+            'dure_sission' => $dure_sission,
+        ])->first(); // Use first() to get a single instance
+    }
 
     if ($session) {
         $session->status_sission = 'Accepted';
@@ -287,9 +295,47 @@ public function UpdateSession()
         session(['idEmploiSelected' => $value]);
         $this->selectedValue = $value;
     }
+    public function findSeance()
+{
+    $idcase = $this->receivedVariable;
+    $day = substr($idcase, 0, 3);
+    $day_part = substr($idcase, 3, 5);
+    $user_id = substr($idcase, 11);
+    $group_id = substr($idcase, 11);
+    $dure_sission = substr($idcase, 8, 3);
+
+    $seance = null;
+
+    // Check if $user_id is numeric to determine if it's a formateur ID
+    if (is_numeric($user_id)) {
+        // Query using user ID
+        $seance = sission::where([
+            'main_emploi_id' => $this->selectedValue,
+            'day' => $day,
+            'day_part' => $day_part,
+            'user_id' => $user_id,
+            'dure_sission' => $dure_sission
+        ])->get();
+    } else {
+        // Query using group ID
+        $seance = sission::where([
+            'main_emploi_id' => $this->selectedValue,
+            'day' => $day,
+            'day_part' => $day_part,
+            'group_id' => $group_id,
+            'dure_sission' => $dure_sission
+        ])->get();
+    }
+
+    return $seance ?: collect(); // Return an empty collection if $seance is null
+}
+
+
+
     public function AccepteAll($formateurID)
     {
         // Find all sessions for the current formateur and main_emploi
+        
         $sissions = Sission::where([
             'user_id' => $formateurID,
             'main_emploi_id' => $this->selectedValue

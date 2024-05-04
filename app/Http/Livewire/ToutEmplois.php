@@ -50,6 +50,8 @@ class ToutEmplois extends Component
     public $yearFilter = [];
     public $selectedYear ;
     public $SearchValue;
+    public $formateurId;
+
 
     protected $listeners = [
         'receiveidEmploiid'=>'receiveidEmploiid',
@@ -64,7 +66,109 @@ class ToutEmplois extends Component
 
     }
 
+// NEWADD
+public $isCaseEmpty = true;
 
+    public function updateCaseStatus($isEmpty, $variable)
+    {
+        $this->isCaseEmpty = $isEmpty;
+        $this->receivedVariable = $variable;
+        $this->formateurId =substr($variable , 11);
+        $this->brancheId = null;
+        $this->formateur = null;
+        $this->selectedGroups = [];
+        $this->selectedYear = null;
+        $this->salle = null;
+        $this->module = null;
+        $this->salleclassTyp = null;
+        $this->TypeSesion = null;
+    }
+
+
+    public function findSeance()
+    {
+        $idcase = $this->receivedVariable;
+        $day = substr($idcase, 0, 3);
+        $day_part = substr($idcase, 3, 5);
+        $user_id = substr($idcase, 11);
+        $dure_sission = substr($idcase, 8, 3);
+
+        $seance = sission::where([
+            'main_emploi_id' => session()->get('id_main_emploi'),
+            'day' => $day,
+            'day_part' => $day_part,
+            'user_id' => $user_id,
+            'dure_sission' => $dure_sission
+        ])->get();
+
+        return $seance;
+    }
+
+
+    public function Canceled()
+    {
+        $idcase = $this->receivedVariable;
+        $day = substr($idcase, 0, 3);
+        $day_part = substr($idcase, 3, 5);
+        $dure_sission = substr($idcase, 8, 3);
+
+        $session = sission::where([
+            'main_emploi_id' => session()->get('id_main_emploi'),
+            'day' => $day,
+            'day_part' => $day_part,
+            'user_id' => $this->formateurId,
+            'dure_sission' => $dure_sission,
+        ])->first(); // Use first() to get a single instance
+
+        if ($session) {
+            $session->status_sission = 'Cancelled';
+            $session->save();
+            $this->alert('success', 'Session Cancelled successfully.', [
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+            ]);
+        } else {
+            $this->alert('error', 'Session not found.', [
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+            ]);
+        }
+    }
+
+    public function Accepte()
+{
+    $idcase = $this->receivedVariable;
+    $day = substr($idcase, 0, 3);
+    $day_part = substr($idcase, 3, 5);
+    $dure_sission = substr($idcase, 8, 3);
+
+    $session = sission::where([
+        'main_emploi_id' => session()->get('id_main_emploi'),
+        'day' => $day,
+        'day_part' => $day_part,
+        'user_id' => $this->formateurId,
+        'dure_sission' => $dure_sission,
+    ])->first(); // Use first() to get a single instance
+
+    if ($session) {
+        $session->status_sission = 'Accepted';
+        $session->save();
+        $this->alert('success', 'Session accepted successfully.', [
+            'position' => 'center',
+            'timer' => 3000,
+            'toast' => true,
+        ]);
+    } else {
+        $this->alert('error', 'Session not found.', [
+            'position' => 'center',
+            'timer' => 3000,
+            'toast' => true,
+        ]);
+    }
+}
+//--------------------------------------------------------------- NEWADD
 
 public function receiveidEmploiid($variable){
      session(['idEmploiSelected' => $variable]);
@@ -140,34 +244,35 @@ public function UpdateSession()
     }
 }
 
-public function DeleteSession()
-{
-    $idcase = $this->receivedVariable;
-    $day = substr($idcase, 0, 3);
-    $day_part = substr($idcase, 3, 5);
-    $group_id = substr($idcase, 11);
-    $user_id = substr($idcase, 11);
-    $dure_sission = substr($idcase,8,3);
 
- if ($this->selectedType === "Group") {
-  sission::where([
-     'main_emploi_id' => Session::get('idEmploiSelected'),
-     'day' => $day,
-     'day_part' => $day_part,
-     'group_id' => $group_id,
-     'dure_sission' => $dure_sission
- ])->delete();
-  }else{
+    public function DeleteSession()
+    {
+        $idcase = $this->receivedVariable;
+        $day = substr($idcase, 0, 3);
+        $day_part = substr($idcase, 3, 5);
+        $group_id = substr($idcase, 11);
+        $user_id = substr($idcase, 11);
+        $dure_sission = substr($idcase,8,3);
+
+    if ($this->selectedType === "Group") {
     sission::where([
         'main_emploi_id' => Session::get('idEmploiSelected'),
         'day' => $day,
         'day_part' => $day_part,
-        'user_id' => $user_id,
+        'group_id' => $group_id,
         'dure_sission' => $dure_sission
     ])->delete();
-  }
+    }else{
+        sission::where([
+            'main_emploi_id' => Session::get('idEmploiSelected'),
+            'day' => $day,
+            'day_part' => $day_part,
+            'user_id' => $user_id,
+            'dure_sission' => $dure_sission
+        ])->delete();
+    }
 
-}
+    }
 
 
     // Method to update selected type emploi group or formateur
@@ -317,8 +422,12 @@ public function DeleteSession()
         $this->groups = Group::where('group_name' ,'like','%'.$this->SearchValue.'%')->where('establishment_id', $establishment_id)->get();
         $this->formateurs = User::where('user_name','like','%'.$this->SearchValue.'%')->where(['establishment_id' => $establishment_id, 'role' => 'formateur'])->get();
 
+        // NEWADD
+        $allseances = sission::where('main_emploi_id',Session::get('idEmploiSelected'));
+        $seance = $this->findSeance()->first();
+
         // Render view
-        return view('livewire.tout-emplois');
+        return view('livewire.tout-emplois',['seance' => $seance,'allseances'=>$allseances]);
     }
 
 }

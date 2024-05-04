@@ -367,7 +367,6 @@ public function Accepte()
 
 
         $establishment_id = session()->get('establishment_id');
-
         $this->yearFilter = DB::table('groups')
         ->where('establishment_id', $establishment_id)
         ->select('year')

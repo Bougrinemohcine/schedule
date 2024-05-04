@@ -51,13 +51,21 @@ class ToutEmplois extends Component
     public $selectedYear ;
     public $SearchValue;
     public $formateurId;
+    public $groupID;
 
 
     protected $listeners = [
         'receiveidEmploiid'=>'receiveidEmploiid',
         'fresh'=>'$refresh'];
 
+        public function mount()
+        {
+            // Fetch the last emploi from the database
+            $lastEmploi = main_emploi::latest()->first();
 
+            // Set the default value for selectedValue
+            $this->selectedValue = $lastEmploi->id;
+        }
     public function getidCase($variable){
         $this->receivedVariable = $variable;
         $this->selectedGroups = [];
@@ -331,11 +339,35 @@ public function UpdateSession()
 }
 
 
+  // Livewire component method
+    public function AccepteAlll($groupID)
+    {
+        // Find all sessions for the current group and main_emploi
+        $sessions = Sission::where([
+            'group_id' => $groupID,
+            'main_emploi_id' => $this->selectedValue
+        ])->get();
+
+        // Update the status of each session to "Accepted"
+        foreach ($sessions as $session) {
+            $session->status_sission = 'Accepted';
+            $session->save();
+        }
+
+        // Show a success message
+        $this->alert('success', 'All sessions accepted successfully.', [
+            'position' => 'center',
+            'timer' => 3000,
+            'toast' => true,
+        ]);
+
+        // Refresh the page
+        $this->render();
+    }
 
     public function AccepteAll($formateurID)
     {
         // Find all sessions for the current formateur and main_emploi
-        
         $sissions = Sission::where([
             'user_id' => $formateurID,
             'main_emploi_id' => $this->selectedValue

@@ -299,9 +299,10 @@
                         <tr>
                             <td>{{$group->group_name}}
                                 @if ($allseances && $allseances->where('group_id', $group->id)->whereIn('status_sission', ['Cancelled', 'Pending'])->count() > 0)
-                                    <button wire:click="AccepteAllGR({{ $group->id }})" aria-label="Close" type="button" class="btn btn-success">Accepte {{ $group->id }}</button>
+                                    <button wire:click="AccepteAlll('{{ $group->id }}')" aria-label="Close" type="button" class="btn btn-success">Accepte {{ $group->id }}</button>
                                 @endif
                             </td>
+
                             @foreach ($dayWeek as $day)
                                 @foreach (['MatinSE1', 'MatinSE2', 'AmidiSE3', 'AmidiSE4'] as $sessionType)
                                     @php

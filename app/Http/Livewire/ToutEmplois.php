@@ -105,6 +105,7 @@ public $isCaseEmpty = true;
     }
 
 
+
     public function Canceled()
     {
         $idcase = $this->receivedVariable;
@@ -256,7 +257,7 @@ public function UpdateSession()
 
     if ($this->selectedType === "Group") {
     sission::where([
-        'main_emploi_id' => Session::get('idEmploiSelected'),
+        'main_emploi_id' => session()->get('id_main_emploi'),
         'day' => $day,
         'day_part' => $day_part,
         'group_id' => $group_id,
@@ -264,7 +265,7 @@ public function UpdateSession()
     ])->delete();
     }else{
         sission::where([
-            'main_emploi_id' => Session::get('idEmploiSelected'),
+            'main_emploi_id' => session()->get('id_main_emploi'),
             'day' => $day,
             'day_part' => $day_part,
             'user_id' => $user_id,
@@ -286,7 +287,30 @@ public function UpdateSession()
         session(['idEmploiSelected' => $value]);
         $this->selectedValue = $value;
     }
+    public function AccepteAll($formateurID)
+    {
+        // Find all sessions for the current formateur and main_emploi
+        $sissions = Sission::where([
+            'user_id' => $formateurID,
+            'main_emploi_id' => $this->selectedValue
+        ])->get();
 
+        // Update the status of each session to "Accepted"
+        foreach ($sissions as $sission) {
+            $sission->status_sission = 'Accepted';
+            $sission->save();
+        }
+
+        // Show a success message
+        $this->alert('success', 'All sessions accepted successfully.', [
+            'position' => 'center',
+            'timer' => 3000,
+            'toast' => true,
+        ]);
+
+        // Refresh the page
+        $this->render();
+    }
     // for delate all sessions
     public function deleteAllSessions(){
         DB::table('sissions')->where('establishment_id', session()->get('establishment_id'))
@@ -423,9 +447,9 @@ public function UpdateSession()
         $this->formateurs = User::where('user_name','like','%'.$this->SearchValue.'%')->where(['establishment_id' => $establishment_id, 'role' => 'formateur'])->get();
 
         // NEWADD
-        $allseances = sission::where('main_emploi_id',Session::get('idEmploiSelected'));
-        $seance = $this->findSeance()->first();
+        $allseances = sission::where('main_emploi_id', $this->selectedValue)->get();
 
+        $seance = $this->findSeance()->first();
         // Render view
         return view('livewire.tout-emplois',['seance' => $seance,'allseances'=>$allseances]);
     }

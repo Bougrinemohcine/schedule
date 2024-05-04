@@ -85,7 +85,6 @@
             </div>
 
             <div>
-
                 <select id='date-select' class="form-select"  wire:model="selectedValue" wire:change="updateSelectedIDEmploi($event.target.value)">
                     <option >Select date emploi</option>
                     @forEach( $Main_emplois as $Main_emploi)
@@ -277,6 +276,14 @@
                                         class="btn btn-danger">supprimer</button>
                                     <button data-bs-dismiss="modal" wire:click="UpdateSession" aria-label="Close" type="submit"
                                         class="btn btn-success">Update</button>
+                                        @if ($seance && $seance->status_sission != 'Accepted')
+                                            <button data-bs-dismiss="modal" wire:click="Accepte" aria-label="Close" type="button"
+                                                class="btn btn-success">Accepte</button>
+                                        @endif
+                                        @if ($seance && $seance->status_sission != 'Cancelled')
+                                            <button data-bs-dismiss="modal" wire:click="Canceled" aria-label="Close" type="button"
+                                                class="btn btn-danger">Cancel</button>
+                                        @endif
                                 </div>
                             </form>
                         </div>
@@ -310,6 +317,7 @@
             <tr>
                 <td>{{ $formateur->user_name }}
                     @if ($allseances && $allseances->where('user_id', $formateur->id)->whereIn('status_sission', ['Cancelled', 'Pending'])->count() > 0)
+                        <button wire:click="AccepteAll({{ $formateur->id }})" aria-label="Close" type="button" class="btn btn-success">Accepte {{ $formateur->id }}</button>
                     @endif
                 </td>
                    @foreach ($dayWeek as $day)

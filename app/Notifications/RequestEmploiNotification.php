@@ -15,31 +15,47 @@ class RequestEmploiNotification extends Notification
     public $FormateurRequest;
     public $RequestCommentaire;
     public $mainEmploiId;
-    
-    public function __construct($Request_id,$FormateurRequest,$RequestCommentaire,$mainEmploiId)
+    public $statusSission;
+    public $type;
+
+    public function __construct($type,$Request_id, $FormateurRequest, $mainEmploiId, $RequestCommentaire, $statusSission)
     {
+        $this->type = $type;
         $this->Request_id = $Request_id;
         $this->FormateurRequest = $FormateurRequest;
         $this->RequestCommentaire = $RequestCommentaire;
         $this->mainEmploiId = $mainEmploiId;
+        $this->statusSission = $statusSission;
     }
 
-    
     public function via($notifiable)
     {
         return ['database'];
     }
 
- 
-
-
     public function toArray($notifiable)
     {
-        return [
-            'Request_id'=> $this->Request_id,
-            'FormateurRequest' => $this->FormateurRequest,
-            'RequestCommentaire' => $this->RequestCommentaire,
-            'mainEmploiId' => $this->mainEmploiId,
-        ];
+        // Déterminez le type de notification en fonction de la présence de seance_id
+        if ($this->type == 'seance') {
+            // Pour la notification de création de séance
+            return [
+                'type' => 'seance',
+                'Request_id' => $this->Request_id,
+                'FormateurRequest' => $this->FormateurRequest,
+                'RequestCommentaire' => $this->RequestCommentaire,
+                'mainEmploiId' => $this->mainEmploiId,
+                'statusSission' => $this->statusSission,
+            ];
+        } else {
+            // Pour la notification de demande d'emploi
+            return [
+                'type' => 'emploi',
+                'Request_id' => $this->Request_id,
+                'FormateurRequest' => $this->FormateurRequest,
+                'RequestCommentaire' => $this->RequestCommentaire,
+                'mainEmploiId' => $this->mainEmploiId,
+            ];
+        }
     }
 }
+

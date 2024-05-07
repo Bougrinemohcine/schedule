@@ -1,6 +1,7 @@
 <x-HeaderMenuFormateur>
 
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <div class="button-container-calendar">
         <label class="left-arrow" id="previous" style="display: none;"></label>
@@ -151,7 +152,7 @@
                                 @php
                                     $color = '';
                                     if ($AllSeance->status_sission === 'Pending') {
-                                        $color = 'yellow';
+                                        $color = 'orange';
                                     } elseif ($AllSeance->status_sission === 'Accepted') {
                                         $color = 'green';
                                     } elseif ($AllSeance->status_sission === 'Cancelled') {
@@ -173,7 +174,7 @@
                             @endforeach
                             @if (!$seanceFound)
                                 <td data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
-                                    data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
+                                    data-day="{{ $day_of_week }}" data-seanceId="" data-seance="{{ $seance_part }}"
                                     data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases">
                                 </td>
                             @endif
@@ -264,8 +265,11 @@
                         </div>
 
                         <br />
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+                        <input id="seanceIdInput" name="seanceId" value="">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Fermer</button>
                         <button type="submit" class="btn btn-primary">Soumettre</button>
+                        <button type="button" id="deleteButton" class="btn btn-danger">supprimer</button>
+
 
                     </form>
 
@@ -316,20 +320,39 @@
             document.getElementById('emploiID').value = this.value;
             submitForm();
         });
+        // Event listener for the delete button
+        $(document).on('click', '#deleteButton', function() {
+            console.log('Delete button clicked');
+            // Retrieve the seanceId value
+            var seanceId = $('#seanceIdInput').val();
+            if (seanceId) {
+                // Perform the deletion action here
+                // You can make an AJAX call to your server to delete the data associated with the seanceId
+                // For example:
+                $.ajax({
+                    url: '{{ route('deleteSession') }}',
+                    type: 'POST',
+                    data: {
+                        seanceId: seanceId,
+                        _token: '{{ csrf_token() }}' // Include CSRF token
+                    },
+                    success: function(response) {
+                        // Handle success response
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error
+                    }
+                });
 
-        function toggleTables() {
-            var table1 = document.getElementById("tbl_exporttable_to_xls_1");
-            var table2 = document.getElementById("tbl_exporttable_to_xls_2");
-
-            // If table1 is currently visible, hide it and show table2
-            if (table1.style.display === "block") {
-                table1.style.display = "none";
-                table2.style.display = "block";
-            } else { // If table1 is currently hidden, show it and hide table2
-                table1.style.display = "block";
-                table2.style.display = "none";
+                // For demonstration purpose, log the seanceId to the console
+                console.log('Deleting data with seanceId:', seanceId);
+            } else {
+                console.log('No seanceId available to delete.');
             }
-        }
+        });
+
+
+
         document.addEventListener("DOMContentLoaded", function() {
             var cells = document.querySelectorAll("td.Cases");
             var daysOfWeek = @json($days_of_week);
@@ -460,8 +483,13 @@
             cells.forEach(function(cell) {
                 cell.addEventListener("click", function() {
 
-                    clickedCell = this; // Assign the clicked cell to clickedCell
+                    clickedCell = this;
                     console.log(clickedCell);
+                    var seanceId = clickedCell.dataset.seanceid || '';
+                    hasSeanceId = !!
+                    seanceId; // Update the variable based on whether seanceId is set
+                    document.getElementById('seanceIdInput').value = seanceId;
+
 
                     $('#groupModuleClassModal').modal('show');
 
@@ -482,9 +510,10 @@
                         var dayOfWeek = clickedCell.dataset.day;
                         var seancePart = clickedCell.dataset.seance;
                         var seanceIds = clickedCell.dataset.seanceid ||
-                        ''; // Use an empty string as a default value
+                            ''; // Use an empty string as a default value
                         console.log(
-                        seanceIds); // Check if the `seanceIds` value is displayed in the console
+                            seanceIds
+                        ); // Check if the seanceIds value is displayed in the console
 
                         var dayPart = (seancePart == "SE1" || seancePart == "SE2") ?
                             "Matin" : "Amidi";
@@ -525,6 +554,13 @@
 
             $('#groupModuleClassModal').on('click', '.btn-danger', function() {
                 $('#groupModuleClassModal').modal('hide');
+            });
+            $('#groupModuleClassModal').on('show.bs.modal', function() {
+                if (hasSeanceId) {
+                    $('.modal-body .btn-danger').show(); // Show the delete button
+                } else {
+                    $('.modal-body .btn-danger').hide(); // Hide the delete button
+                }
             });
 
             $('#cancelButton').click(function() {
@@ -594,24 +630,31 @@
         });
 
         function ExportToExcel(type, fn, dl) {
-            // Get the currently visible table
-            var currentTable = document.getElementById("tbl_exporttable_to_xls_1").style.display === "block" ?
-                document.getElementById("tbl_exporttable_to_xls_1") :
-                document.getElementById("tbl_exporttable_to_xls_2");
+            var selectedEmploiID = $('#emploiID').val(); // Get the selected emploiID
+            var dateStart = $('#date-select option:selected').text().split(' - ')[
+                0]; // Extract date start from selected option
+            var dateEnd = $('#date-select option:selected').text().split(' - ')[1]; // Extract date end from selected option
 
-            // Convert the table to Excel format
-            var wb = XLSX.utils.table_to_book(currentTable, {
+            // Depending on your implementation, you may need to adjust how you fetch the selected emploiID and dates
+
+            var elt = document.getElementById('tbl_exporttable_to_xls_1');
+            var wb = XLSX.utils.table_to_book(elt, {
                 sheet: "sheet1"
             });
 
-            // Export the Excel file
+            // Include date start and date end in the filename
+            var filename = '{{ Auth::user()->user_name }} - ' + dateStart.trim() + ' - ' + dateEnd.trim() + '.' + (type ||
+                'xlsx');
+
             return dl ?
                 XLSX.write(wb, {
                     bookType: type,
                     bookSST: true,
                     type: 'base64'
                 }) :
-                XLSX.writeFile(wb, fn || ('Schedule.' + (type || 'xlsx')));
+                XLSX.writeFile(wb, fn || filename, {
+                    selectedEmploiID: selectedEmploiID // Pass the selected emploiID as a parameter
+                });
         }
     </script>
 

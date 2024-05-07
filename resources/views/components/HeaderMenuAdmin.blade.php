@@ -86,8 +86,9 @@
             left: auto;
             right: 0;
         }
-        .display{
-            display: none ;
+
+        .display {
+            display: none;
         }
     </style>
 </head>
@@ -168,7 +169,7 @@
                                     </div>
                                     @foreach (Auth::user()->Notifications as $Notification)
                                         <div data-simplebar style="max-height: 230px;">
-                                            <a href="" class="text-reset notification-item">
+                                            <a href="{{ route('AllRequest') }}" class="text-reset notification-item">
                                                 <div class="d-flex align-items-start">
                                                     <div class="avatar-xs me-3">
                                                         <span
@@ -177,23 +178,35 @@
                                                         </span>
                                                     </div>
                                                     <div class="flex-1">
+                                                        @if ($Notification->data['type'] === 'emploi')
+                                                            <h6 class="mt-0 mb-1">
+                                                                {{ $Notification->data['FormateurRequest'] }}</h6><p>a deamnder une nouvelle emplois du temps</p>
+                                                            <div class="font-size-12 text-muted">
+                                                                <p class="mb-1">
+                                                                    {{ $Notification->data['RequestCommentaire'] }}</p>
+                                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i>
+                                                                    {{ $Notification->created_at->diffForHumans() }}
+                                                                </p>
+                                                            </div>
+                                                        @elseif ($Notification->data['type'] === 'seance')
                                                         <h6 class="mt-0 mb-1">
-                                                            {{ $Notification->data['FormateurRequest'] }}</h6>
+                                                            {{ $Notification->data['FormateurRequest'] }} </h6> <p>a deamnder une nouvelle seance</p>
                                                         <div class="font-size-12 text-muted">
                                                             <p class="mb-1">
                                                                 {{ $Notification->data['RequestCommentaire'] }}</p>
+                                                                <p class="mb-1">
+                                                                    {{ $Notification->data['statusSission'] }}</p>
                                                             <p class="mb-0"><i class="mdi mdi-clock-outline"></i>
                                                                 {{ $Notification->created_at->diffForHumans() }}
                                                             </p>
                                                         </div>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </a>
-
-
-
                                         </div>
                                     @endforeach
+
                                     <div class="p-2 border-top d-grid">
                                         <a class="btn btn-sm btn-link font-size-14 " href="javascript:void(0)">
                                             <i class="mdi mdi-arrow-right-circle me-1"></i> View More..
@@ -233,7 +246,7 @@
                         <div>
                             <!-- LOGO -->
                             <div class="dropdown d-none d-lg-inline-block ms-1">
-                                <button class="btn btn-sm px-3 font-size-16 header-item toggle-sidebar "  >
+                                <button class="btn btn-sm px-3 font-size-16 header-item toggle-sidebar ">
                                     <i class="fa fa-fw fa-bars"></i>
                                 </button>
                             </div>
@@ -255,15 +268,15 @@
             </header>
             <!-- ENd header  -->
             <!-- ========== Left Sidebar Start ========== -->
-            <div id="sideBareMenu" class="vertical-menu  display" >
+            <div id="sideBareMenu" class="vertical-menu  display">
                 {{-- <div class="arow">
                         <button class="btn btn-primary toggle-sidebar"><i class="mdi mdi-chevron-left"></i></button>
                     </div> --}}
                 <div class="widthSideBare ">
                     <div class="user-wid text-center py-4">
                         <div class="user-img">
-                            <img class="rounded-circle header-profile-user" src="{{asset('assets/images/users/user.jpg')}}"
-                                alt="">
+                            <img class="rounded-circle header-profile-user"
+                                src="{{ asset('assets/images/users/user.jpg') }}" alt="">
                         </div>
 
                         <div class="mt-3">
@@ -276,7 +289,7 @@
                     </div>
 
                     <!--- Sidemenu -->
-                    <div id="sidebar-menu" >
+                    <div id="sidebar-menu">
                         <!-- Left Menu Start -->
                         <ul class="metismenu list-unstyled" id="side-menu">
                             <li class="menu-title">Menu</li>
@@ -292,22 +305,22 @@
 
 
 
-                                <li><a href="{{ route('CreateEmploi') }}" class=" waves-effect"> <span
-                                            data-toggle="tooltip" data-placement="right" title="tout les groupes"
-                                            class="mdi mdi-lightbulb-group-outline"
-                                            style="font-weight: 400 ; font-size:25PX"></span></a></li>
-                                <li><a href="{{ route('emploiForFormateurs') }}" class=" waves-effect"> <span
-                                            data-toggle="tooltip" data-placement="right" title="tout les Formateurs"
-                                            style="font-weight: 400 ; font-size:25PX"
-                                            class="mdi mdi-account-supervisor-outline"></span></a></li>
-                                <li><a href="{{ route('ChaqueFormateur') }}" class=" waves-effect"> <span
-                                            data-toggle="tooltip" data-placement="right" title="chaque formateur"
-                                            style="font-weight: 400 ; font-size:25PX"
-                                            class="mdi mdi-account-tie-outline"></span></a></li>
-                                <li><a href="{{ route('emploiForGroup') }}" class=" waves-effect"> <span
-                                            data-toggle="tooltip" data-placement="right" title="chaque group"
-                                            style="font-weight: 400 ; font-size:25PX"
-                                            class="mdi mdi-lightbulb-multiple-outline"></span></a></li>
+                            <li><a href="{{ route('CreateEmploi') }}" class=" waves-effect"> <span
+                                        data-toggle="tooltip" data-placement="right" title="tout les groupes"
+                                        class="mdi mdi-lightbulb-group-outline"
+                                        style="font-weight: 400 ; font-size:25PX"></span></a></li>
+                            <li><a href="{{ route('emploiForFormateurs') }}" class=" waves-effect"> <span
+                                        data-toggle="tooltip" data-placement="right" title="tout les Formateurs"
+                                        style="font-weight: 400 ; font-size:25PX"
+                                        class="mdi mdi-account-supervisor-outline"></span></a></li>
+                            <li><a href="{{ route('ChaqueFormateur') }}" class=" waves-effect"> <span
+                                        data-toggle="tooltip" data-placement="right" title="chaque formateur"
+                                        style="font-weight: 400 ; font-size:25PX"
+                                        class="mdi mdi-account-tie-outline"></span></a></li>
+                            <li><a href="{{ route('emploiForGroup') }}" class=" waves-effect"> <span
+                                        data-toggle="tooltip" data-placement="right" title="chaque group"
+                                        style="font-weight: 400 ; font-size:25PX"
+                                        class="mdi mdi-lightbulb-multiple-outline"></span></a></li>
 
 
                             <li>
@@ -409,36 +422,34 @@
     <!-- App js -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
-    <script src="{{ asset('assets/js/pusherNotifications.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
     <script>
-     document.addEventListener('DOMContentLoaded', function() {
-    let sidebarMenu = document.querySelector('#sideBareMenu');
+        document.addEventListener('DOMContentLoaded', function() {
+            let sidebarMenu = document.querySelector('#sideBareMenu');
 
-    function hideHidentext() {
-        if (sidebarMenu.classList.contains('display')) {
-            sidebarMenu.classList.remove('display');
+            function hideHidentext() {
+                if (sidebarMenu.classList.contains('display')) {
+                    sidebarMenu.classList.remove('display');
 
-        } else {
-            sidebarMenu.classList.add('display');
+                } else {
+                    sidebarMenu.classList.add('display');
 
-        }
-    }
+                }
+            }
 
-    hideHidentext();
+            hideHidentext();
 
-    document.querySelector('.toggle-sidebar').addEventListener('click', function() {
-        sidebarMenu.classList.toggle('collapsed');
-        hideHidentext();
-    });
-});
-
+            document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+                sidebarMenu.classList.toggle('collapsed');
+                hideHidentext();
+            });
+        });
     </script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
- 
+
 
 
 

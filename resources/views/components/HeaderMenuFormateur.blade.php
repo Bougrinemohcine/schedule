@@ -8,6 +8,8 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
+    {{-- driver JS --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css" />
 
 
     <!-- Plugin css -->
@@ -248,28 +250,28 @@
                         <ul class="metismenu list-unstyled" id="side-menu">
                             <li class="menu-title">Menu</li>
 
-                            <li>
+                            <li class="Acceuil">
                                 <a class="waves-effect" href="{{ url('dashboardFormateur') }}">
                                     <i class="fas fa-home"></i>
                                     <span>Acceuil</span>
                                 </a>
                             </li>
 
-                            <li>
+                            <li class="RequestCalendar">
                                 <a href="{{ url('DemanderEmploi') }}" class="waves-effect">
                                     <i class="mdi mdi-frequently-asked-questions"></i>
                                     <span>RequestCalendar</span>
                                 </a>
                             </li>
 
-                            <li>
+                            <li class="Calendar">
                                 <a href="{{ url('calendarFormateur') }}" class="waves-effect">
                                     <i class="mdi mdi-calendar-text"></i>
                                     <span>Calendar</span>
                                 </a>
                             </li>
 
-                            <li>
+                            <li class="Groupes">
                                 <a href="javascript:void(0);" class="has-arrow waves-effect">
                                     <i class="mdi mdi-account-group"></i>
                                     <span>Groupes</span>
@@ -279,7 +281,7 @@
                                 </ul>
                             </li>
 
-                            <li>
+                            <li class="Modules">
                                 <a href="javascript:void(0);" class="has-arrow waves-effect">
                                     <i class="mdi mdi-inbox-full"></i>
                                     <span>Modules</span>
@@ -289,13 +291,20 @@
                                 </ul>
                             </li>
 
-                            <li>
+                            <li class="Settings">
                                 <a class="dropdown-item d-block" href="{{ url('settings') }}">
                                     <i class="mdi mdi-settings-outline"></i> Settings
                                 </a>
                             </li>
+                            <li class="Documentation">
+                                <a class="dropdown-item d-block" onclick="launchDriver()">
+                                    <i class="fas fa-book"></i>Lunch Documentation
+                                </a>
+                            </li>
 
-                            <li>
+
+
+                            <li class="Logout">
                                 <a class="dropdown-item text-danger" href="{{ route('logout') }}">
                                     <i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i>
                                     Logout
@@ -345,7 +354,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-   
+
     <script src="{{ asset('/assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('/assets/libs/metismenu/metisMenu.min.js') }}"></script>
@@ -365,15 +374,210 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
+    {{-- driver js --}}
+    <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+
 
     <script>
-       $(document).ready(function() {
-    $('#vertical-menu-toggle').click(function() {
-        $('.vertical-menu').toggleClass('hide-menu');
-    });
-});
+        $(document).ready(function() {
+            $('#vertical-menu-toggle').click(function() {
+                $('.vertical-menu').toggleClass('hide-menu');
+            });
+        });
 
 
+        function launchDriver() {
+            const driver = window.driver.js.driver;
+            const username = "{{ Auth::user()->user_name }}"; // Obtenir le nom d'utilisateur dynamiquement
+            const driverObj = driver({
+                showProgress: true,
+                showButtons: ['next', 'previous'],
+                steps: [
+                    // Première étape
+                    {
+                        element: '#some-element',
+                        popover: {
+                            title: username,
+                            description: 'Suivez les instructions pour comprendre comment vous pouvez utiliser ce site.',
+                            side: "bottom",
+                            align: 'start'
+                        }
+                    },
+                    // Deuxième étape
+                    {
+                        element: '.vertical-menu',
+                        popover: {
+                            title: 'Menu Principal',
+                            description: 'Voici le menu principal du tableau de bord.',
+                            side: "left",
+                            align: 'start'
+                        }
+                    },
+                    // Troisième étape
+                    {
+                        element: '.navbar-header',
+                        popover: {
+                            title: 'En-tête',
+                            description: 'Ceci est l\'en-tête du tableau de bord.',
+                            side: "bottom",
+                            align: 'start'
+                        }
+                    },
+                    // Quatrième étape
+                    {
+                        element: '.logo-light',
+                        popover: {
+                            title: 'Logo',
+                            description: 'Ceci est notre logo.',
+                            side: "bottom",
+                            align: 'start'
+                        }
+                    },
+                    // Cinquième étape
+                    {
+                        element: '#vertical-menu-toggle',
+                        popover: {
+                            title: 'Basculer le Menu Vertical',
+                            description: 'Cliquez ici pour basculer la visibilité du menu vertical.',
+                            side: "bottom",
+                            align: 'start'
+                        }
+                    },
+                    // Sixième étape
+                    {
+                        element: '.mdi-fullscreen',
+                        popover: {
+                            title: 'Bouton Plein Écran',
+                            description: 'Cliquez ici pour basculer en mode plein écran.',
+                            side: "bottom",
+                            align: 'start'
+                        }
+                    },
+                    // Septième étape
+                    {
+                        element: '.mdi-bell-outline',
+                        popover: {
+                            title: 'Menu des Notifications',
+                            description: 'Cliquez ici pour afficher les notifications.',
+                            side: "bottom",
+                            align: 'start'
+                        }
+                    },
+                    // Huitième étape
+                    {
+                        element: '.header-profile-user',
+                        popover: {
+                            title: 'Profil Utilisateur',
+                            description: 'Cliquez ici pour afficher votre profil.',
+                            side: "bottom",
+                            align: 'start'
+                        }
+                    },
+                    // Neuvième étape
+                    {
+                        element: '#page-header-user-dropdown span',
+                        popover: {
+                            title: 'Menu de Profil',
+                            description: 'Cliquez ici pour accéder aux options de profil.',
+                            side: "bottom",
+                            align: 'start'
+                        }
+                    },
+                    // Dixième étape
+                    {
+                        element: '.user-wid',
+                        popover: {
+                            title: 'Widget Utilisateur',
+                            description: 'Ceci est le widget utilisateur.',
+                            side: "left",
+                            align: 'start'
+                        }
+                    },
+                    // Onzième étape
+                    {
+                        element: '.Acceuil',
+                        popover: {
+                            title: 'Page d\'Accueil',
+                            description: 'Ceci est la page d\'accueil.',
+                            side: "left",
+                            align: 'start'
+                        }
+                    },
+                    // Douzième étape
+                    {
+                        element: '.RequestCalendar ',
+                        popover: {
+                            title: 'Calendrier des Demandes',
+                            description: 'Ceci est le calendrier des demandes.',
+                            side: "left",
+                            align: 'start'
+                        }
+                    },
+                    // Treizième étape
+                    {
+                        element: '.Calendar ',
+                        popover: {
+                            title: 'Calendrier',
+                            description: 'Ceci est le calendrier.',
+                            side: "left",
+                            align: 'start'
+                        }
+                    },
+                    // Quatorzième étape
+                    {
+                        element: '.Groupes ',
+                        popover: {
+                            title: 'Groupes',
+                            description: 'Ceci sont les groupes.',
+                            side: "left",
+                            align: 'start'
+                        }
+                    },
+                    // Quinzième étape
+                    {
+                        element: '.Modules ',
+                        popover: {
+                            title: 'Modules',
+                            description: 'Ceci sont les modules.',
+                            side: "left",
+                            align: 'start'
+                        }
+                    },
+                    // Seizième étape
+                    {
+                        element: '.Settings ',
+                        popover: {
+                            title: 'Paramètres',
+                            description: 'Ceci sont les paramètres.',
+                            side: "left",
+                            align: 'start'
+                        }
+                    },
+                    // Dix-septième étape
+                    {
+                        element: '.Documentation ',
+                        popover: {
+                            title: 'Documentation',
+                            description: 'Cliquez ici pour accéder à la documentation.',
+                            side: "left",
+                            align: 'start'
+                        }
+                    },
+                    // Dix-huitième étape
+                    {
+                        element: '.Logout',
+                        popover: {
+                            title: 'Déconnexion',
+                            description: 'Cliquez ici pour vous déconnecter.',
+                            side: "left",
+                            align: 'start'
+                        }
+                    }
+                ]
+            });
+
+            driverObj.drive();
+        }
     </script>
 
 </body>

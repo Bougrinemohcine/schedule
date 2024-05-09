@@ -84,7 +84,12 @@
                         <!-- Loop through each seance part -->
 
                         @foreach ($seancesPart as $seance_part)
-                            @php $seanceFound = false; @endphp
+                            @php $seanceFound = false;
+                            if ($seance_part == 'SE1' || $seance_part == 'SE2') {
+                                            $day_part = 'Matin';
+                                        } elseif ($seance_part == 'SE3' || $seance_part == 'SE4') {
+                                            $day_part = 'Amidi';
+                                        }@endphp
                             @foreach ($allSeances as $AllSeance)
                                 @php
                                     $color = '';
@@ -95,22 +100,19 @@
                                     } elseif ($AllSeance->status_sission === 'Cancelled') {
                                         $color = 'red';
                                     }
-                                    if ($seance_part == 'SE1' || $seance_part == 'SE2') {
-                                            $day_part = 'Matin';
-                                        } elseif ($seance_part == 'SE3' || $seance_part == 'SE4') {
-                                            $day_part = 'Amidi';
-                                        }
+
                                 @endphp
                                 @if ($AllSeance->day == $day_of_week && $AllSeance->dure_sission == $seance_part)
                                     @php $seanceFound = true; @endphp
-                                    <td data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
-                                    data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
-                                    data-seanceId="{{ $AllSeance->id }}" class="Cases"
+                                    <td wire:click="updateCaseStatus({{ $seanceFound ? 'false' : 'true' }},'{{ $day . $AllSeance->sission_type }}')" data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
+                                        data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
+                                        data-seanceId="{{ $AllSeance->id }}" class="Cases"
                                         style="color: {{ $color }}">
                                         {{ $AllSeance->sission_type }}<br>
                                         {{ $AllSeance->group->group_name }} <br>
                                         {{ $AllSeance->class_room->class_name }}
                                     </td>
+
                                 @endif
                             @endforeach
                             @if (!$seanceFound)
@@ -142,8 +144,144 @@
             </ul>
         </div>
     @endif
-    <div class="modal fade" id="createRequestModal" tabindex="-1" role="dialog"
-        aria-labelledby="createRequestModalLabel" aria-hidden="true" wire:ignore.self>
+    {{-- MODAL  --}}
+    <div wire:ignore.self class="modal fade col-9" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-lg  ">
+            <div class="modal-content  col-9">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Create session</h1>
+                    @if ($errors->any())
+                        @foreach ($errors->all() as $error)
+                            <div id="liveAlertPlaceholder" class="alert alert-danger">
+                                {{ $error }}
+                            </div>
+                        @endforeach
+                    @endif
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form wire:submit.prevent="UpdateSession">
+                    <div class="modal-body">
+                        {{-- branches  --}}
+                            @if (!$checkValues[0]->branch)
+                                <select wire:model='brancheId' class="form-select "
+                                    aria-label="Default select example">
+                                    <option>Filiére</option>
+                                    @if ($baranches)
+                                        @foreach ($baranches as $baranche)
+                                            <option value="{{ $baranche->id }}">{{ $baranche->name }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            @endif
+
+                            @if (!$checkValues[0]->year)
+                                <select wire:model='selectedYear' class="form-select "
+                                    aria-label="Default select example">
+                                    <option>année</option>
+                                    @if ($yearFilter)
+                                        @foreach ($yearFilter as $item)
+                                            <option value="{{ $item }}">{{ $item }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            @endif
+
+                        <div style="display: flex">
+
+                            {{-- Formateur --}}
+
+                                <select wire:model="group" class="form-select"
+                                    aria-label="Default select example">
+                                    <option value="" selected>Groupes</option>
+                                    @if (!$groupes->isEmpty())
+                                        @foreach ($groupes as $grp)
+                                            <option value="{{ $grp->id }}">{{ $grp->group_name }}
+                                            </option>
+                                        @endforeach
+                                    @else
+                                        <option>Pas de groupe trouvé <i style="color:black"
+                                                class="mdi mdi-alert-rhombus"></i></option>
+                                    @endif
+                                </select>
+
+                            {{-- module  content --}}
+                            @if (!$checkValues[0]->module)
+                                <select wire:model="module" class="form-select "
+                                    aria-label="Default select example">
+                                    <option selected>Modules</option>
+                                    @if ($modules)
+                                        @foreach ($modules as $module)
+                                            <option value="{{ $module->id }}">
+                                                {{ preg_replace('/^\d+/', '', $module->id) }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            @endif
+
+                            {{-- salle --}}
+                            @if (!$checkValues[0]->salle)
+                                <select wire:model="salle" class="form-select"
+                                    aria-label="Default select example">
+                                    <option selected>les salles</option>
+                                    @if ($salles)
+                                        @foreach ($salles as $salle)
+                                            <option value="{{ $salle->id }}">
+                                                {{ $salle->class_name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            @endif
+                        </div>
+                        {{-- tyope session --}}
+                        <div style="display: flex;justify-content: space-between">
+                            @if (!$checkValues[0]->typeSalle)
+                                <select wire:model="salleclassTyp" class="form-select"
+                                    aria-label="Default select example">
+                                    <option selected>les Types</option>
+                                    @if ($classType)
+                                        @foreach ($classType as $classTyp)
+                                            <option value="{{ $classTyp->id }}">
+                                                {{ $classTyp->class_room_types }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            @endif
+                            {{-- id case --}}
+                            <input type="hidden" value="{{ $receivedVariable }}">
+                        </div>
+                        {{-- day part && type sission --}}
+                        <div style="display: flex">
+                            @if (!$checkValues[0]->typeSession)
+                                <select wire:model="TypeSesion" class="form-select"
+                                    aria-label="Default select example">
+                                    <option selected>Types</option>
+                                    <option value="presentielle">Presentielle</option>
+                                    <option value="teams">Teams</option>
+                                </select>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button data-bs-dismiss="modal" wire:click="DeleteSession" aria-label="Close"
+                            type="button" class="btn btn-danger">supprimer</button>
+                        <button data-bs-dismiss="modal" wire:click="UpdateSession" aria-label="Close"
+                            type="submit" class="btn btn-success">Update</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL REQUESTS -->
+    <div class="modal fade" id="createRequestModal" tabindex="-1" role="dialog" aria-labelledby="createRequestModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -160,14 +298,14 @@
                             <textarea class="form-control" id="cmt" name="comment" rows="3" wire:model="comment"></textarea>
                         </div>
                         <br>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"
-                            id="cancelRequests">Fermer</button>
-                        <button type="submit" id="cancelRequestcs" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelRequests">Fermer</button>
+                        <button type="submit" id="submitRequest" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
     <script>
         document.addEventListener('livewire:load', function () {
             Livewire.on('modal-hidden', function () {
@@ -184,13 +322,19 @@
                 $('#createRequestModal').modal('hide');
             });
 
-            $('#cancelRequestcs').click(function() {
-                $('#createRequestModal').modal('hide');
-            });
-
             $('#cancelRequests').click(function() {
                 $('#createRequestModal').modal('hide');
             });
+
+            $('#submitRequest').click(function() {
+                $('#createRequestModal').modal('hide');
+            });
+
+            // Show the session creation modal when clicking on a case
+            document.querySelectorAll('.Cases').forEach(item => {
+                item.addEventListener('click', event => {
+                    $('#exampleModal').modal('show');
+                });
+            });
         });
     </script>
-

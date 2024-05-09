@@ -9,13 +9,18 @@
         </select>
 
         <div class="fixed-button">
+            @php
+                if($existingRequest){
+                    $clr = 'green';
+                }else{
+                    $clr = 'red';
+                }
+            @endphp
             <button id="createRequestBtn" type="button"
-                class="btn btn-outline-warning waves-effect waves-light position-relative @if($existingRequest) bg-success @else bg-danger @endif">
+                class="btn btn-outline-warning waves-effect waves-light position-relative " style="background-color: {{$clr}}" >
                 <i class="fa fa-exclamation-circle" style="font-size:16px;"></i>
                 Creer une demande
             </button>
-
-
             <button onclick="ExportToExcel('xlsx')" class="btn btn-primary waves-effect waves-light"><i
                     class="mdi mdi-download"></i>
                 telecharger</button>
@@ -163,26 +168,29 @@
             </div>
         </div>
     </div>
-<script>
-    document.addEventListener('livewire:load', function () {
-        Livewire.on('modal-hidden', function () {
-            $('#createRequestModal').modal('hide');
-        });
-    });
-    $(document).ready(function() {
-        $('#createRequestBtn').click(function() {
-            $('#createRequestModal').modal('show');
+    <script>
+        document.addEventListener('livewire:load', function () {
+            Livewire.on('modal-hidden', function () {
+                $('#createRequestModal').modal('hide');
+            });
         });
 
-        $('#cancelRequest').click(function() {
-            $('#createRequestModal').modal('hide');
-        });
-        $('#cancelRequestcs').click(function() {
-            $('#createRequestModal').modal('hide');
-        });
-        $('#cancelRequests').click(function() {
-            $('#createRequestModal').modal('hide');
-        });
-    });
+        $(document).ready(function() {
+            $('#createRequestBtn').click(function() {
+                $('#createRequestModal').modal('show');
+            });
 
-</script>
+            $('#cancelRequest').click(function() {
+                $('#createRequestModal').modal('hide');
+            });
+
+            $('#cancelRequestcs').click(function() {
+                $('#createRequestModal').modal('hide');
+            });
+
+            $('#cancelRequests').click(function() {
+                $('#createRequestModal').modal('hide');
+            });
+        });
+    </script>
+

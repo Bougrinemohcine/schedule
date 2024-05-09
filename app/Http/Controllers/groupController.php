@@ -27,7 +27,6 @@ class groupController extends Controller
 
 
 
-
     //display page setting
     public function settingView(){
         return view('adminDashboard.setting.setting');

@@ -62,7 +62,7 @@ class PourChaqueFormateur extends Component
     public function updateCaseStatus($isEmpty )
     {
         $this->isCaseEmpty = $isEmpty;
-       
+
     }
 
 
@@ -290,6 +290,7 @@ class PourChaqueFormateur extends Component
         ->join('class_rooms', 'class_rooms.id', '=', 'sissions.class_room_id')
         ->where('sissions.establishment_id', $establishment_id)
         ->where('sissions.main_emploi_id', session()->get('id_main_emploi'))
+        ->where('sissions.status_sission', 'Accepted')
         ->orderBy('sissions.day') // Order by day
         ->orderBy('sissions.dure_sission')
         ->get();

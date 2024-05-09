@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Session;
 class Schedule extends Controller
 {
     public function index(){
-        return  view('adminDashboard.main.main');
+        return  view('adminDashboard.Main.main');
     }
 
 

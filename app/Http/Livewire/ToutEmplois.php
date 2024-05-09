@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\main_emploi;
 use Illuminate\Support\Facades\DB;
 use App\Models\group;
-use App\Models\user;
+use App\Models\User;
 use App\Models\module;
 use App\Models\class_room;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +15,6 @@ use App\Models\class_room_type;
 use Illuminate\Support\Facades\Session;
 use App\Models\sission;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-
 use function PHPUnit\Framework\isEmpty;
 
 class ToutEmplois extends Component
@@ -264,11 +263,12 @@ public function DeleteSession()
                         ->join('users', 'users.id', '=', 'sissions.user_id')
                         ->join('class_rooms', 'class_rooms.id', '=', 'sissions.class_room_id')
                         ->where('sissions.establishment_id', $establishment_id)
+                        ->where('sissions.status_sission', 'Accepted')
                         ->where('sissions.main_emploi_id', $this->selectedValue)
                         ->get();
 
         // Fetch groups data
-        $groupsQuery = Group::join('formateur_has_groups as f', 'f.group_id', '=', 'groups.id')
+        $groupsQuery = group::join('formateur_has_groups as f', 'f.group_id', '=', 'groups.id')
                         ->where('groups.establishment_id', $establishment_id)
                         ->where('f.formateur_id', substr($this->receivedVariable, 11))
                         ->select('groups.id', 'groups.group_name');
@@ -314,7 +314,7 @@ public function DeleteSession()
 
         // Fetch additional data
         $this->sissions = $sissions ;
-        $this->groups = Group::where('group_name' ,'like','%'.$this->SearchValue.'%')->where('establishment_id', $establishment_id)->get();
+        $this->groups = group::where('group_name' ,'like','%'.$this->SearchValue.'%')->where('establishment_id', $establishment_id)->get();
         $this->formateurs = User::where('user_name','like','%'.$this->SearchValue.'%')->where(['establishment_id' => $establishment_id, 'role' => 'formateur'])->get();
 
         // Render view

@@ -1,11 +1,11 @@
-<?php
+    <?php
 
     use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\auth_controller;
-    use App\Http\controllers\classRoomsController;
-    use App\Http\controllers\groupController;
-    use App\Http\controllers\moduleController;
-    use App\Http\controllers\formateurController;
+    use App\Http\Controllers\classRoomsController;
+    use App\Http\Controllers\groupController;
+    use App\Http\Controllers\moduleController;
+    use App\Http\Controllers\formateurController;
     use App\Http\Controllers\FormateurHasGroup;
     use App\Http\Controllers\ShowGroupAffected;
     use App\Http\Controllers\ShowModuleAffected;

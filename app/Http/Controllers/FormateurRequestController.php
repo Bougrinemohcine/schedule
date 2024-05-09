@@ -143,34 +143,19 @@ class FormateurRequestController extends Controller
         }
     }
 
-    public function deleteSession(Request $request) {
-        // Validate the request
-        $request->validate([
-            'seanceId' => 'required', // Adjust validation rules as needed
-        ]);
+    public function deleteSession(Request $request)
+    {
+        try {
+            // Récupérer les données de la requête
+            $data = $request->all();
 
-        // Retrieve the seanceId from the request
-        $seanceId = $request->input('seanceId');
+            // Implémenter la logique de suppression de la séance
 
-        // Find the record in the database based on the seanceId
-        $record = sission::find($seanceId);
-
-        // Check if the record exists
-        if (!$record) {
-            // If the record does not exist, return an error response
-            return response()->json(['message' => 'Record not found.'], 404);
+            return response()->json(['success' => 'Séance supprimée avec succès.', 'status' => 200]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur est survenue lors de la suppression de la séance.', 'status' => 500]);
         }
-
-        // Perform any additional authorization checks if necessary
-        // For example, you might check if the user has permission to delete this record
-
-        // Delete the record from the database
-        $record->delete();
-
-        // Redirect the user back to the previous page
-        return back();
     }
-
 
     public function createRequestEmploi(Request $request)
     {

@@ -87,7 +87,7 @@ class EmploiToutFormateurs extends Component
     public function updateCaseStatus($isEmpty )
     {
         $this->isCaseEmpty = $isEmpty;
-        
+
     }
 
 
@@ -271,7 +271,7 @@ class EmploiToutFormateurs extends Component
         ->where('formateur_has_filier.formateur_id', $this->formateurId)
         ->get();
         // groupes
-        $groupsQuery = Group::join('formateur_has_groups as f', 'f.group_id', '=', 'groups.id')
+        $groupsQuery = group::join('formateur_has_groups as f', 'f.group_id', '=', 'groups.id')
         ->where('groups.establishment_id', $establishment_id)
         ->where('f.formateur_id', $this->formateurId)
         ->select('groups.id', 'groups.group_name'); // Select ID along with group_name
@@ -312,6 +312,7 @@ class EmploiToutFormateurs extends Component
         ->join('users', 'users.id', '=', 'sissions.user_id')
         ->join('class_rooms', 'class_rooms.id', '=', 'sissions.class_room_id')
         ->where('sissions.establishment_id', $establishment_id)
+        ->where('sissions.status_sission', 'Accepted')
         ->where('sissions.main_emploi_id', session()->get('id_main_emploi'))
         ->get();
 

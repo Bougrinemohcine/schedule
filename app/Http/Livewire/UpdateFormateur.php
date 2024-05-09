@@ -3,9 +3,9 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Models\Branch;
-use App\Models\Group;
-use App\Models\Module;
+use App\Models\branch;
+use App\Models\group;
+use App\Models\module;
 use App\models\formateur;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 class UpdateFormateur extends Component

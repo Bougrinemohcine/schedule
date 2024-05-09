@@ -3,10 +3,10 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Models\Formateur;
-use App\Models\Branch;
-use App\Models\Module;
-use App\Models\Group;
+use App\Models\formateur;
+use App\Models\branch;
+use App\Models\module;
+use App\Models\group;
 use App\Models\formateur_has_branche;
 use App\Models\formateur_has_group;
 use App\Models\module_has_formateur;
@@ -63,7 +63,7 @@ class AddFormateur extends Component
     {
 
         $establishment_id = session()->get('establishment_id');
-        $groupesAll = Group::where('establishment_id', $establishment_id);
+        $groupesAll = group::where('establishment_id', $establishment_id);
         if(!empty($this->selectedBranches)){
              $groupesAll->whereIn('barnch_id',$this->selectedBranches)->get();
 

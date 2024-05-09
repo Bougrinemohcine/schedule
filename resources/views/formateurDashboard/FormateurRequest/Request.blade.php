@@ -1,9 +1,6 @@
 <x-HeaderMenuFormateur>
 
 
-    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-
 
     <div class="button-container-calendar">
         <label class="left-arrow" id="previous" style="display: none;"></label>
@@ -176,7 +173,7 @@
                             @endforeach
                             @if (!$seanceFound)
                                 <td data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
-                                    data-day="{{ $day_of_week }}" data-seanceId="" data-seance="{{ $seance_part }}"
+                                    data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
                                     data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases">
                                 </td>
                             @endif
@@ -221,8 +218,8 @@
                             <select class="form-control" id="group" name="group" required>
                                 @foreach ($GroupsList as $GroupList)
                                     @php
-                                        $groupId = \App\Models\Group::find($GroupList['group_id'])->id;
-                                        $groupName = \App\Models\Group::find($GroupList['group_id'])->group_name;
+                                        $groupId = \App\Models\group::find($GroupList['group_id'])->id;
+                                        $groupName = \App\Models\group::find($GroupList['group_id'])->group_name;
                                     @endphp
                                     <option value="{{ $groupId }}">{{ $groupName }}</option>
                                 @endforeach
@@ -267,11 +264,9 @@
                         </div>
 
                         <br />
-                        <input id="seanceIdInput" name="seanceId" value="">
-                        <button type="button" class="btn btn-info" data-dismiss="modal">Fermer</button>
-                        <button type="submit" class="btn btn-primary">Soumettre</button>
-                        <button type="button" id="deleteButton" class="btn btn-danger">supprimer</button>
 
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Soumettre</button>
 
                     </form>
 
@@ -322,37 +317,6 @@
             document.getElementById('emploiID').value = this.value;
             submitForm();
         });
-        // Event listener for the delete button
-        $(document).on('click', '#deleteButton', function() {
-            console.log('Delete button clicked');
-            // Retrieve the seanceId value
-            var seanceId = $('#seanceIdInput').val();
-            if (seanceId) {
-                // Perform the deletion action here
-                // You can make an AJAX call to your server to delete the data associated with the seanceId
-                // For example:
-                $.ajax({
-                    url: '{{ route('deleteSession') }}',
-                    type: 'POST',
-                    data: {
-                        seanceId: seanceId,
-                        _token: '{{ csrf_token() }}' // Include CSRF token
-                    },
-                    success: function(response) {
-                        // Handle success response
-                    },
-                    error: function(xhr, status, error) {
-                        // Handle error
-                    }
-                });
-
-                // For demonstration purpose, log the seanceId to the console
-                console.log('Deleting data with seanceId:', seanceId);
-            } else {
-                console.log('No seanceId available to delete.');
-            }
-        });
-
 
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -485,13 +449,8 @@
             cells.forEach(function(cell) {
                 cell.addEventListener("click", function() {
 
-                    clickedCell = this;
+                    clickedCell = this; // Assign the clicked cell to clickedCell
                     console.log(clickedCell);
-                    var seanceId = clickedCell.dataset.seanceid || '';
-                    hasSeanceId = !!
-                    seanceId; // Update the variable based on whether seanceId is set
-                    document.getElementById('seanceIdInput').value = seanceId;
-
 
                     $('#groupModuleClassModal').modal('show');
 
@@ -515,7 +474,7 @@
                             ''; // Use an empty string as a default value
                         console.log(
                             seanceIds
-                        ); // Check if the seanceIds value is displayed in the console
+                        ); // Check if the `seanceIds` value is displayed in the console
 
                         var dayPart = (seancePart == "SE1" || seancePart == "SE2") ?
                             "Matin" : "Amidi";
@@ -556,13 +515,6 @@
 
             $('#groupModuleClassModal').on('click', '.btn-danger', function() {
                 $('#groupModuleClassModal').modal('hide');
-            });
-            $('#groupModuleClassModal').on('show.bs.modal', function() {
-                if (hasSeanceId) {
-                    $('.modal-body .btn-danger').show(); // Show the delete button
-                } else {
-                    $('.modal-body .btn-danger').hide(); // Hide the delete button
-                }
             });
 
             $('#cancelButton').click(function() {

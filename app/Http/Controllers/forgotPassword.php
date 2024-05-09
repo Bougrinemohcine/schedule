@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use \Illuminate\Support\Facades\DB;
 use Nette\Utils\Random;
-use App\Models\user;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
 class forgotPassword extends Controller
@@ -22,7 +22,7 @@ class forgotPassword extends Controller
         $request->validate([
             'email'=>'required|email'
         ]);
-        $user = user::where(['email'=> $request->email,'role'=>'admin'])->first();
+        $user = User::where(['email'=> $request->email,'role'=>'admin'])->first();
 
         if(!$user){
             return redirect()->route('ForgotPassword')->withErrors(['errors'=>"Désolé, nous n'avons pas pu trouver votre compte."]);
@@ -62,7 +62,7 @@ public function resetPassword(Request $request){
         return redirect()->back()->withErrors(['errors' =>"Vous avez saisi une adresse e-mail qui n'existe pas."]);
     } else {
         if ($request->password === $request->passwordConfirme) {
-            user::where('email', $request->email)->update(['password'=>bcrypt($request->password)]);
+            User::where('email', $request->email)->update(['password'=>bcrypt($request->password)]);
             DB::table('password_resets')->where('email',$request->email)->delete();
             return redirect()->back()->with(['success'=>'Votre mot de passe a été mis à jour avec succès.']);
         } else {

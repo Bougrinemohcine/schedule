@@ -105,7 +105,7 @@ class classRoomsController extends Controller
                  $data[$class] = $types;
             }
 
-        return view('adminDashboard.addClasses.Determane_Class_type',['classes'=>$class_rooms,"types"=>$class_type,'classes_with_types'=>$data]);
+        return view('adminDashboard.addClasses.Determane_Class_Type',['classes'=>$class_rooms,"types"=>$class_type,'classes_with_types'=>$data]);
     }
 
     //insert classes with  this types

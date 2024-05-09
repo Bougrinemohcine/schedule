@@ -51,7 +51,7 @@ public function create()
         $groupNameWithoutSpaces = str_replace(' ', '', $this->group_name);
 
         // dd($this);
-        $group = Group::create([
+        $group = group::create([
             'id' => $establishment . $groupNameWithoutSpaces,
             'group_name' => $this->group_name,
             'year' => $this->year,
@@ -129,7 +129,7 @@ public function create()
 
     public function delete($id)
     {
-        $group = Group::find($id);
+        $group = group::find($id);
 
         if ($group) {
             $group->delete();

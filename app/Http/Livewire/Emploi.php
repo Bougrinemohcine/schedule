@@ -11,7 +11,7 @@ use App\Models\group;
 use App\Models\module;
 use App\Models\class_room;
 use App\Models\class_room_type;
-use App\Models\user;
+use App\Models\User;
 use App\Models\formateur_has_group;
 use App\Models\EmploiStrictureModel;
 use App\Models\Setting;
@@ -226,6 +226,7 @@ class Emploi extends Component
         ->join('users', 'users.id', '=', 'sissions.user_id')
         ->join('class_rooms', 'class_rooms.id', '=', 'sissions.class_room_id')
         ->where('sissions.establishment_id', $establishment_id)
+        ->where('sissions.status_sission', 'Accepted')
         ->where('sissions.main_emploi_id', session()->get('id_main_emploi'))
         ->get();
 

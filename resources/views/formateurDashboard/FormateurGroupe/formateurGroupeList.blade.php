@@ -22,11 +22,11 @@
                                         @if (isset($GroupsList) && $GroupsList->count() > 0)
                                             @foreach ($GroupsList as $GroupList)
                                                 @php
-                                                    $groupName = \App\Models\Group::find($GroupList['group_id'])
+                                                    $groupName = \App\Models\group::find($GroupList['group_id'])
                                                         ->group_name;
-                                                    $groupBranch = \App\Models\Group::find($GroupList['group_id'])
+                                                    $groupBranch = \App\Models\group::find($GroupList['group_id'])
                                                         ->barnch_id;
-                                                    $groupYear = \App\Models\Group::find($GroupList['group_id'])->year;
+                                                    $groupYear = \App\Models\group::find($GroupList['group_id'])->year;
                                                 @endphp
                                                 <tr>
                                                     <td>{{ $groupName }}</td>

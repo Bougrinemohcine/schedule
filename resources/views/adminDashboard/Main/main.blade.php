@@ -5,6 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
         <title>Schedule Table</title>
 
         <style>
@@ -54,7 +55,7 @@
         @livewireStyles
     </head>
 
-    <body>
+    <body data-layout="detached" data-topbar="colored">
         <livewire:emploi />
         @livewireScripts
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>

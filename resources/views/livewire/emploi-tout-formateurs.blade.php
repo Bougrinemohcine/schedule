@@ -29,13 +29,32 @@
         input[type="checkbox"]:checked+label {
             background-color: #eee;
         }
+        .dateContent{
+            width: 85vw ;
+            display: flex ;
+            justify-content: space-between
+        }
+        @media screen and (max-width:600px){
+            .dateContent{
+            margin-top: 15px ;
+            width: 95vw ;
+            display: flex ;
+            flex-direction: column
+        }
+        .hide{
+            display: none ;
+        }
+        .data{
+            margin-top:5px
+        }
+        }
     </style>
 
     <h2>Schedule Table</h2>
 
 
     <div class="table-responsive">
-        <h3 style="margin: auto ; width :fit-content;">Emploi Global hebdomadaire</h3>
+        <h3 class="hide" style="margin: auto ; width :fit-content;">Emploi Global hebdomadaire</h3>
         @if($tableEmploi[0]->toutFormateur == '1')
         <div class="input-group rounded">
             <input wire:model='SearchValue' style="max-width:400px" type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
@@ -46,7 +65,7 @@
 
         <table id="tbl_exporttable_to_xls" style="overflow:scroll" class="col-md-12 ">
 
-            <div style="width:70rem ;display: flex ;justify-content:space-between ;marign-top:15px ">
+            <div class="dateContent">
                 @if ($this->checkValues[0]->modeRamadan)
                 <h4 style="marign-top:15px " >
                     SE1 = 08:30 - 10:20 SE2 = 10:25 - 12:15 SE3 = 12:45 - 14:35 SE4 = 14:40 - 16:30
@@ -58,13 +77,14 @@
 
 
                     @if (!$dataEmploi->isEmpty())
-                    <h4 style="float: right; margin-top: 15px;">
+                    <h4 class='data' style="float: right; ">
                         @foreach ($dataEmploi as $item)
                             Du: {{ $item->datestart }} au {{ $item->dateend }}
                         @endforeach
                     </h4>
                     @else
-                    <h4 style="float: right; margin-top: 15px; padding: 0px 5px 0px 5px; border-radius: 3px; background-color: #dc3545; color: white;">
+                    <h4 class='data' style="float: right;  padding: 0px 5px 0px 5px;
+                     border-radius: 3px; background-color: #dc3545; color: white;">
                         Il faut créer un emploi
                     </h4>
                     @endif
@@ -185,8 +205,7 @@
 
     </div>
 
-    <button onclick="ExportToExcel('xlsx')" class=" btn  btn-primary mt-5">telecharger</button>
-<button class="btn  btn-primary mt-5" wire:click='AddAutherEmploi'> <span class="mdi mdi-plus"></span> Ajouter un autre</button>
+    <button onclick="ExportToExcel('xlsx')" class=" btn  btn-primary mt-5">télécharger</button>
       <!-- Button trigger modal -->
 <button type="button" class="btn btn-danger mt-5 col-3" data-bs-toggle="modal" data-bs-target="#exampleModal1">
     Supprimer tout

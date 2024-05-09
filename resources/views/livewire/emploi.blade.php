@@ -1,6 +1,26 @@
 <div>
+    <style>
+          .dateContent{
+            width: 85vw ;
+            display: flex ;
+            justify-content: space-between
+        }
+        @media screen and (max-width:600px){
+            .dateContent{
+            margin-top: 15px ;
+            width: 95vw ;
+            display: flex ;
+            flex-direction: column
+        }
+        .hide{
+            display: none ;
+        }
+        .data{
+            margin-top:5px
+        }
+        }
 
-
+    </style>
     @php
 
 @endphp
@@ -8,7 +28,7 @@
 
 
     <div  class="table-responsive">
-        <h3 style="margin: auto ; width :fit-content;">Emploi Global hebdomadaire</h3>
+        <h3 class="hide" style="margin: auto ; width :fit-content;">Emploi Global hebdomadaire</h3>
         @if($tableEmploi[0]->toueGroupe == '1')
         <div id="SearchInput" class="input-group rounded">
             <input wire:model='SearchValue' style="max-width:400px" type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
@@ -17,35 +37,40 @@
             </span>
         </div>
 
-        <table id="tbl_exporttable_to_xls"  style="overflow:scroll" class="col-md-12 ">
 
 
-            <thead>
-                <div style="width:70rem ; display: flex ;justify-content:space-between ;marign-top:15px ">
-                    @if ($this->checkValues[0]->modeRamadan)
-                    <h4 style="marign-top:15px " >
-                        SE1 = 08:30 - 10:20 SE2 = 10:25 - 12:15 SE3 = 12:45 - 14:35 SE4 = 14:40 - 16:30
+
+
+        <table id="tbl_exporttable_to_xls" style="overflow:scroll" class="col-md-12 ">
+            <div class="dateContent">
+                @if ($this->checkValues[0]->modeRamadan)
+                <h4 style="marign-top:15px " >
+                    SE1 = 08:30 - 10:20 SE2 = 10:25 - 12:15 SE3 = 12:45 - 14:35 SE4 = 14:40 - 16:30
+                </h4>
+                @else
+                <h4> SE1 = 08:30 - 11:20 SE2 = 11:30 - 13:30 SE3 = 13:30 - 16:20 SE4 = 16:30 - 18:30 </h4>
+                @endif
+
+
+
+                    @if (!$dataEmploi->isEmpty())
+                    <h4 class='data' style="float: right; ">
+                        @foreach ($dataEmploi as $item)
+                            Du: {{ $item->datestart }} au {{ $item->dateend }}
+                        @endforeach
                     </h4>
                     @else
-                    <h4> SE1 = 08:30 - 11:20 SE2 = 11:30 - 13:30 SE3 = 13:30 - 16:20 SE4 = 16:30 - 18:30 </h4>
+                    <h4 class='data' style="float: right;  padding: 0px 5px 0px 5px;
+                     border-radius: 3px; background-color: #dc3545; color: white;">
+                        Il faut créer un emploi
+                    </h4>
                     @endif
 
 
+             </div>
 
-                        @if (!$dataEmploi->isEmpty())
-                        <h4 style="float: right; margin-top: 15px;">
-                            @foreach ($dataEmploi as $item)
-                                Du: {{ $item->datestart }} au {{ $item->dateend }}
-                            @endforeach
-                        </h4>
-                        @else
-                        <h4 style="float: right; margin-top: 15px; padding: 0px 5px 0px 5px; border-radius: 3px; background-color: #dc3545; color: white;">
-                            Il faut créer un emploi
-                        </h4>
-                        @endif
+            <thead>
 
-
-                 </div>
 
                 <tr class="day">
                     <th style="width: 140px !important"  rowspan="3">Groups Name</th>
@@ -126,11 +151,11 @@
                                         data-bs-toggle="modal"
                                         data-bs-target="#exampleModal"
                                         class="TableCases"
-                                        style="background-color:{{ $isActive ? 'rgba(12, 72, 166, 0.3)' :  ''}}"
+                                        style="background-color:{{ $isActive ? 'rgba(12, 72, 166, 0.3)' :  ''}} ;"
                                         id="{{ $day.$sessionType.$group->id }}">
-                                        {{ $sission->sission_type }}</br>
-                                        {{ $sission->class_name }}</br>
-                                        {{ $sission->user_name }}</br>
+                                        {{ $sission->sission_type }}<br>
+                                        {{ $sission->class_name }}<br>
+                                        {{ $sission->user_name }}<br>
                                         {{ preg_replace('/^\d/' , ' ' , $sission->module_name ) }}
                                     </td>
                                     @break
@@ -142,6 +167,7 @@
                                     data-bs-toggle="modal"
                                     data-bs-target="#exampleModal"
                                     class="TableCases"
+                                    {{-- style="white-space: nowrap;" --}}
                                     id="{{ $day.$sessionType.$group->id }}">
                                 </td>
                             @endif
@@ -155,18 +181,16 @@
                 @endif
             </tbody>
         </table>
+
         @else
                 @include('livewire.tout-groupes22')
                 @endif
     </div>
 
-    <button onclick="ExportToExcel('xlsx')" class=" btn  btn-primary mt-5">
-        telecharger</button>
-<button class="btn  btn-primary mt-5" wire:click='AddAutherEmploi'> <span class="mdi mdi-plus"></span> Ajouter un autre</button>
+    <button id="sheetjsexport" onclick="ExportToExcel('xlsx')" class=" btn  btn-primary mt-5">  télécharger</button>
+
       <!-- Button trigger modal -->
-<button type="button" class="btn btn-danger mt-5 col-3" data-bs-toggle="modal" data-bs-target="#exampleModal1">
-    Supprimer tout
-  </button>
+<button type="button" class="btn btn-danger mt-5 col-3" data-bs-toggle="modal" data-bs-target="#exampleModal1"> Supprimer tout</button>
   <!-- Modal for delete-->
   <div wire:ignore class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -197,6 +221,9 @@
            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
            XLSX.writeFile(wb, fn || ('Schedule.' + (type || 'xlsx')));
       }
+
+
+
 
 
   document.addEventListener('livewire:load', function () {
@@ -245,4 +272,5 @@
 });
 
     </script>
+
 </div>

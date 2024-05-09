@@ -6,11 +6,11 @@ use Livewire\Component;
 use App\Models\main_emploi;
 use Illuminate\Support\Facades\DB;
 use App\Models\group;
-use App\Models\user;
+use App\Models\User;
 use App\Models\module;
 use App\Models\class_room;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Setting ;
+use App\Models\Setting;
 use App\Models\class_room_type;
 use Illuminate\Support\Facades\Session;
 use App\Models\sission;
@@ -36,52 +36,57 @@ class TousLesDemandes extends Component
     public $idMainEmploi;
     public $sissions  = [];
     public $formateurs;
-    public $selectedValue;//i will sit default value here
+    public $selectedValue; //i will sit default value here
     public $selectedType;
     public $groups;
     public $receivedVariable;
     public $Main_emplois;
-    public $checkValues ;
-    public $groupes = [] ;
-    public $selectedGroups ;
+    public $checkValues;
+    public $groupes = [];
+    public $selectedGroups;
     public $brancheId;
     public $baranches;
     public $Group_has_formateurs;
     public $yearFilter = [];
-    public $selectedYear ;
+    public $selectedYear;
     public $SearchValue;
     public $formateurId;
     public $groupID;
 
 
     protected $listeners = [
-        'receiveidEmploiid'=>'receiveidEmploiid',
-        'fresh'=>'$refresh'];
+        'receiveidEmploiid' => 'receiveidEmploiid',
+        'fresh' => '$refresh'
+    ];
 
-        public function mount()
-        {
-            // Fetch the last emploi from the database
-            $lastEmploi = main_emploi::latest()->first();
+    public function mount()
+    {
+        // Fetch the last emploi from the database
+        $lastEmploi = main_emploi::latest()->first();
 
+        // Check if $lastEmploi exists
+        if ($lastEmploi) {
             // Set the default value for selectedValue
             $this->selectedValue = $lastEmploi->id;
         }
-    public function getidCase($variable){
-        $this->receivedVariable = $variable;
-        $this->selectedGroups = [];
-         $this->brancheId = null;
-         $this->formateur = null ;
-
     }
 
-// NEWADD
-public $isCaseEmpty = true;
+    public function getidCase($variable)
+    {
+        $this->receivedVariable = $variable;
+        $this->selectedGroups = [];
+        $this->brancheId = null;
+        $this->formateur = null;
+    }
+
+    // NEWADD
+    public $isCaseEmpty = true;
 
     public function updateCaseStatus($isEmpty, $variable)
     {
         $this->isCaseEmpty = $isEmpty;
         $this->receivedVariable = $variable;
-        $this->formateurId =substr($variable , 11);
+        $this->formateurId = substr($variable, 11);
         $this->brancheId = null;
         $this->formateur = null;
         $this->selectedGroups = [];
@@ -114,7 +119,7 @@ public $isCaseEmpty = true;
                 'user_id' => $this->formateurId,
                 'dure_sission' => $dure_sission,
             ])->first(); // Use first() to get a single instance
-        }else{
+        } else {
             $session = sission::where([
                 'main_emploi_id' => $this->selectedValue,
                 'day' => $day,
@@ -142,124 +147,122 @@ public $isCaseEmpty = true;
     }
 
     public function Accepte()
-{
-    $idcase = $this->receivedVariable;
-    $day = substr($idcase, 0, 3);
-    $day_part = substr($idcase, 3, 5);
-    $dure_sission = substr($idcase, 8, 3);
-    $group_id = substr($idcase, 11);
-    $user_id = substr($idcase, 11);
-
-    if (is_numeric($user_id)) {
-        $session = sission::where([
-            'main_emploi_id' => $this->selectedValue,
-            'day' => $day,
-            'day_part' => $day_part,
-            'user_id' => $this->formateurId,
-            'dure_sission' => $dure_sission,
-        ])->first();
-    }else{
-
-        $session = sission::where([
-            'main_emploi_id' => $this->selectedValue,
-            'day' => $day,
-            'day_part' => $day_part,
-            'group_id' => $group_id,
-            'dure_sission' => $dure_sission,
-        ])->first(); // Use first() to get a single instance
-    }
-
-    if ($session) {
-        $session->status_sission = 'Accepted';
-        $session->save();
-        $this->alert('success', 'Session accepted successfully.', [
-            'position' => 'center',
-            'timer' => 3000,
-            'toast' => true,
-        ]);
-    } else {
-        $this->alert('error', 'Session not found.', [
-            'position' => 'center',
-            'timer' => 3000,
-            'toast' => true,
-        ]);
-    }
-}
-//--------------------------------------------------------------- NEWADD
-
-public function receiveidEmploiid($variable){
-     session(['idEmploiSelected' => $variable]);
-}
-
-public function UpdateSession()
-{
-    try {
+    {
         $idcase = $this->receivedVariable;
         $day = substr($idcase, 0, 3);
         $day_part = substr($idcase, 3, 5);
+        $dure_sission = substr($idcase, 8, 3);
         $group_id = substr($idcase, 11);
         $user_id = substr($idcase, 11);
-        $dure_sission = substr($idcase, 8, 3);
 
-
-        $sessionData = [
-            'day' => $day,
-            'day_part' => $day_part,
-            'dure_sission' => $dure_sission,
-            'module_id' => $this->module,
-            'establishment_id' => session()->get('establishment_id'),
-            'class_room_id' => $this->salle,
-            'main_emploi_id' => session()->get('idEmploiSelected'),
-            'demand_emploi_id' => null,
-            'message' => null,
-            'sission_type' => $this->TypeSesion,
-            'status_sission' => 'Accepted',
-        ];
-        // dd($sessionData);
-
-        if ($this->selectedType === "Group") {
-            // for group side
-            $sessionData['group_id'] = $group_id;
-            $sessionData['user_id'] = $this->formateur;
+        if (is_numeric($user_id)) {
+            $session = sission::where([
+                'main_emploi_id' => $this->selectedValue,
+                'day' => $day,
+                'day_part' => $day_part,
+                'user_id' => $this->formateurId,
+                'dure_sission' => $dure_sission,
+            ])->first();
+        } else {
 
             $session = sission::where([
-                'main_emploi_id' => session()->get('idEmploiSelected'),
+                'main_emploi_id' => $this->selectedValue,
                 'day' => $day,
                 'day_part' => $day_part,
                 'group_id' => $group_id,
                 'dure_sission' => $dure_sission,
-            ])->first();
-
-        } else {
-            // for formateur group side
-            $sessionData['group_id'] = $this->group;
-            $sessionData['user_id'] = $user_id;
-            $session = sission::where([
-                'main_emploi_id' => session()->get('idEmploiSelected'),
-                'day' => $day,
-                'day_part' => $day_part,
-                'user_id' => $user_id,
-                'dure_sission' => $dure_sission,
-            ])->first();
+            ])->first(); // Use first() to get a single instance
         }
 
         if ($session) {
-            $session->update($sessionData);
+            $session->status_sission = 'Accepted';
+            $session->save();
+            $this->alert('success', 'Session accepted successfully.', [
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+            ]);
         } else {
-            sission::create($sessionData);
+            $this->alert('error', 'Session not found.', [
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+            ]);
         }
-
-        $this->emit('fresh');
-    } catch (\Exception $e) {
-        $this->alert('error', $e->getMessage() , [
-            'position' => 'center',
-            'timer' => 3000,
-            'toast' => true,
-        ]);
-
-
     }
-}
+    //--------------------------------------------------------------- NEWADD
+
+    public function receiveidEmploiid($variable)
+    {
+        session(['idEmploiSelected' => $variable]);
+    }
+
+    public function UpdateSession()
+    {
+        try {
+            $idcase = $this->receivedVariable;
+            $day = substr($idcase, 0, 3);
+            $day_part = substr($idcase, 3, 5);
+            $group_id = substr($idcase, 11);
+            $user_id = substr($idcase, 11);
+            $dure_sission = substr($idcase, 8, 3);
+
+
+            $sessionData = [
+                'day' => $day,
+                'day_part' => $day_part,
+                'dure_sission' => $dure_sission,
+                'module_id' => $this->module,
+                'establishment_id' => session()->get('establishment_id'),
+                'class_room_id' => $this->salle,
+                'main_emploi_id' => session()->get('idEmploiSelected'),
+                'demand_emploi_id' => null,
+                'message' => null,
+                'sission_type' => $this->TypeSesion,
+                'status_sission' => 'Accepted',
+            ];
+            // dd($sessionData);
+
+            if ($this->selectedType === "Group") {
+                // for group side
+                $sessionData['group_id'] = $group_id;
+                $sessionData['user_id'] = $this->formateur;
+
+                $session = sission::where([
+                    'main_emploi_id' => session()->get('idEmploiSelected'),
+                    'day' => $day,
+                    'day_part' => $day_part,
+                    'group_id' => $group_id,
+                    'dure_sission' => $dure_sission,
+                ])->first();
+            } else {
+                // for formateur group side
+                $sessionData['group_id'] = $this->group;
+                $sessionData['user_id'] = $user_id;
+                $session = sission::where([
+                    'main_emploi_id' => session()->get('idEmploiSelected'),
+                    'day' => $day,
+                    'day_part' => $day_part,
+                    'user_id' => $user_id,
+                    'dure_sission' => $dure_sission,
+                ])->first();
+            }
+
+            if ($session) {
+                $session->update($sessionData);
+            } else {
+                sission::create($sessionData);
+            }
+
+            $this->emit('fresh');
+        } catch (\Exception $e) {
+            $this->alert('error', $e->getMessage(), [
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+            ]);
+        }
+    }
 
 
     public function DeleteSession()
@@ -269,26 +272,25 @@ public function UpdateSession()
         $day_part = substr($idcase, 3, 5);
         $group_id = substr($idcase, 11);
         $user_id = substr($idcase, 11);
-        $dure_sission = substr($idcase,8,3);
+        $dure_sission = substr($idcase, 8, 3);
 
-    if ($this->selectedType === "Group") {
-    sission::where([
-        'main_emploi_id' => session()->get('id_main_emploi'),
-        'day' => $day,
-        'day_part' => $day_part,
-        'group_id' => $group_id,
-        'dure_sission' => $dure_sission
-    ])->delete();
-    }else{
-        sission::where([
-            'main_emploi_id' => session()->get('id_main_emploi'),
-            'day' => $day,
-            'day_part' => $day_part,
-            'user_id' => $user_id,
-            'dure_sission' => $dure_sission
-        ])->delete();
-    }
-
+        if ($this->selectedType === "Group") {
+            sission::where([
+                'main_emploi_id' => session()->get('id_main_emploi'),
+                'day' => $day,
+                'day_part' => $day_part,
+                'group_id' => $group_id,
+                'dure_sission' => $dure_sission
+            ])->delete();
+        } else {
+            sission::where([
+                'main_emploi_id' => session()->get('id_main_emploi'),
+                'day' => $day,
+                'day_part' => $day_part,
+                'user_id' => $user_id,
+                'dure_sission' => $dure_sission
+            ])->delete();
+        }
     }
 
 
@@ -304,42 +306,42 @@ public function UpdateSession()
         $this->selectedValue = $value;
     }
     public function findSeance()
-{
-    $idcase = $this->receivedVariable;
-    $day = substr($idcase, 0, 3);
-    $day_part = substr($idcase, 3, 5);
-    $user_id = substr($idcase, 11);
-    $group_id = substr($idcase, 11);
-    $dure_sission = substr($idcase, 8, 3);
+    {
+        $idcase = $this->receivedVariable;
+        $day = substr($idcase, 0, 3);
+        $day_part = substr($idcase, 3, 5);
+        $user_id = substr($idcase, 11);
+        $group_id = substr($idcase, 11);
+        $dure_sission = substr($idcase, 8, 3);
 
-    $seance = null;
+        $seance = null;
 
-    // Check if $user_id is numeric to determine if it's a formateur ID
-    if (is_numeric($user_id)) {
-        // Query using user ID
-        $seance = sission::where([
-            'main_emploi_id' => $this->selectedValue,
-            'day' => $day,
-            'day_part' => $day_part,
-            'user_id' => $user_id,
-            'dure_sission' => $dure_sission
-        ])->get();
-    } else {
-        // Query using group ID
-        $seance = sission::where([
-            'main_emploi_id' => $this->selectedValue,
-            'day' => $day,
-            'day_part' => $day_part,
-            'group_id' => $group_id,
-            'dure_sission' => $dure_sission
-        ])->get();
+        // Check if $user_id is numeric to determine if it's a formateur ID
+        if (is_numeric($user_id)) {
+            // Query using user ID
+            $seance = sission::where([
+                'main_emploi_id' => $this->selectedValue,
+                'day' => $day,
+                'day_part' => $day_part,
+                'user_id' => $user_id,
+                'dure_sission' => $dure_sission
+            ])->get();
+        } else {
+            // Query using group ID
+            $seance = sission::where([
+                'main_emploi_id' => $this->selectedValue,
+                'day' => $day,
+                'day_part' => $day_part,
+                'group_id' => $group_id,
+                'dure_sission' => $dure_sission
+            ])->get();
+        }
+
+        return $seance ?: collect(); // Return an empty collection if $seance is null
     }
 
-    return $seance ?: collect(); // Return an empty collection if $seance is null
-}
 
-
-  // Livewire component method
+    // Livewire component method
     public function AccepteAlll($groupID)
     {
         // Find all sessions for the current group and main_emploi
@@ -390,19 +392,20 @@ public function UpdateSession()
         $this->render();
     }
     // for delate all sessions
-    public function deleteAllSessions(){
+    public function deleteAllSessions()
+    {
         DB::table('sissions')->where('establishment_id', session()->get('establishment_id'))
-        ->where('main_emploi_id',  $this->selectedValue)->delete();
+            ->where('main_emploi_id',  $this->selectedValue)->delete();
         DB::table('main_emploi')->where('establishment_id', session()->get('establishment_id'))
-        ->where('id',  $this->selectedValue)->delete();
+            ->where('id',  $this->selectedValue)->delete();
 
-       $this->Alert("success","Vous avez supprimé l'emploi du template.", [
-        'position' => 'center',
-        'timer' => 3000,
-        'toast' => false,
-        'width' =>650,
-       ]);
-       return redirect()->route('toutlesEmploi');
+        $this->Alert("success", "Vous avez supprimé l'emploi du template.", [
+            'position' => 'center',
+            'timer' => 3000,
+            'toast' => false,
+            'width' => 650,
+        ]);
+        return redirect()->route('toutlesEmploi');
     }
 
     public function render()
@@ -411,53 +414,53 @@ public function UpdateSession()
         // Initialize variables
         $establishment_id = session()->get('establishment_id');
         $this->yearFilter = DB::table('groups')
-        ->where('establishment_id', $establishment_id)
-        ->select('year')
-        ->distinct()
-        ->pluck('year');
+            ->where('establishment_id', $establishment_id)
+            ->select('year')
+            ->distinct()
+            ->pluck('year');
 
 
-        $this->checkValues = Setting::select('typeSession','branch','year','module','formateur','salle','typeSalle')
-                            ->where('userId', Auth::id())->get();
+        $this->checkValues = Setting::select('typeSession', 'branch', 'year', 'module', 'formateur', 'salle', 'typeSalle')
+            ->where('userId', Auth::id())->get();
 
         // Fetch data from branches table
         $this->baranches = DB::table('branches')
-                        ->select('branches.*')
-                        ->join('formateur_has_filier', 'formateur_has_filier.barnch_id', '=', 'branches.id')
-                        ->where('formateur_has_filier.formateur_id', substr($this->receivedVariable, 11))
-                        ->get();
+            ->select('branches.*')
+            ->join('formateur_has_filier', 'formateur_has_filier.barnch_id', '=', 'branches.id')
+            ->where('formateur_has_filier.formateur_id', substr($this->receivedVariable, 11))
+            ->get();
 
         // Fetch data related to formateurs
         $allFormateursByGroup = User::select('users.*')
-                            ->join('formateur_has_groups as f', 'f.formateur_id', '=', 'users.id')
-                            ->where('users.status', '=', 'active')
-                            ->where('f.group_id', substr($this->receivedVariable, 11))
-                            ->get();
+            ->join('formateur_has_groups as f', 'f.formateur_id', '=', 'users.id')
+            ->where('users.status', '=', 'active')
+            ->where('f.group_id', substr($this->receivedVariable, 11))
+            ->get();
 
         // Fetch main emploi data
         $this->Main_emplois  = DB::table('main_emploi')
-                            ->where('establishment_id', $establishment_id)
-                            ->orderBy('datestart', 'desc')
-                            ->get();
+            ->where('establishment_id', $establishment_id)
+            ->orderBy('datestart', 'desc')
+            ->get();
 
         // Fetch modules data
-      if($this->selectedType !== 'Group'){
-                $this->modules = Module::join('module_has_formateur as MHF', 'MHF.module_id', '=', 'modules.id')
+        if ($this->selectedType !== 'Group') {
+            $this->modules = Module::join('module_has_formateur as MHF', 'MHF.module_id', '=', 'modules.id')
                 ->join('groupe_has_modules as GHM', 'GHM.module_id', '=', 'modules.id')
                 ->where('modules.establishment_id', $establishment_id)
                 ->where('MHF.formateur_id', substr($this->receivedVariable, 11))
                 ->where('GHM.group_id', $this->group)
                 ->select('modules.*')
                 ->get();
-      }else{
-                $this->modules = Module::join('module_has_formateur as MHF', 'MHF.module_id', '=', 'modules.id')
+        } else {
+            $this->modules = Module::join('module_has_formateur as MHF', 'MHF.module_id', '=', 'modules.id')
                 ->join('groupe_has_modules as GHM', 'GHM.module_id', '=', 'modules.id')
                 ->where('modules.establishment_id', $establishment_id)
                 ->where('MHF.formateur_id', $this->formateur)
                 ->where('GHM.group_id', substr($this->receivedVariable, 11))
                 ->select('modules.*')
                 ->get();
-      }
+        }
 
         // Fetch class rooms data
         $this->salles = Class_room::where('id_establishment', $establishment_id)->get();
@@ -465,26 +468,26 @@ public function UpdateSession()
 
         // Fetch sissions data
         $sissions = DB::table('sissions')
-                        ->select('sissions.*', 'modules.id as module_name', 'groups.group_name', 'users.*', 'class_rooms.class_name')
-                        ->leftJoin('modules', 'modules.id', '=', 'sissions.module_id')
-                        ->join('groups', 'groups.id', '=', 'sissions.group_id')
-                        ->join('users', 'users.id', '=', 'sissions.user_id')
-                        ->join('class_rooms', 'class_rooms.id', '=', 'sissions.class_room_id')
-                        ->where('sissions.establishment_id', $establishment_id)
-                        ->where('sissions.main_emploi_id', $this->selectedValue)
-                        ->get();
+    ->select('sissions.*', 'modules.id as module_name', 'groups.group_name', 'users.*', 'class_rooms.class_name')
+    ->leftJoin('modules', 'modules.id', '=', 'sissions.module_id')
+    ->join('groups', 'groups.id', '=', 'sissions.group_id')
+    ->join('users', 'users.id', '=', 'sissions.user_id')
+    ->join('class_rooms', 'class_rooms.id', '=', 'sissions.class_room_id')
+    ->where('sissions.establishment_id', $establishment_id)
+    ->where('sissions.main_emploi_id', $this->selectedValue)
+    ->get();
+;
 
         // Fetch groups data
-        $groupsQuery = Group::join('formateur_has_groups as f', 'f.group_id', '=', 'groups.id')
-                        ->where('groups.establishment_id', $establishment_id)
-                        ->where('f.formateur_id', substr($this->receivedVariable, 11))
-                        ->select('groups.id', 'groups.group_name');
+        $groupsQuery = group::join('formateur_has_groups as f', 'f.group_id', '=', 'groups.id')
+            ->where('groups.establishment_id', $establishment_id)
+            ->where('f.formateur_id', substr($this->receivedVariable, 11))
+            ->select('groups.id', 'groups.group_name');
 
-        if ($this->brancheId !== 'Filiére' && $this->brancheId  ) {
+        if ($this->brancheId !== 'Filiére' && $this->brancheId) {
             $groupsQuery->where('groups.barnch_id', $this->brancheId);
-
         }
-        if($this->selectedYear !=='année' && $this->selectedYear ){
+        if ($this->selectedYear !== 'année' && $this->selectedYear) {
 
             $groupsQuery->where('groups.year', "{$this->selectedYear}");
         }
@@ -507,8 +510,8 @@ public function UpdateSession()
 
 
         // Filter data
-        $this->Group_has_formateurs = $allFormateursByGroup->reject(function($formateur) use ($removeFormateur){
-            return in_array($formateur->id , $removeFormateur);
+        $this->Group_has_formateurs = $allFormateursByGroup->reject(function ($formateur) use ($removeFormateur) {
+            return in_array($formateur->id, $removeFormateur);
         });
 
         $this->salles = $this->salles->reject(function ($salle) use ($removeSalles) {
@@ -520,16 +523,15 @@ public function UpdateSession()
         });
 
         // Fetch additional data
-        $this->sissions = $sissions ;
-        $this->groups = Group::where('group_name' ,'like','%'.$this->SearchValue.'%')->where('establishment_id', $establishment_id)->get();
-        $this->formateurs = User::where('user_name','like','%'.$this->SearchValue.'%')->where(['establishment_id' => $establishment_id, 'role' => 'formateur'])->get();
+        $this->sissions = $sissions;
+        $this->groups = group::where('group_name', 'like', '%' . $this->SearchValue . '%')->where('establishment_id', $establishment_id)->get();
+        $this->formateurs = User::where('user_name', 'like', '%' . $this->SearchValue . '%')->where(['establishment_id' => $establishment_id, 'role' => 'formateur'])->get();
 
         // NEWADD
         $allseances = sission::where('main_emploi_id', $this->selectedValue)->get();
 
         $seance = $this->findSeance()->first();
         // Render view
-        return view('livewire.tous-les-demandes',['seance' => $seance,'allseances'=>$allseances]);
+        return view('livewire.tous-les-demandes', ['seance' => $seance, 'allseances' => $allseances]);
     }
-
-  }
+}

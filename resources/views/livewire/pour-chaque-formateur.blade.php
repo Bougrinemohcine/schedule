@@ -48,6 +48,26 @@
 
     }
 
+    .dateContent{
+            width: 85vw ;
+            display: flex ;
+            justify-content: space-between
+        }
+        @media screen and (max-width:600px){
+            .dateContent{
+            margin-top: 15px ;
+            width: 95vw ;
+            display: flex ;
+            flex-direction: column
+        }
+        .hide{
+            display: none ;
+        }
+        .data{
+            margin-top:5px
+        }
+        }
+
 
     </style>
 
@@ -84,26 +104,32 @@
 
         <table  id="tbl_exporttable_to_xls" style="overflow:scroll ;" class="col-md-12 ">
 
-            <div style="display: flex ;justify-content:space-between ;marign-top:50px ;width:70rem">
+            <div class="dateContent">
                 @if ($this->checkValues[0]->modeRamadan)
-                    <h4 style="marign-top:15px " >
-                        SE1 = 08:30 - 10:20 SE2 = 10:25 - 12:15 SE3 = 12:45 - 14:35 SE4 = 14:40 - 16:30
-                    </h4>
+                <h4 style="marign-top:15px " >
+                    SE1 = 08:30 - 10:20 SE2 = 10:25 - 12:15 SE3 = 12:45 - 14:35 SE4 = 14:40 - 16:30
+                </h4>
                 @else
-                    <h4> SE1 = 08:30 - 11:20 SE2 = 11:30 - 13:30 SE3 = 13:30 - 16:20 SE4 = 16:30 - 18:30 </h4>
+                <h4> SE1 = 08:30 - 11:20 SE2 = 11:30 - 13:30 SE3 = 13:30 - 16:20 SE4 = 16:30 - 18:30 </h4>
                 @endif
+
+
+
                     @if (!$dataEmploi->isEmpty())
-                    <h4 >
+                    <h4 style="float: right; ">
                         @foreach ($dataEmploi as $item)
                             Du: {{ $item->datestart }} au {{ $item->dateend }}
                         @endforeach
                     </h4>
                     @else
-                    <h4 style="float: right; margin-top: 15px; padding: 0px 5px 0px 5px; border-radius: 3px; background-color: #dc3545; color: white;">
+                    <h4 style="float: right;  padding: 0px 5px 0px 5px;
+                     border-radius: 3px; background-color: #dc3545; color: white;">
                         Il faut créer un emploi
                     </h4>
                     @endif
-            </div>
+
+
+             </div>
 
              @if($tableEmploi[0]->formateur == '1')
       <thead>
@@ -182,7 +208,7 @@
                                 $SalleValue = $sission->class_name ;
                                 $Typevalue = $sission->sission_type ;
                                 $ModuleValue = preg_replace('/^\d+/', '', $sission->module_name);
-                              
+
                             @endphp
                         @endif
                     @endforeach
@@ -212,9 +238,7 @@
         </table>
     </div>
 
-    <button onclick="ExportToExcel('xlsx')" class=" btn  btn-primary mt-5">
-        telecharger</button>
-<button class="btn  btn-primary mt-5" wire:click='AddAutherEmploi'> <span class="mdi mdi-plus"></span> Ajouter un autre</button>
+    <button onclick="ExportToExcel('xlsx')" class=" btn  btn-primary mt-5"> télécharger</button>
       <!-- Button trigger modal -->
 <button type="button" class="btn btn-danger mt-5 col-3" data-bs-toggle="modal" data-bs-target="#exampleModal1">
     Supprimer tout

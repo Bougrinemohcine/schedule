@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\DB ;
-use App\Models\Group ;
+use App\Models\group ;
 use App\Models\group_has_module;
 use App\Models\module ;
 use DeepCopy\Filter\Filter;
@@ -30,7 +30,7 @@ class UpdateGroupes extends Component
     public function mount($group, $modules , $branches)
     {
         $this->groupID = $group['group_id'];
-        $groupModel = Group::find($group['group_id']);
+        $groupModel = group::find($group['group_id']);
         $this->group_name = $groupModel->group_name;
         $this->year = $groupModel->year;
         $this->branches = $branches;
@@ -52,7 +52,7 @@ class UpdateGroupes extends Component
                 
             ]);
 
-            $group = Group::find($this->groupID);
+            $group = group::find($this->groupID);
             $group->group_name = $this->group_name;
             $group->year = $this->year;
             $group->barnch_id = $this->selectedBranch;

@@ -107,6 +107,7 @@
         Route::post('/AddAutherEmploi', [Schedule::class, 'AddAutherEmploi'])->name('AddAutherEmploies');
         Route::get('/toutlesEmploi', [Schedule::class, 'toutlesEmploi'])->name('toutlesEmploi');
         Route::get('/AllRequest', [Schedule::class, 'AllRequest'])->name('AllRequest');
+        Route::get('/formateurRequest', [Schedule::class, 'FormateurRequest'])->name('FormateurRequest');
         //end Schedule routes
         Route::get('/add-class-rooms', [classRoomsController::class, 'index'])->name('add-class-rooms');
         Route::post('/insertClasses', [classRoomsController::class, 'insert'])->name('insertClasses');

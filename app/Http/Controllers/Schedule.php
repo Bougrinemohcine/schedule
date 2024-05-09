@@ -60,7 +60,7 @@ class Schedule extends Controller
                 'dateend' => $dateEnd,
                 'establishment_id' => $establishment_id,
             ]);
-            
+
 
             if ($main_emploi) {
                 session(['id_main_emploi' => $main_emploi->id, 'datestart' => $main_emploi->datestart]);
@@ -122,6 +122,11 @@ class Schedule extends Controller
         return view('adminDashboard.Main.AllRequest');
 
     }
-      
+
+    public function FormateurRequest(){
+        return view('formateurDashboard.FormateurRequest.Request');
+
+    }
+
 
 }

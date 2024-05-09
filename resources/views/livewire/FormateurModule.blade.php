@@ -16,7 +16,7 @@
                 aria-label="Close"></button>
         </div>
         {{-- <form wire:submit.prevent="createSession"> --}}
-            <form wire:submit.prevent='UpdateSession'>
+            <form wire:submit.prevent=' '>
             <div class="modal-body">
                 <div style="display: flex">
                     {{-- branches --}}

@@ -155,16 +155,7 @@ class TousLesDemandes extends Component
         $group_id = substr($idcase, 11);
         $user_id = substr($idcase, 11);
 
-        if (is_numeric($user_id)) {
-            $session = sission::where([
-                'main_emploi_id' => $this->selectedValue,
-                'day' => $day,
-                'day_part' => $day_part,
-                'user_id' => $this->formateurId,
-                'dure_sission' => $dure_sission,
-            ])->first();
-        } else {
-
+        if ($this->selectedType === "Group") {
             $session = sission::where([
                 'main_emploi_id' => $this->selectedValue,
                 'day' => $day,
@@ -172,6 +163,14 @@ class TousLesDemandes extends Component
                 'group_id' => $group_id,
                 'dure_sission' => $dure_sission,
             ])->first(); // Use first() to get a single instance
+        } else {
+            $session = sission::where([
+                'main_emploi_id' => $this->selectedValue,
+                'day' => $day,
+                'day_part' => $day_part,
+                'user_id' => $this->formateurId,
+                'dure_sission' => $dure_sission,
+            ])->first();
         }
 
         if ($session) {
@@ -317,13 +316,14 @@ class TousLesDemandes extends Component
         $seance = null;
 
         // Check if $user_id is numeric to determine if it's a formateur ID
-        if (is_numeric($user_id)) {
+        if ($this->selectedType === "Group") {
             // Query using user ID
+
             $seance = sission::where([
                 'main_emploi_id' => $this->selectedValue,
                 'day' => $day,
                 'day_part' => $day_part,
-                'user_id' => $user_id,
+                'group_id' => $group_id,
                 'dure_sission' => $dure_sission
             ])->get();
         } else {
@@ -332,7 +332,7 @@ class TousLesDemandes extends Component
                 'main_emploi_id' => $this->selectedValue,
                 'day' => $day,
                 'day_part' => $day_part,
-                'group_id' => $group_id,
+                'user_id' => $user_id,
                 'dure_sission' => $dure_sission
             ])->get();
         }

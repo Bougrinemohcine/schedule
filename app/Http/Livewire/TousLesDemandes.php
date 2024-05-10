@@ -206,7 +206,6 @@ class TousLesDemandes extends Component
             $user_id = substr($idcase, 11);
             $dure_sission = substr($idcase, 8, 3);
 
-
             $sessionData = [
                 'day' => $day,
                 'day_part' => $day_part,
@@ -214,7 +213,7 @@ class TousLesDemandes extends Component
                 'module_id' => $this->module,
                 'establishment_id' => session()->get('establishment_id'),
                 'class_room_id' => $this->salle,
-                'main_emploi_id' => session()->get('idEmploiSelected'),
+                'main_emploi_id' => $this->selectedValue,
                 'demand_emploi_id' => null,
                 'message' => null,
                 'sission_type' => $this->TypeSesion,
@@ -228,7 +227,7 @@ class TousLesDemandes extends Component
                 $sessionData['user_id'] = $this->formateur;
 
                 $session = sission::where([
-                    'main_emploi_id' => session()->get('idEmploiSelected'),
+                    'main_emploi_id' => $this->selectedValue,
                     'day' => $day,
                     'day_part' => $day_part,
                     'group_id' => $group_id,
@@ -239,7 +238,7 @@ class TousLesDemandes extends Component
                 $sessionData['group_id'] = $this->group;
                 $sessionData['user_id'] = $user_id;
                 $session = sission::where([
-                    'main_emploi_id' => session()->get('idEmploiSelected'),
+                    'main_emploi_id' => $this->selectedValue,
                     'day' => $day,
                     'day_part' => $day_part,
                     'user_id' => $user_id,
@@ -252,6 +251,7 @@ class TousLesDemandes extends Component
             } else {
                 sission::create($sessionData);
             }
+            $this->alert('success', 'vous avez crée une séance');
 
             $this->emit('fresh');
         } catch (\Exception $e) {

@@ -85,11 +85,16 @@
 
                         @foreach ($seancesPart as $seance_part)
                             @php $seanceFound = false;
-                            if ($seance_part == 'SE1' || $seance_part == 'SE2') {
-                                            $day_part = 'Matin';
-                                        } elseif ($seance_part == 'SE3' || $seance_part == 'SE4') {
-                                            $day_part = 'Amidi';
-                                        }@endphp
+                            if ($seance_part == 'SE1') {
+                                $day_part = 'MatinSE1';
+                            }elseif ($seance_part == 'SE2') {
+                                $day_part = 'MatinSE2';
+                            }elseif ($seance_part == 'SE3') {
+                                $day_part = 'AmidiSE3';
+                            }elseif ($seance_part == 'SE4') {
+                                $day_part = 'AmidiSE4';
+                            }
+                           @endphp
                             @foreach ($allSeances as $AllSeance)
                                 @php
                                     $color = '';
@@ -104,7 +109,7 @@
                                 @endphp
                                 @if ($AllSeance->day == $day_of_week && $AllSeance->dure_sission == $seance_part)
                                     @php $seanceFound = true; @endphp
-                                    <td wire:click="updateCaseStatus({{ $seanceFound ? 'false' : 'true' }},'{{ $day . $AllSeance->sission_type }}')" data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
+                                    <td wire:click="updateCaseStatus({{ $seanceFound ? 'false' : 'true' }},'{{ $day_of_week . $day_part }}')" data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
                                         data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
                                         data-seanceId="{{ $AllSeance->id }}" class="Cases"
                                         style="color: {{ $color }}">
@@ -116,7 +121,7 @@
                                 @endif
                             @endforeach
                             @if (!$seanceFound)
-                                <td data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
+                                <td wire:click="updateCaseStatus({{ $seanceFound ? 'false' : 'true' }},'{{ $day_of_week . $day_part }}')" data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
                                 data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
                                     class="Cases">
                                 </td>
@@ -244,7 +249,7 @@
                                     <option selected>les Types</option>
                                     @if ($classType)
                                         @foreach ($classType as $classTyp)
-                                            <option value="{{ $classTyp->id }}">
+                                            <option value="{{ $classTyp->class_room_types }}">
                                                 {{ $classTyp->class_room_types }}</option>
                                         @endforeach
                                     @endif
@@ -268,10 +273,19 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
                             data-bs-dismiss="modal">Close</button>
-                        <button data-bs-dismiss="modal" wire:click="DeleteSession" aria-label="Close"
-                            type="button" class="btn btn-danger">supprimer</button>
+                            @if ($isCaseEmpty == false)
+                                <button data-bs-dismiss="modal" wire:click="DeleteSession" aria-label="Close"
+                                type="button" class="btn btn-danger">supprimer</button>
+                            @endif
                         <button data-bs-dismiss="modal" wire:click="UpdateSession" aria-label="Close"
-                            type="submit" class="btn btn-success">Update</button>
+                            type="submit" class="btn btn-success">
+                            @if ($isCaseEmpty == false)
+                                Update
+
+                            @else
+                                Save
+                            @endif
+                        </button>
 
                     </div>
                 </form>
@@ -337,4 +351,5 @@
                 });
             });
         });
+
     </script>

@@ -15,9 +15,11 @@ use App\Models\class_room_type;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use function PHPUnit\Framework\isEmpty;
+use Illuminate\Support\Facades\Notification;
 
 use Illuminate\Support\Facades\Session;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Notifications\RequestEmploiNotification;
 
 class FormateurRequests extends Component
 {
@@ -57,6 +59,8 @@ class FormateurRequests extends Component
     public $daysOfWeek;
     public $daysPart;
     public $seancesPart;
+    public $comment;
+
 
     protected $listeners = [
         'receiveidEmploiid' => 'receiveidEmploiid',
@@ -69,23 +73,20 @@ class FormateurRequests extends Component
          $this->emploiID = main_emploi::latest()->value('id');
 
          // Fetch all main emplois
-         $this->mainEmplois = main_emploi::all();
-
-         // Define lists of days of week, days part, and seances part
-         $this->daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-         $this->daysPart = ["Matin", "Amidi"];
-         $this->seancesPart = ["SE1", "SE2", "SE3", "SE4"];
 
          // Fetch initial seances data
          $this->handleEmploiChange($this->emploiID);
+
     }
 
     public function handleEmploiChange($main_emploi_id)
     {
         $this->emploiID = $main_emploi_id;
+
         $this->allSeances = Sission::where('user_id', Auth::id())
-            ->where('main_emploi_id', $main_emploi_id)
+            ->where('main_emploi_id', $this->emploiID)
             ->get();
+
 
         // Check if a request exists for the user and employment ID
         $this->existingRequest = RequestEmploi::where('user_id', Auth::id())
@@ -110,6 +111,40 @@ class FormateurRequests extends Component
         $this->salleclassTyp = null;
         $this->TypeSesion = null;
     }
+
+    public function DeleteSession()
+{
+    try{
+        $idcase = $this->receivedVariable;
+        $day = substr($idcase, 0, 3);
+        $day_part = substr($idcase, 3, 5);
+        $user_id = substr($idcase, 11);
+        $dure_sission = substr($idcase,8,3);
+        $requestEmploiId = RequestEmploi::where('user_id', $user_id)
+        ->where('main_emploi_id', $this->emploiID)
+        ->value('id');
+
+        if (!$requestEmploiId) {
+            $this->alert('error', 'Tu dois créer une demande d\'emploi pour cet emploi d\'abord.');
+        }else{
+            sission::where([
+                'main_emploi_id' => $this->emploiID,
+                'day' => $day,
+                'day_part' => $day_part,
+                'user_id' => $user_id,
+                'dure_sission' => $dure_sission
+            ])->delete();
+            $this->mount();
+            $this->alert('success', 'vous avez supprimer une séance');
+        }
+    } catch (\Exception $e) {
+        $this->alert('error', 'il y a un problème', [
+            'position' => 'center',
+            'timer' => 3000,
+            'toast' => true,
+        ]);
+    }
+}
 
 
     // Method to update selected type emploi group or formateur
@@ -139,9 +174,110 @@ class FormateurRequests extends Component
 
         return $seance ?: collect(); // Return an empty collection if $seance is null
     }
+    public function createRequestEmploi()
+    {
+        // Validate the incoming request data
+        $this->validate([
+            'comment' => 'nullable|string',
+        ]);
+
+        // Retrieve the validated comment from the request data
+        $comment = $this->comment;
+        $type = 'emploi';
+        $MainUser = User::where('role', 'admin')->first();
+
+        if ($this->existingRequest) {
+            // If a request already exists, inform the user and abort
+            session()->flash('error', 'A request for this emploi already exists.');
+            // Notification::send($MainUser, new RequestEmploiNotification($type,$this->existingRequest->id, Auth::user()->user_name,$this->emploiID, $comment,''));
+        } else {
+            // If no request exists, create a new one
+            $requestEmploi = new RequestEmploi([
+                'date_request' => now(),
+                'comment' => $comment,
+                'user_id' => Auth::id(),
+                'main_emploi_id' => $this->emploiID,
+            ]);
+            $requestEmploi->save();
+
+            // Flash success message to the session
+            session()->flash('success', 'Request emploi created successfully.');
+
+            // Show an alert to the user
+            $this->dispatchBrowserEvent('modal-hidden');
+            Notification::send($MainUser, new RequestEmploiNotification($type,$requestEmploi->id, Auth::user()->user_name,$this->emploiID, $comment,''));
+        }
+        $this->mount();
+    }
+
+    public function UpdateSession()
+    {
+        try {
+            $idcase = $this->receivedVariable;
+            $day = substr($idcase, 0, 3);
+            $day_part = substr($idcase, 3, 5);
+            $user_id = Auth::id();
+            $dure_sission = substr($idcase, 8, 3);
+            $requestEmploiId = RequestEmploi::where('user_id', $user_id)
+            ->where('main_emploi_id', $this->emploiID)
+            ->value('id');
+            if (!$requestEmploiId) {
+                $this->alert('error', 'Tu dois créer une demande d\'emploi pour cet emploi d\'abord.');
+            }else{
+
+                $sessionData = [
+                    'day' => $day,
+                    'day_part' => $day_part,
+                    'dure_sission' => $dure_sission,
+                    'module_id' => $this->module,
+                    'establishment_id' => session()->get('establishment_id'),
+                    'class_room_id' => $this->salle,
+                    'main_emploi_id' => $this->emploiID,
+                    'demand_emploi_id' => null,
+                    'message' => null,
+                    'typeSalle'=>$this->salleclassTyp,
+                    'sission_type' => $this->TypeSesion,
+                    'status_sission' => 'Pending',
+                ];
+                $sessionData['group_id'] = $this->group;
+                $sessionData['user_id'] = $user_id;
+                $session = sission::where([
+                    'main_emploi_id' => $this->emploiID,
+                    'day' => $day,
+                    'day_part' => $day_part,
+                    'user_id' => $user_id,
+                    'dure_sission' => $dure_sission,
+                ])->first();
+
+            if ($session) {
+                $session->update($sessionData);
+            } else {
+                sission::create($sessionData);
+            }
+            $this->mount();
+            $this->alert('success', 'vous avez crée une séance');
+            }
+            // dd($sessionData);
+
+        } catch (\Exception $e) {
+            $this->alert('error', 'il y a un problème', [
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+            ]);
+        }
+    }
+
 
     public function render()
     {
+
+        $this->mainEmplois = main_emploi::all();
+
+         // Define lists of days of week, days part, and seances part
+         $this->daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+         $this->daysPart = ["Matin", "Amidi"];
+         $this->seancesPart = ["SE1", "SE2", "SE3", "SE4"];
 
         // Initialize variables
         $establishment_id = session()->get('establishment_id');

@@ -157,6 +157,7 @@
                                     $sessionFound = true;
                                     $typeValue = $sission->sission_type ;
                                     $SalleValue = $sission->class_name ;
+                                    $typeSalle = $sission->typeSalle ;
                                     $moduleValue = preg_replace('/^\d+/', '', $sission->module_name);
 
                                 @endphp
@@ -174,7 +175,7 @@
                                 @elseif ($item === 'Module')
                                     {{ $moduleValue }}
                                 @elseif ($item === 'Salle')
-                                    {{ $SalleValue }}
+                                {{ $SalleValue ."\n" . $typeSalle}}
                                 @elseif ($item === 'type Séance')
                                     {{ $typeValue }}
 

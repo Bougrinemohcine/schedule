@@ -16,7 +16,7 @@ class branchController extends Controller
     public function index()
     {
         $establishment_id = session()->get('establishment_id');
-        $branches = branch::all()->where('establishment_id' , $establishment_id);
+        $branches = branch::where('establishment_id' , $establishment_id)->get();
         return view('adminDashboard.branches.AddBranch' , ['branches' =>$branches]);
     }
 
@@ -29,7 +29,7 @@ class branchController extends Controller
 {
     try {
         $request->validate([
-            'id' => 'required',
+            'id' => 'required|string',
             'name' => 'required',
         ]);
 
@@ -43,10 +43,10 @@ class branchController extends Controller
             return redirect()->route('addbranch')->withErrors(['error' => "Un Filière avec le même code existe déjà."]);
         }
 
-        $str= Str::random(6);
+        // $str= Str::random(6);
         // Create branch record
         $branch = branch::create([
-            'id' => $establishment_id.$str.$request->id,
+            'id' => $establishment_id.$request->id,
             'name' => $request->name,
             'establishment_id' => $establishment_id,
         ]);
@@ -71,7 +71,7 @@ class branchController extends Controller
      */
     public function updateView(Request $request)
     {
-        // dd($request);
+
         $branche = branch::find($request->id);
         return view('adminDashboard.branches.updateBranch',['branche' => $branche]);
     }

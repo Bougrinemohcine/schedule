@@ -10,6 +10,9 @@
         <style>
             body {
                 font-family: Arial, sans-serif;
+                /* margin: 0px !important;
+                padding: 0px !important;
+                box-sizing: border-box !important; */
             }
 
             table {
@@ -17,6 +20,7 @@
                 border-collapse: collapse;
                 margin-top: 20px;
                 table-layout: fixed;
+                /* float: left !important; */
                 word-wrap: break-word;
             }
 
@@ -24,7 +28,7 @@
             td {
 
                 height: 40px;
-                width: 430px !important;
+                width: 450px !important;
                 border: 1px solid #ddd;
                 text-align: center;
             }

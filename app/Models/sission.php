@@ -14,7 +14,8 @@ class sission extends Model
             'day',
             'day_part',
             'dure_sission',
-            'module_id', 
+            'module_id',
+            'typeSalle',
             'group_id',
         	'establishment_id',
             'user_id',
@@ -24,7 +25,7 @@ class sission extends Model
             "demand_emploi_id",
             'message',
             'sission_type',
-        	'status_sission',   
+        	'status_sission',
 
     ];
     public function group()

@@ -1,4 +1,15 @@
+<style>
 
+#SearchInput{
+            width: 45% !important;
+        }
+
+        @media screen and (max-width: 600px){
+            #SearchInput{
+            width: 100% !important;
+        }
+        }
+</style>
 <thead>
     <tr>
         <th colspan="2">Jours</th>
@@ -51,9 +62,10 @@
                     @php
                         $sessionFound = true ;
                         $moduleValue =  preg_replace('/^\d+/', '', $sission->module_name );
-                        $SalleValue = $sission->class_name  ;
-                        $SessionType = $sission->sission_type ;
-                        $GroupName[] = $sission->group_name ;
+                        $SalleValue =    $sission->class_name  ;
+                        $typeSalle =     $sission->typeSalle  ;
+                        $SessionType =   $sission->sission_type ;
+                        $GroupName[] =   $sission->group_name ;
                         $FormateurName = $sission->user_name ;
                     @endphp
                 @endif
@@ -67,7 +79,8 @@
                         @elseif ($item === 'Module')
                              {{  $moduleValue }}
                         @elseif ($item === 'Salle')
-                            {{ $SalleValue}}
+                        {{ $SalleValue . "\n" . $typeSalle }}
+
                         @elseif ($item === 'type Séance')
                             {{$SessionType}}
                         @elseif ($item === 'Groupe')

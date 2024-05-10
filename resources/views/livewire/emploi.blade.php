@@ -20,6 +20,16 @@
         }
         }
 
+        #SearchInput{
+            width: 45% !important;
+        }
+
+        @media screen and (max-width: 600px){
+            #SearchInput{
+            width: 100% !important;
+        }
+        }
+
     </style>
     @php
 
@@ -155,6 +165,7 @@
                                         id="{{ $day.$sessionType.$group->id }}">
                                         {{ $sission->sission_type }}<br>
                                         {{ $sission->class_name }}<br>
+                                        {{ $sission->typeSalle }}<br>
                                         {{ $sission->user_name }}<br>
                                         {{ preg_replace('/^\d/' , ' ' , $sission->module_name ) }}
                                     </td>

@@ -10,6 +10,8 @@ use App\Models\formateur_has_group;
 use App\Models\module_has_formateur;
 use App\Models\group_has_module;
 use App\Models\formateur_has_branche;
+use App\Models\RequestEmploi;
+use Illuminate\Support\Facades\Auth;
 
 class formateurController extends Controller
 {
@@ -24,7 +26,8 @@ class formateurController extends Controller
         $id_formateur = session()->get('user_id');
         //Assuming the model name is 'Formateur' and you're looking for a single record.
         $formateur = formateur::select('user_name')->where('id', $id_formateur)->first();
-
+         
+ 
         return view('formateurDashboard.Home.formateur',['formateur'=>$formateur]);
         //return $formateur->user_name ;
     }
@@ -33,6 +36,7 @@ class formateurController extends Controller
     {
         return view('adminDashboard.addFormateur.update_formateur');
     }
+    
 
 
     // return data  to module edit

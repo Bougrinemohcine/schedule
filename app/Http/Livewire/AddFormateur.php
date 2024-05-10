@@ -234,18 +234,14 @@ class AddFormateur extends Component
       public function destroy($id)
       {
           $formateur = formateur::destroy($id);
-          if($formateur){
+
               $this->alert('success', "Vous avez supprimé ce formateur.", [
                   'position' => 'center',
                   'timer' => 3000,
                   'toast' => true,
               ]);
-          }
-          $this->alert('error', "Il y a un problème.", [
-              'position' => 'center',
-              'timer' => 3000,
-              'toast' => true,
-          ]);
+
+       
 
       }
 

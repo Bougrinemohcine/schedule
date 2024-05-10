@@ -19,6 +19,9 @@
     <!-- App Css-->
     <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
 
     <style>
         a.green {
@@ -107,11 +110,7 @@
                         <div class="float-end">
 
                             <div class="dropdown d-inline-block d-lg-none ms-2">
-                                <button type="button" class="btn header-item noti-icon waves-effect"
-                                    id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                    <i class="mdi mdi-magnify"></i>
-                                </button>
+                               
                                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
                                     aria-labelledby="page-header-search-dropdown">
 
@@ -180,7 +179,8 @@
                                                     <div class="flex-1">
                                                         @if ($Notification->data['type'] === 'emploi')
                                                             <h6 class="mt-0 mb-1">
-                                                                {{ $Notification->data['FormateurRequest'] }}</h6><p>a deamnder une nouvelle emplois du temps</p>
+                                                                {{ $Notification->data['FormateurRequest'] }}</h6>
+                                                            <p>a deamnder une nouvelle emplois du temps</p>
                                                             <div class="font-size-12 text-muted">
                                                                 <p class="mb-1">
                                                                     {{ $Notification->data['RequestCommentaire'] }}</p>
@@ -189,17 +189,18 @@
                                                                 </p>
                                                             </div>
                                                         @elseif ($Notification->data['type'] === 'seance')
-                                                        <h6 class="mt-0 mb-1">
-                                                            {{ $Notification->data['FormateurRequest'] }} </h6> <p>a deamnder une nouvelle seance</p>
-                                                        <div class="font-size-12 text-muted">
-                                                            <p class="mb-1">
-                                                                {{ $Notification->data['RequestCommentaire'] }}</p>
+                                                            <h6 class="mt-0 mb-1">
+                                                                {{ $Notification->data['FormateurRequest'] }} </h6>
+                                                            <p>a deamnder une nouvelle seance</p>
+                                                            <div class="font-size-12 text-muted">
+                                                                <p class="mb-1">
+                                                                    {{ $Notification->data['RequestCommentaire'] }}</p>
                                                                 <p class="mb-1">
                                                                     {{ $Notification->data['statusSission'] }}</p>
-                                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i>
-                                                                {{ $Notification->created_at->diffForHumans() }}
-                                                            </p>
-                                                        </div>
+                                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i>
+                                                                    {{ $Notification->created_at->diffForHumans() }}
+                                                                </p>
+                                                            </div>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -245,8 +246,41 @@
                         </div>
                         <div>
                             <!-- LOGO -->
+                            <div class="navbar-brand-box" style="color: white">
+                                <a class="logo logo-dark">
+                                    <span class="logo-sm" style="font-size: 20px;font-weight:bold;color:white">
+                                        @php
+                                            $ISTA = Auth::user()->establishment_id;
+                                            $establishmentName = \App\Models\establishment::find($ISTA)
+                                                ->name_establishment;
+                                        @endphp
+
+                                        {{ $establishmentName }} </span>
+                                    <span class="logo-lg" style="font-size: 17px;font-weight:bold">
+                                        @php
+                                            $ISTA = Auth::user()->establishment_id;
+                                            $establishmentName = \App\Models\establishment::find($ISTA)
+                                                ->name_establishment;
+                                        @endphp
+
+                                        {{ $establishmentName }} </span>
+                                </a>
+
+                                <a class="logo logo-light">
+                                    <span class="w3-cursive" style="font-size: 20px;font-weight:bold;color:white">
+                                        @php
+                                            $ISTA = Auth::user()->establishment_id;
+                                            $establishmentName = \App\Models\establishment::find($ISTA)
+                                                ->name_establishment;
+                                        @endphp
+
+                                        {{ $establishmentName }}
+                                    </span>
+                                </a>
+                            </div>
                             <div class="dropdown d-none d-lg-inline-block ms-1">
-                                <button class="btn btn-sm px-3 font-size-16 header-item toggle-sidebar ">
+                                <button class="btn btn-sm px-3 font-size-16 header-item toggle-sidebar "
+                                    style="margin-left: -125px;margin-top: 20px;">
                                     <i class="fa fa-fw fa-bars"></i>
                                 </button>
                             </div>

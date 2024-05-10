@@ -15,9 +15,9 @@
 <form action="{{route('createBranch')}}" method="POST">
     @csrf
     <label style="font-size: 19px" for=""> Nome Filiére : </label>
-    <input style="width:300px" class="form-control col-3" type="text" name='name'/>
+    <input style="width:300px" class="form-control col-3" type="text" name='name'placeholder='Assistant Administratif option Commerce' />
     <label style="font-size: 19px" for=""> code Filiére :</label>
-    <input style="width:300px" class="form-control col-3" type="text" name='id'/>
+    <input style="width:300px" class="form-control col-3" type="text" name='id' placeholder="Example GC_AA_T" />
     <button class="btn btn-primary my-5" type="submit"> Ajuter Filiéres</button>
 </form>
 
@@ -35,11 +35,11 @@
     <tr>
 
         <td>{{ preg_replace("/^\d+/", '', $branche->id) }}</td>
-        <td style="Width: 520px">{{$branche->name}}</td>
 
+        <td style="Width: 520px">{{$branche->name}}</td>
         <td style="width: 220px">
             <button type="button" class="btn btn-primary">
-                <a style="text-decoration: none ;color:black" href="{{url("update-branch/$branche->id")}}">Edit</a>
+                <a style="text-decoration: none ;color:black" href="{{ route('update-branch', ['id' => $branche->id]) }}">Edit</a>
             </button>
             <button type="button" class="btn btn-danger">
                 <a href="{{route('delateBranch',['id'=>$branche->id])}}">Delete</a>

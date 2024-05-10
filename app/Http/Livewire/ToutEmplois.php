@@ -90,6 +90,7 @@ public function UpdateSession()
             'main_emploi_id' => session()->get('idEmploiSelected'),
             'demand_emploi_id' => null,
             'message' => null,
+            'typeSalle'=>$this->salleclassTyp,
             'sission_type' => $this->TypeSesion,
             'status_sission' => 'Accepted',
         ];
@@ -129,7 +130,7 @@ public function UpdateSession()
 
         $this->emit('fresh');
     } catch (\Exception $e) {
-        $this->alert('error', $e->getMessage() , [
+        $this->alert('error', 'il y a un problème' , [
             'position' => 'center',
             'timer' => 3000,
             'toast' => true,

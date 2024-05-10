@@ -19,6 +19,7 @@ class AddGroupes extends Component
     public $modules ;
     public $dataGroups;
     public $groups ;
+    public $selectedBranch;
     // form var
     public $group_name ;
     public $branch;
@@ -48,14 +49,15 @@ public function create()
     $establishment = session()->get('establishment_id');
 
     try {
-        $groupNameWithoutSpaces = str_replace(' ', '', $this->group_name);
+        $groupNameWithoutSpaces = str_replace([' ', "'" ,"/" , "#"] , '', $this->group_name);
+
 
         // dd($this);
         $group = group::create([
-            'id' => $establishment . $groupNameWithoutSpaces,
+            'id' => $establishment .$groupNameWithoutSpaces,
             'group_name' => $this->group_name,
             'year' => $this->year,
-            'barnch_id' => $this->branch,
+            'barnch_id' => $this->selectedBranch,
             'establishment_id' => $establishment
         ]);
 

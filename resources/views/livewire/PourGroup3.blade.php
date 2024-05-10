@@ -42,6 +42,7 @@
                     <td>{{$session->group_name}}</td>
                         <td>{{$session->user_name}}</td>
                         <td>{{$session->class_name}}</td>
+                        <td>{{ $sission->typeSalle }}</td>
                         <td>{{$session->sission_type}}</td>
                         <td>{{$dayName}}</td>
                         <td>{{$session->day_part}}</td>

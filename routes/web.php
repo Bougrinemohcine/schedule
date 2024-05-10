@@ -1,4 +1,4 @@
-    <?php
+<?php
 
     use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\auth_controller;
@@ -77,9 +77,10 @@
         Route::controller(branchController::class)->group(function () {
             Route::get('/add-Branch', 'index')->name('addbranch');
             Route::post('/create-Branch', 'create')->name('createBranch');
-            Route::get('/update-branch/{id}', 'updateView')->name('updateBranch');
             Route::get('/delate-branch/{id}', 'delateBranch')->name('delateBranch');
-            Route::post('update-branch/{id}', 'updateBarnch')->name('updateBarnch');
+
+            Route::get('/update-branch/{id}', 'updateView')->name('update-branch');
+            Route::post('/update-branch/{id}', 'updateBarnch')->name('updateBarnch');
         });
         // end branch routes
         // Model Setting
@@ -107,7 +108,6 @@
         Route::post('/AddAutherEmploi', [Schedule::class, 'AddAutherEmploi'])->name('AddAutherEmploies');
         Route::get('/toutlesEmploi', [Schedule::class, 'toutlesEmploi'])->name('toutlesEmploi');
         Route::get('/AllRequest', [Schedule::class, 'AllRequest'])->name('AllRequest');
-        Route::get('/formateurRequest', [Schedule::class, 'FormateurRequest'])->name('FormateurRequest');
         //end Schedule routes
         Route::get('/add-class-rooms', [classRoomsController::class, 'index'])->name('add-class-rooms');
         Route::post('/insertClasses', [classRoomsController::class, 'insert'])->name('insertClasses');
@@ -166,6 +166,10 @@
 
         // displat main page in formateur account
         Route::get('/dashboardFormateur', [formateurController::class, 'showHomepage'])->name('dashboard_formateur');
+        Route::get('/settingsFormateur', [FormateurRequestController::class, 'settings'])->name('settings_formateur');
+        Route::post('/update_settings', [FormateurRequestController::class, 'updateSettings'])->name('update_settings');
+
+
         // request Emploi
         Route::get('DemanderEmploi', [FormateurRequestController::class, 'show'])->name('DemanderEmploi');
         // Route::post('DemanderEmploi',[FormateurRequestController::class,'show'])->name('DemanderEmploi');
@@ -174,7 +178,11 @@
         Route::post('/deleteSession', [FormateurRequestController::class, 'deleteSession'])->name('deleteSession');
 
         Route::post('createRequestEmploi', [FormateurRequestController::class, 'createRequestEmploi'])->name('createRequestEmploi');
+        Route::get('/TousLesSeances', [Schedule::class, 'ForamteurCalendar'])->name('TousLesSeances');
+
         //
+        Route::get('dashboardFormateur', [ShowGroupAffected::class, 'ShowInHomeGroupAndModuleAffected'])->name('dashboard_formateur');
+
         Route::get('FormateurGroupeList', [ShowGroupAffected::class, 'Show']);
         Route::get('FormateurModuleList', [ShowModuleAffected::class, 'Show']);
     });

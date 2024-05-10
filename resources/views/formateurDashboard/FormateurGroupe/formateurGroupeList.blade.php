@@ -6,29 +6,38 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Liste Des Groupes</h4>
+                                <h4 class="card-title">Liste Des groupes</h4>
 
-                                <table id="FormateurGroupesTable"
+                                <table id="FormateurgroupesTable"
                                     class="table table-striped table-bordered dt-responsive nowrap">
                                     <thead>
                                         <tr>
-                                            <th>Nom Du Groupe</th>
+                                            <th >ID Du groupe</th>
+                                            <th>Nom Du groupe</th>
                                             <th>Branch</th>
                                             <th>Year</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        @if (isset($GroupsList) && $GroupsList->count() > 0)
-                                            @foreach ($GroupsList as $GroupList)
+                                        @if (isset($groupsList) && $groupsList->count() > 0)
+                                            @foreach ($groupsList as $groupList)
                                                 @php
-                                                    $groupName = \App\Models\group::find($GroupList['group_id'])
+                                                    $groupId = substr(
+                                                        \App\Models\group::find($groupList['group_id'])->id,
+                                                        1,
+                                                    );
+
+                                                    $groupName = \App\Models\group::find($groupList['group_id'])
                                                         ->group_name;
-                                                    $groupBranch = \App\Models\group::find($GroupList['group_id'])
-                                                        ->barnch_id;
-                                                    $groupYear = \App\Models\group::find($GroupList['group_id'])->year;
+                                                    $groupBranch = substr(
+                                                        \App\Models\group::find($groupList['group_id'])->barnch_id,
+                                                        1,
+                                                    );
+                                                    $groupYear = \App\Models\group::find($groupList['group_id'])->year;
                                                 @endphp
                                                 <tr>
+                                                    <td>{{ $groupId }}</td>
                                                     <td>{{ $groupName }}</td>
                                                     <td>{{ $groupBranch }}</td>
                                                     <td>{{ $groupYear }}</td>
@@ -36,7 +45,7 @@
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="2">No groups assigned to this formateur</td>
+                                                <td colspan="3">No groups assigned to this formateur</td>
                                             </tr>
                                         @endif
                                     </tbody>
@@ -52,7 +61,7 @@
     <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
     <script>
         function ExportToExcel(type, fn, dl) {
-            var elt = document.getElementById('FormateurGroupesTable');
+            var elt = document.getElementById('FormateurgroupesTable');
             var wb = XLSX.utils.table_to_book(elt, {
                 sheet: "sheet1"
             });
@@ -71,7 +80,7 @@
                     bookSST: true,
                     type: 'base64'
                 }) :
-                XLSX.writeFile(wb, fn || ('FormateurGroupesTable.' + (type || 'xlsx')));
+                XLSX.writeFile(wb, fn || ('FormateurgroupesTable.' + (type || 'xlsx')));
         }
     </script>
 

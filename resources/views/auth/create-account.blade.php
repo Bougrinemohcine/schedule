@@ -51,27 +51,25 @@
                                 <form class="form-horizontal" method="POST" action="/insert" >
                                     @csrf
                                     <div class="mb-3">
-                                        <label class="form-label" for="useremail">Name</label>
-                                        <input type="text" name="user_name" class="form-control" id="useremail"
-                                            placeholder="Enter email">
+                                        <labellass="form-label" for="useremail">Name</labellass=>
+                                        <input  type="text" name="user_name" class="form-control" id="useremail"  placeholder="Enter name">
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="useremail">Matricule</label>
-                                        <input type="text" name="id" class="form-control" id="useremail"
-                                            placeholder="Matricule">
+                                        <input type="text" name="id" class="form-control" id="useremail" placeholder="Matricule">
                                     </div>
                                     <input style="display:none" value="admin" type="text" name='role'class="form-control" >
 
                                     <div class="mb-3">
                                         <label class="form-label" for="username">Email</label>
                                         <input type="email" name="email" class="form-control" id="username"
-                                            placeholder="Enter username">
+                                            placeholder="Enter email">
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label" for="username">Ista</label>
                                         <input type="text" name="name_establishment"  class="form-control" id="username"
-                                            placeholder="Enter username">
+                                            placeholder="Enter Ista name">
                                     </div>
 
                                     <div class="mb-3">

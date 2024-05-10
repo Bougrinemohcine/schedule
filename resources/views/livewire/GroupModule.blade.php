@@ -1,18 +1,6 @@
    {{-- Model --}}
    <style>
-    .modal-dialog {
-        position: absolute !important;
-        transition: none !important;
-        top: 35%;
-        left: 35%;
-        transform: translate(-35%, -35%);
 
-        min-width: 50vw !important ;
-        min-height: 30vh;
-    }
-    .modal-header{
-        cursor: move;
-    }
 </style>
    <div wire:ignore.self  class="modal fade col-9 ModelBody" id="exampleModal" tabindex="-1"
    aria-labelledby="exampleModalLabel" aria-hidden="true" >
@@ -84,10 +72,10 @@
                       @if (!$checkValues[0]->typeSalle)
                       <select wire:model="salleclassTyp" class="form-select"
                           aria-label="Default select example">
-                          <option selected>les Types</option>
+                          <option selected> Type Salle</option>
                           @if ($classType)
                               @foreach ($classType as $classTyp)
-                                  <option value="{{ $classTyp->id }}">
+                                  <option value="{{ $classTyp->class_room_types }}">
                                       {{ $classTyp->class_room_types }}</option>
                               @endforeach
                           @endif
@@ -102,10 +90,11 @@
                       @if (!$checkValues[0]->typeSession)
                       <select wire:model="TypeSesion" class="form-select"
                           aria-label="Default select example">
-                          <option selected>Types</option>
+                          <option selected>Type Séance</option>
                           <option value="presentielle">Presentielle</option>
                           <option value="teams">Teams</option>
                           <option value="EFM">EFM</option>
+
                       </select>
                       @endif
                   </div>
@@ -134,7 +123,7 @@
 
 </div>
 
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function () {
     const modalHeader = document.querySelector('.modal-header');
     const modalDialog = document.querySelector('.modal-dialog');
@@ -169,6 +158,6 @@
     }
 });
 
-</script>
+</script> --}}
 
 

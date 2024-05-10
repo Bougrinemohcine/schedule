@@ -35,6 +35,17 @@
         }
         }
 
+
+        #SearchInput{
+            width: 45% !important;
+        }
+
+        @media screen and (max-width: 600px){
+            #SearchInput{
+            width: 100% !important;
+        }
+        }
+
 </style>
 
     <h2>Schedule Table</h2>
@@ -56,7 +67,7 @@
                     <select style="box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;" wire:model="groupID" id="selectOptions" class="form-control col-3" name="">
                         <option > les Groupes</option>
                         @foreach ($groups as $group)
-                        <option class="form-control"  value="{{$group->id}}">{{$group->group_name}} </option>
+                              <option class="form-control"  value="{{$group->id}}">{{$group->group_name}} </option>
                         @endforeach
                     </select>
                 </div>
@@ -159,8 +170,10 @@
                             @endphp
                             @foreach ($sissions as $sission)
                                 @if ($sission->day === $day && $sission->group_id === $groupID && $sission->day_part === substr($sessionType, 0, 5) && $sission->dure_sission === substr($sessionType, 5))
-                                    <td wire:click='updateCaseStatus(false)' data-bs-toggle="modal" class="tdClass Cases" data-bs-target="#exampleModal" id="{{ $day . $sessionType }}">
-                                        {{ $sission->sission_type }}<br>{{ $sission->class_name }}<br>{{ $sission->user_name }}<br>{{ preg_replace('/^\d+/', '', $sission->module_name) }}
+                                    <td wire:click='updateCaseStatus(false)' data-bs-toggle="modal"
+                                    style="background-color:rgba(12, 72, 166, 0.3) ;"
+                                     class="tdClass Cases" data-bs-target="#exampleModal" id="{{ $day . $sessionType }}">
+                                       {{$sission->group_name}}<br> {{ $sission->sission_type }}<br>{{ $sission->class_name }} <br>{{ $sission->typeSalle }} <br>{{ $sission->user_name }}<br>{{ preg_replace('/^\d+/', '', $sission->module_name) }}
                                     </td>
                                     @php
                                         $sessionFound = true;
@@ -265,7 +278,7 @@
                                             <option selected value="null">les Types</option>
                                             @if ($classType)
                                                 @foreach ($classType as $classTyp)
-                                                    <option value="{{ $classTyp->id }}">
+                                                    <option value="{{ $classTyp->class_room_types }}">
                                                         {{ $classTyp->class_room_types }}</option>
                                                 @endforeach
                                             @endif

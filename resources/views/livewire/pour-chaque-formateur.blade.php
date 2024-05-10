@@ -68,6 +68,16 @@
         }
         }
 
+        #SearchInput{
+            width: 45% !important;
+        }
+
+        @media screen and (max-width: 600px){
+            #SearchInput{
+            width: 100% !important;
+        }
+        }
+
 
     </style>
 
@@ -198,6 +208,8 @@
                         $groupes = [];
                         $SalleValue ;
                         $Typevalue ;
+                        $typeSalle;
+                        $formateur;
                         $ModuleValue;
                     @endphp
                     @foreach ($sissions as $sission)
@@ -206,6 +218,8 @@
                                 $groupes[] = $sission->group_name ;
                                 $sessionFound = true;
                                 $SalleValue = $sission->class_name ;
+                                $formateur  =$sission->user_name ;
+                                $typeSalle = $sission->typeSalle ;
                                 $Typevalue = $sission->sission_type ;
                                 $ModuleValue = preg_replace('/^\d+/', '', $sission->module_name);
 
@@ -218,8 +232,9 @@
                     data-bs-toggle="modal"
                     class="tdClass Cases" data-bs-target="#exampleModal" id="{{ $day.$sessionType }}">
                         @if ($sessionFound)
+                            {{$formateur}} <br/>
                             {{ implode(' - ', $groupes) }}<br/>
-                            {{$SalleValue}}<br/>
+                            {{$SalleValue . "\n" . $typeSalle}}<br/>
                             {{$Typevalue}} <br/>
                             {{$ModuleValue}}
                         @endif

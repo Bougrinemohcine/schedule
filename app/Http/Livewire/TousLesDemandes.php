@@ -104,78 +104,75 @@ class TousLesDemandes extends Component
 
     public function Canceled()
     {
-        $idcase = $this->receivedVariable;
-        $day = substr($idcase, 0, 3);
-        $day_part = substr($idcase, 3, 5);
-        $group_id = substr($idcase, 11);
-        $user_id = substr($idcase, 11);
-        $dure_sission = substr($idcase, 8, 3);
-        if (is_numeric($user_id)) {
+        $day = substr($this->receivedVariable, 0, 3);
+        $day_part = substr($this->receivedVariable, 3, 5);
+        $group_id = substr($this->receivedVariable, 11);
+        $user_id = substr($this->receivedVariable, 11);
+        $dure_sission = substr($this->receivedVariable, 8, 3);
 
-            $session = sission::where([
-                'main_emploi_id' => $this->selectedValue,
-                'day' => $day,
-                'day_part' => $day_part,
-                'user_id' => $this->formateurId,
-                'dure_sission' => $dure_sission,
-            ])->first(); // Use first() to get a single instance
+        $sessionsQuery = sission::where([
+            'main_emploi_id' => $this->selectedValue,
+            'day' => $day,
+            'day_part' => $day_part,
+            'dure_sission' => $dure_sission,
+        ]);
+
+        if ($this->selectedType === "Group") {
+            $sessionsQuery->where('group_id', $group_id);
         } else {
-            $session = sission::where([
-                'main_emploi_id' => $this->selectedValue,
-                'day' => $day,
-                'day_part' => $day_part,
-                'group_id' => $group_id,
-                'dure_sission' => $dure_sission,
-            ])->first();
+            $sessionsQuery->where('user_id', $this->formateurId);
         }
 
-        if ($session) {
-            $session->status_sission = 'Cancelled';
-            $session->save();
-            $this->alert('success', 'Session Cancelled successfully.', [
+        $sessions = $sessionsQuery->get();
+
+        if ($sessions->isNotEmpty()) {
+            foreach ($sessions as $session) {
+                $session->status_sission = 'Cancelled';
+                $session->save();
+            }
+
+            $this->alert('success', 'Sessions Cancelled successfully.', [
                 'position' => 'center',
                 'timer' => 3000,
                 'toast' => true,
             ]);
         } else {
-            $this->alert('error', 'Session not found.', [
+            $this->alert('error', 'No sessions found to cancel.', [
                 'position' => 'center',
                 'timer' => 3000,
                 'toast' => true,
             ]);
         }
+
     }
 
     public function Accepte()
     {
-        $idcase = $this->receivedVariable;
-        $day = substr($idcase, 0, 3);
-        $day_part = substr($idcase, 3, 5);
-        $dure_sission = substr($idcase, 8, 3);
-        $group_id = substr($idcase, 11);
-        $user_id = substr($idcase, 11);
+        $day = substr($this->receivedVariable, 0, 3);
+        $day_part = substr($this->receivedVariable, 3, 5);
+        $group_id = substr($this->receivedVariable, 11);
+        $user_id = substr($this->receivedVariable, 11);
+        $dure_sission = substr($this->receivedVariable, 8, 3);
+
+        $sessionsQuery = Session::where([
+            'main_emploi_id' => $this->selectedValue,
+            'day' => $day,
+            'day_part' => $day_part,
+            'dure_sission' => $dure_sission,
+        ]);
 
         if ($this->selectedType === "Group") {
-            $session = sission::where([
-                'main_emploi_id' => $this->selectedValue,
-                'day' => $day,
-                'day_part' => $day_part,
-                'group_id' => $group_id,
-                'dure_sission' => $dure_sission,
-            ])->first(); // Use first() to get a single instance
+            $sessionsQuery->where('group_id', $group_id);
         } else {
-            $session = sission::where([
-                'main_emploi_id' => $this->selectedValue,
-                'day' => $day,
-                'day_part' => $day_part,
-                'user_id' => $this->formateurId,
-                'dure_sission' => $dure_sission,
-            ])->first();
+            $sessionsQuery->where('user_id', $this->formateurId);
         }
+
+        $session = $sessionsQuery->first();
 
         if ($session) {
             $session->status_sission = 'Accepted';
             $session->save();
+
             $this->alert('success', 'Session accepted successfully.', [
                 'position' => 'center',
                 'timer' => 3000,
@@ -188,6 +185,7 @@ class TousLesDemandes extends Component
                 'toast' => true,
             ]);
         }
+
     }
     //--------------------------------------------------------------- NEWADD
 
@@ -206,6 +204,7 @@ class TousLesDemandes extends Component
             $user_id = substr($idcase, 11);
             $dure_sission = substr($idcase, 8, 3);
 
+
             $sessionData = [
                 'day' => $day,
                 'day_part' => $day_part,
@@ -213,7 +212,7 @@ class TousLesDemandes extends Component
                 'module_id' => $this->module,
                 'establishment_id' => session()->get('establishment_id'),
                 'class_room_id' => $this->salle,
-                'main_emploi_id' => $this->selectedValue,
+                'main_emploi_id' => session()->get('idEmploiSelected'),
                 'demand_emploi_id' => null,
                 'message' => null,
                 'sission_type' => $this->TypeSesion,
@@ -227,7 +226,7 @@ class TousLesDemandes extends Component
                 $sessionData['user_id'] = $this->formateur;
 
                 $session = sission::where([
-                    'main_emploi_id' => $this->selectedValue,
+                    'main_emploi_id' => session()->get('idEmploiSelected'),
                     'day' => $day,
                     'day_part' => $day_part,
                     'group_id' => $group_id,
@@ -238,7 +237,7 @@ class TousLesDemandes extends Component
                 $sessionData['group_id'] = $this->group;
                 $sessionData['user_id'] = $user_id;
                 $session = sission::where([
-                    'main_emploi_id' => $this->selectedValue,
+                    'main_emploi_id' => session()->get('idEmploiSelected'),
                     'day' => $day,
                     'day_part' => $day_part,
                     'user_id' => $user_id,
@@ -251,7 +250,6 @@ class TousLesDemandes extends Component
             } else {
                 sission::create($sessionData);
             }
-            $this->alert('success', 'vous avez crée une séance');
 
             $this->emit('fresh');
         } catch (\Exception $e) {

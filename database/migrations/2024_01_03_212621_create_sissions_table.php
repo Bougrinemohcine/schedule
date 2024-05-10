@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('day');
+            $table->string('typeSalle')->nullable();
             $table->enum('day_part', ['Matin', 'Amidi']);
             $table->enum('dure_sission', ['SE1', 'SE2','SE3',"SE4"]);
             $table->string('module_id')->nullable();

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('password');
             $table->string('passwordClone')->nullable();
+            $table->string('domaine')->nullable();
             $table->string('image')->nullable();
             $table->enum('role',['formateur','admin']);
             $table->enum('status',['active','desactive'])->nullable();

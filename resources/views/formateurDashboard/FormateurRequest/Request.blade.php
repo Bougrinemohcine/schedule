@@ -7,6 +7,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Schedule Table</title>
          @livewireStyles
+         <style>
+            select#date-select {
+                width: 20%;
+            }
+        </style>
     </head>
     <body>
         <livewire:formateur-requests />

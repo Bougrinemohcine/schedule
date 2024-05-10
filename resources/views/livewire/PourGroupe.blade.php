@@ -17,7 +17,7 @@
     'Jeudi' => 'Thu',
     'Vendredi' => 'Fri',
     'Samedi' => 'Sat'];
-    $sessionData = ['Groupe', 'Module', 'Salle' ,'type Séance'];
+    $sessionData = ['Groupe', 'Module', 'Salle' ,'type Séance','formateur'];
     if ($checkValues[0]->module){
                 unset($sessionData[1]);
             }
@@ -29,6 +29,9 @@
             }
             if ($checkValues[0]->module) {
                 unset($sessionData[1]);
+            }
+            if ($checkValues[0]->formateur) {
+                unset($sessionData[4]);
             }
 
     @endphp
@@ -46,7 +49,8 @@
             @endphp
             @foreach ($sissions as $sission)
                 @if ($sission->day === $abbreviations[$day] && $sission->dure_sission === $dure)
-                    <td wire:click='updateCaseStatus(false)' data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    <td wire:click='updateCaseStatus(false)'
+                    style="background-color:rgba(12, 72, 166, 0.3) ;" data-bs-toggle="modal" data-bs-target="#exampleModal"
                     class="Cases casesNewtamplate"
                     id="{{ $abbreviations[$day] . (in_array($dure, ['SE1', 'SE2']) ? 'Matin' : 'Amidi') . $dure }}">
                         @if ($item === 'Groupe')
@@ -54,9 +58,11 @@
                         @elseif ($item === 'Module')
                             {{ preg_replace('/^\d+/' , '' , $sission->module_name) }}
                         @elseif ($item === 'Salle')
-                            {{ $sission->class_name }}
+                            {{ $sission->class_name ."\n" . $sission->typeSalle}}
                         @elseif ($item === 'type Séance')
                             {{ $sission->sission_type }}
+                            @elseif ($item === 'formateur')
+                            {{ $sission->user_name }}
                         @endif
                     </td>
                     @php

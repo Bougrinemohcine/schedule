@@ -121,6 +121,7 @@ class Emploi extends Component
                 'message' => null,
                 'sission_type' => $this->TypeSesion,
                 'status_sission' => 'Accepted',
+                'typeSalle'=>$this->salleclassTyp,
                 'user_id'=> $this->formateur,
                 'group_id'=> $group_id
             ];
@@ -128,16 +129,39 @@ class Emploi extends Component
         if ($session) {
             if ($this->module !== null) {
                 $session->update(['module_id'=> $this->module]);
+                $this->alert('success', 'Vous modifiez le module de cette séance.',[
+                    'position' => 'center',
+                    'timer' => 3000,
+                    'toast' => true,]);
             }
 
             if ($this->formateur !== null) {
                 $session->update(['user_id'=> $this->formateur]);
+                $this->alert('success', 'Vous modifiez le formateur de cette séance.',[
+                    'position' => 'center',
+                    'timer' => 3000,
+                    'toast' => true,]);
             }
             if ($this->salle !== null) {
                 $session->update(['class_room_id'=> $this->salle]);
+                $this->alert('success', 'Vous modifiez la salle de cette séance.',[
+                    'position' => 'center',
+                    'timer' => 3000,
+                    'toast' => true,]);
             }
             if ($this->TypeSesion !== null) {
                 $session->update(['sission_type'=> $this->TypeSesion]);
+                $this->alert('success', 'Vous modifiez le type de cette séance.',[
+                    'position' => 'center',
+                    'timer' => 3000,
+                    'toast' => true,]);
+            }
+            if ($this->salleclassTyp !== null) {
+                $session->update(['typeSalle'=> $this->salleclassTyp]);
+                $this->alert('success', 'Vous modifiez le type de Salle.',[
+                    'position' => 'center',
+                    'timer' => 3000,
+                    'toast' => true,]);
             }
         } else {
 
@@ -145,11 +169,15 @@ class Emploi extends Component
                     $sessionData['module_id'] = $this->module;
                 }
                 sission::create($sessionData);
+                $this->alert('success', 'Vous créez une nouvelle session.',[
+                    'position' => 'center',
+                    'timer' => 3000,
+                    'toast' => true,]);
         }
 
         $this->emit('fresh');
     } catch (\Exception $e) {
-        $this->alert('error', $e->getMessage() , [
+        $this->alert('error', 'il y a un probléme' , [
             'position' => 'center',
             'timer' => 3000,
             'toast' => true,

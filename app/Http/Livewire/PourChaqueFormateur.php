@@ -47,7 +47,7 @@ class PourChaqueFormateur extends Component
     public $checkValues;
     public $receivedVariable;
     public $groupID;
-    public $moduleID ;
+
     public $baranches = [] ;
     public $brancheId;
     public $selectedGroups = [];
@@ -104,13 +104,14 @@ class PourChaqueFormateur extends Component
 
     public function UpdateSession()
     {
+       
         try {
             $idcase = $this->receivedVariable;
             $day = substr($idcase, 0, 3);
             $day_part = substr($idcase, 3, 5);
             $dure_sission = substr($idcase, 8, 3);
 
-            // dd($dure_sission);
+
 
             $session = Sission::where([
                 'main_emploi_id' => session()->get('id_main_emploi'),
@@ -123,8 +124,8 @@ class PourChaqueFormateur extends Component
 
             if ($session->isNotEmpty()) {
                 foreach ($session as $item) {
-                    if ($this->moduleID !== null) {
-                        $item->update(['module_id' => $this->moduleID]);
+                    if ($this->module !== null) {
+                        $item->update(['module_id' => $this->module]);
                         $this->alert('success', 'Vous modifiez le module de cette séance.',[
                                             'position' => 'center',
                                             'timer' => 3000,
@@ -156,6 +157,14 @@ class PourChaqueFormateur extends Component
                             'timer' => 3000,
                             'toast' => true,]);
                     }
+
+                    if ($this->salleclassTyp !== null) {
+                        $item->update(['typeSalle' => $this->salleclassTyp]);
+                        $this->alert('success', 'Vous modifiez le type de Salle.',[
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,]);
+                    }
                 }
             } else {
 
@@ -164,7 +173,7 @@ class PourChaqueFormateur extends Component
                                     'day'=>substr($idcase,0,3),
                                     'day_part'=>substr($idcase,3,5),
                                     'dure_sission'=>substr($idcase,8,3),
-                                    'module_id'=> $this->moduleID,
+                                    'module_id'=> $this->module,
                                     'group_id'=> $group ,
                                     'establishment_id'=>session()->get('establishment_id'),
                                     'user_id'=>$this->formateurId,
@@ -173,6 +182,7 @@ class PourChaqueFormateur extends Component
                                     'main_emploi_id'=>session()->get('id_main_emploi'),
                                     "demand_emploi_id"=>null,
                                     'message'=>null,
+                                    'typeSalle'=>$this->salleclassTyp,
                                     'sission_type'=>$this->TypeSesion,
                                     'status_sission'=>'Accepted',
                                 ]);

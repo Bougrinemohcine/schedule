@@ -85,7 +85,7 @@
         </div>
 
         {{-- table --}}
-        <div>
+        <div wire:ignore>
             <h3>Groupes</h3>
             <table class="table table-striped" style="font-size: 19px; font-weight:300; width: 70vw;">
                 <thead>
@@ -105,7 +105,7 @@
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $group['group_name'] }}</td>
                         <td>{{ preg_replace('/^\d+/' , "" ,$group['branch_id'])}}</td>
-                        <td>{{ $group['group_name'] }}</td>
+                        <td>{{ $group['branch_id'] }}</td>
                         <td>{{ $group['year'] }}</td>
                         <td colspan="">
                             <!-- Modal trigger button -->
@@ -232,7 +232,14 @@
 });
 
 
-    </script>
 
 
+
+
+
+
+
+
+
+</script>
 </div>

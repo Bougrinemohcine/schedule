@@ -5,14 +5,16 @@
 *:after,
 *:before {
     box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
 }
 
-input[type='text'],
- input[type='search']
- input[type = 'email']
+ input[type = 'text'],
+ input[type = 'search'],
+ input[type = 'email'],
  input[type = 'password'] {
     border: 1px solid rgb(31, 31, 150) !important;
-    max-width: 45vw !important;
+    max-width: 100% !important;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px !important;
     margin-bottom: 5px !important;
     transition: 0.8s all; /* corrected from 'transform' to 'transition' */
@@ -593,6 +595,7 @@ body[data-layout="horizontal"] .footer {
     }
     body.sidebar-enable .vertical-menu {
         display: block;
+
     }
 }
 .vertical-collpsed .main-content {

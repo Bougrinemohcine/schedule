@@ -8,8 +8,13 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
+    <link rel="shortcut icon" href="{{ asset('assets/images/users/user.jpg') }}">
+
+
     {{-- driver JS --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
     <script src="{{ asset('js/jquery.min.js') }}"></script>
 
 
@@ -147,31 +152,31 @@
                             </div>
 
 
+                            @php
+                                // Get the user's image
+$userImage = Auth::user()->image;
+
+// Check if the user has uploaded an image
+if ($userImage) {
+    // Use the uploaded image
+    $imagePath = 'uploads/' . $userImage;
+} else {
+    // Use the default image
+    $imagePath = 'assets/images/users/user.jpg';
+                                }
+
+                            @endphp
                             <div class="dropdown d-inline-block">
                                 <button type="button" class="btn header-item waves-effect"
                                     id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                    <img class="rounded-circle header-profile-user" src="assets/images/users/user.jpg"
+                                    <img class="rounded-circle header-profile-user" src="{{ asset($imagePath) }}"
                                         alt="Header Avatar">
+
                                     <span class="d-none d-xl-inline-block ms-1">{{ Auth::user()->user_name }}</span>
-
-                                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                                    {{-- "assets/images/users/user.jpg" --}}
                                 </button>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <!-- item-->
-                                    <a class="dropdown-item" href="#"><i
-                                            class="bx bx-user font-size-16 align-middle me-1"></i>
-                                        Profile</a>
 
-                                    <a class="dropdown-item d-block" href="#"><span
-                                            class="badge bg-success float-end">11</span><i
-                                            class="bx bx-wrench font-size-16 align-middle me-1"></i> Settings</a>
-
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item text-danger" href="{{ route('logout') }}"><i
-                                            class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i>
-                                        Logout</a>
-                                </div>
                             </div>
 
 
@@ -181,20 +186,33 @@
                             <!-- LOGO -->
                             <div class="navbar-brand-box">
                                 <a class="logo logo-dark">
-                                    <span class="logo-sm">
-                                        <img src="assets/images/logo-sm.png" alt="" height="20">
-                                    </span>
-                                    <span class="logo-lg">
-                                        <img src="assets/images/logo-dark.png" alt="" height="17">
-                                    </span>
+                                    <span class="logo-sm" style="font-size: 20px;font-weight:bold">
+                                        @php
+                                            $ISTA = Auth::user()->establishment_id;
+                                            $establishmentName = \App\Models\establishment::find($ISTA)
+                                                ->name_establishment;
+                                        @endphp
+
+                                        {{ $establishmentName }} </span>
+                                    <span class="logo-lg" style="font-size: 17px;font-weight:bold">
+                                        @php
+                                            $ISTA = Auth::user()->establishment_id;
+                                            $establishmentName = \App\Models\establishment::find($ISTA)
+                                                ->name_establishment;
+                                        @endphp
+
+                                        {{ $establishmentName }} </span>
                                 </a>
 
                                 <a class="logo logo-light">
-                                    <span class="logo-sm">
-                                        <img src="assets/images/logo-sm.png" alt="" height="20">
-                                    </span>
-                                    <span class="logo-lg">
-                                        <img src="assets/images/logo-light.png" alt="" height="19">
+                                    <span class="w3-cursive" style="font-size: 20px;font-weight:bold">
+                                        @php
+                                            $ISTA = Auth::user()->establishment_id;
+                                            $establishmentName = \App\Models\establishment::find($ISTA)
+                                                ->name_establishment;
+                                        @endphp
+
+                                        {{ $establishmentName }}
                                     </span>
                                 </a>
                             </div>
@@ -230,8 +248,23 @@
                 <div class="h-100">
                     <div class="user-wid text-center py-4">
                         <div class="user-img">
-                            <img class="rounded-circle header-profile-user" src="assets/images/users/user.jpg"
+                            @php
+                                // Get the user's image
+$userImage = Auth::user()->image;
+
+// Check if the user has uploaded an image
+if ($userImage) {
+    // Use the uploaded image
+    $imagePath = 'uploads/' . $userImage;
+} else {
+    // Use the default image
+    $imagePath = 'assets/images/users/user.jpg';
+                                }
+
+                            @endphp
+                            <img class="rounded-circle header-profile-user" src="{{ asset($imagePath) }}"
                                 alt="Header Avatar">
+
                         </div>
 
 
@@ -239,8 +272,13 @@
                             <a href="#"
                                 class="text-reset fw-medium font-size-16">{{ Auth::user()->user_name }}</a>
                             <p class="text-muted mt-1 mb-0 font-size-13">
-                                Domaine du formation
+                                @if (Auth::user()->domaine)
+                                    {{ Auth::user()->domaine }}
+                                @else
+                                    Domaine du formation
+                                @endif
                             </p>
+
                         </div>
                     </div>
 
@@ -266,41 +304,55 @@
                             </li>
 
                             <li class="Calendar">
-                                <a href="{{ url('calendarFormateur') }}" class="waves-effect">
+                                <a href="{{ url('TousLesSeances') }}" class="waves-effect">
                                     <i class="mdi mdi-calendar-text"></i>
                                     <span>Calendar</span>
                                 </a>
                             </li>
-
                             <li class="Groupes">
-                                <a href="javascript:void(0);" class="has-arrow waves-effect">
+                                <a href="{{ url('FormateurGroupeList') }}" class="waves-effect">
                                     <i class="mdi mdi-account-group"></i>
-                                    <span>Groupes</span>
+                                    <span>List des Groupes</span>
                                 </a>
-                                <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="{{ url('FormateurGroupeList') }}">List des Groupes</a></li>
-                                </ul>
+                            </li>
+                            <li class="Modules">
+                                <a href="{{ url('FormateurModuleList') }}" class="waves-effect">
+                                    <i class="mdi mdi-inbox-full"></i>
+                                    <span>List des Modules</span>
+                                </a>
                             </li>
 
-                            <li class="Modules">
-                                <a href="javascript:void(0);" class="has-arrow waves-effect">
-                                    <i class="mdi mdi-inbox-full"></i>
-                                    <span>Modules</span>
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="{{ url('FormateurModuleList') }}">List des Modules</a></li>
-                                </ul>
-                            </li>
+
+
+
 
                             <li class="Settings">
-                                <a class="dropdown-item d-block" href="{{ url('settings') }}">
+                                <a class="dropdown-item d-block" href="{{ url('settingsFormateur') }}">
                                     <i class="mdi mdi-settings-outline"></i> Settings
                                 </a>
                             </li>
-                            <li class="Documentation">
-                                <a class="dropdown-item d-block" onclick="launchDriver()">
-                                    <i class="fas fa-book"></i>Lunch Documentation
+                            <li>
+                                <a href="javascript: void(0);" class="has-arrow waves-effect" aria-expanded="false">
+                                    <i class="fas fa-book"></i>
+                                    <span>Lunch Documentation</span>
                                 </a>
+                                <ul class="sub-menu mm-collapse" aria-expanded="false">
+                                    <li>
+                                        <a onclick="launchDriver()">
+                                            Decouvrir l'application
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a onclick="launchDriver()">
+                                            Comment creer une demande
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a onclick="launchDriver()">
+                                            Comment modifier les parametre
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
 
 

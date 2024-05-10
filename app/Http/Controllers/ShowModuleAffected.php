@@ -14,4 +14,5 @@ class ShowModuleAffected extends Controller
 
         return view('formateurDashboard.FormateurModule.FormateurModuleList', ['modulesList' => $modulesList]);
     }
+   
 }

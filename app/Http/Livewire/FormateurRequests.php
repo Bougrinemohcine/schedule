@@ -268,6 +268,12 @@ class FormateurRequests extends Component
                 $session->update($sessionData);
             } else {
                 sission::create($sessionData);
+                // $MainUser = User::where('role', 'admin')->first();
+                // $comment = $sessionData['message'];
+                // $mainEmploiId = $sessionData['main_emploi_id'];
+                // $type = 'seance';
+                // $FormateurRequest = Auth::user()->user_name;
+                // Notification::send($MainUser, new RequestEmploiNotification($type, $session->id, $FormateurRequest, $mainEmploiId, $comment, $session->status_sission));
             }
             $this->mount();
             $this->alert('success', 'vous avez crée une séance');

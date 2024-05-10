@@ -162,6 +162,13 @@ class PourChaqueGroup extends Component
                             'timer' => 3000,
                             'toast' => true,]);
                     }
+                    if ($this->salleclassTyp !== null) {
+                        $item->update(['typeSalle'=> $this->salleclassTyp]);
+                        $this->alert('success', 'Vous modifiez le type de Salle.',[
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,]);
+                    }
                 }
             } else {
 
@@ -178,6 +185,7 @@ class PourChaqueGroup extends Component
                         'main_emploi_id' => session()->get('id_main_emploi'),
                         "demand_emploi_id" => null,
                         'message' => null,
+                        'typeSalle'=>$this->salleclassTyp ,
                         'sission_type' => $this->TypeSesion,
                         'status_sission' => 'Accepted',
                     ]);

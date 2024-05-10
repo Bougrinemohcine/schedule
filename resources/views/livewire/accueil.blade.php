@@ -78,13 +78,12 @@
 
                 </form>
 
-                <form method="post" action="{{route('deleteAllSessions')}}">
-                    @csrf
+
                     <button id="delete" type="submit" class="btn btn-danger" {{ session()->get('id_main_emploi') !== null ? '' : 'disabled' }}
                         data-bs-toggle="modal" data-bs-target="#exampleModal1">
                         Supprimer
                     </button>
-                </form>
+
             </div>
         </div>
     </div>
@@ -163,7 +162,9 @@
     </script>
 
      <!-- Modal for delete-->
-     <form method="post" action="{{route('deleteAllSessions')}}">
+
+
+    <form method="post" action="{{route('deleteAllSessions')}}">
         @csrf
   <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">

@@ -37,6 +37,10 @@
             background-color: #eee;
         }
 
+        #SearchContainer123{
+            width: 45% !importent;
+        }
+
     </style>
     {{-- create formateur  --}}
    <!-- Button trigger modal -->
@@ -180,8 +184,8 @@
     {{-- end create formateur  --}}
 
     {{-- Display formateur info  --}}
-    <div class="input-group rounded">
-        <input wire:model='SearchValue' style="max-width:400px" type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+    <div style="max-width: 400px" id="SearchContainer123" class="input-group rounded" wire:ignore>
+        <input wire:model='SearchValue'   type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
         <span class="input-group-text border-0" id="search-addon">
           <i class="fas fa-search"></i>
         </span>

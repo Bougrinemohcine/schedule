@@ -1,6 +1,18 @@
 <x-HeaderMenuAdmin>
 <style>
+.input-group{
+    width: 75%;
 
+}
+.input-group-text{
+    width: 100px
+}
+@media screen and (max-width:600px){
+    .input-group{
+    width: 100%;
+
+}
+}
 </style>
 
 
@@ -37,7 +49,7 @@
       {{-- name --}}
       <div class="input-group mb-3">
         <div class="input-group-prepend">
-          <span  class="input-group-text" id="inputGroup-sizing-default"><span class="mdi mdi-account-lock" style="margin:5px"></span> Nome</span>
+          <span  class="input-group-text" id="inputGroup-sizing-default"><span class="mdi mdi-account-lock" style=""></span> Nome</span>
         </div>
         <input name="user_name" value="{{$Obj->name}}" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
       </div>
@@ -45,7 +57,7 @@
       {{-- email --}}
       <div class="input-group mb-3">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroup-sizing-default"><span style="margin: 5px" class="mdi mdi-email-edit "> </span> Email</span>
+          <span class="input-group-text" id="inputGroup-sizing-default"><span style="" class="mdi mdi-email-edit "> </span> Email</span>
         </div>
         <input name="email" value="{{$Obj->email}}" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
       </div>
@@ -55,7 +67,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text" id="inputGroup-sizing-default"><span class="mdi mdi-lock-open-variant" style="5px"></span> Password</span>
         </div>
-        <input name="password" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+        <input name="password" type="text" class="form-control" placeholder="******" aria-label="Default" aria-describedby="inputGroup-sizing-default">
       </div>
 
       {{-- Matricule --}}

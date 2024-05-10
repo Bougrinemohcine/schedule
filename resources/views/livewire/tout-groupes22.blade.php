@@ -117,7 +117,7 @@
                                     @elseif ($item === 'Module')
                                         {{ preg_replace('/^\d+/', '', $sission->module_name) }}
                                     @elseif ($item === 'Salle')
-                                        {{ $sission->class_name }}
+                                        {{ $sission->class_name  ."\n" . $sission->typeSalle}}
                                     @elseif ($item === 'type Séance')
                                         {{ $sission->sission_type }}
                                     @endif

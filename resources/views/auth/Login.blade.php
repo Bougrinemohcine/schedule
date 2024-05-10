@@ -59,14 +59,14 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="userpassword">Mot de passe</label>
                                         <div class="input-group">
-                                            <input type="password" name="password" class="form-control" id="userpassword" placeholder="Enter Mot de passe">
+                                            <input style="border:none !importent;"ype="password" name="password" class="form-control" id="userpassword" placeholder="Enter Mot de passe">
                                             <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                                                 <i class="mdi mdi-eye"></i>
                                             </button>
                                         </div>
                                     </div>
 
-                                   
+
 
                                     <div class="mt-3">
                                         <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Log

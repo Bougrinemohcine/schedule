@@ -72,6 +72,16 @@
             font-size: 16px
         }
 
+        #SearchInput{
+            width: 45% !important;
+        }
+
+        @media screen and (max-width: 600px){
+            #SearchInput{
+            width: 100% !important;
+        }
+        }
+
         </style>
         @php
     @endphp
@@ -100,8 +110,8 @@
 
             <select class="form-select"  wire:model="selectedType" wire:change="updateSelectedType($event.target.value)">
                 <option  disabled selected >Select type emploi</option>
-                <option value="Formateur" selected>Formateur</option>
-                <option value="Group">Group</option>
+                <option value="Formateur" selected>Formateurs</option>
+                <option value="Group">Groupes</option>
             </select>
          </div>
 
@@ -263,10 +273,10 @@
                                         @if (!$checkValues[0]->typeSalle)
                                         <select wire:model="salleclassTyp" class="form-select"
                                             aria-label="Default select example">
-                                            <option selected>les Types</option>
+                                            <option selected> Type de salle</option>
                                             @if ($classType)
                                                 @foreach ($classType as $classTyp)
-                                                    <option value="{{ $classTyp->id }}">
+                                                    <option value="{{ $classTyp->class_room_types }}">
                                                         {{ $classTyp->class_room_types }}</option>
                                                 @endforeach
                                             @endif
@@ -280,7 +290,7 @@
                                         @if (!$checkValues[0]->typeSession)
                                         <select wire:model="TypeSesion" class="form-select"
                                             aria-label="Default select example">
-                                            <option selected>Types</option>
+                                            <option selected>Type  de Séance</option>
                                             <option value="presentielle">Presentielle</option>
                                             <option value="teams">Teams</option>
                                         </select>
@@ -292,7 +302,7 @@
                                     <button data-bs-dismiss="modal" wire:click="DeleteSession" aria-label="Close" type="button"  class="btn btn-danger">supprimer</button>
                                     <button data-bs-dismiss="modal" wire:click="UpdateSession" aria-label="Close" type="submit"  class="btn btn-success">Updare</button>
                                 </div>
-                            </form>
+                        </form>
                 </div>
                 </div>
                   </div>
@@ -304,13 +314,27 @@
        <td>{{$group->group_name}}</td>
        @foreach ($dayWeek as $day)
            @foreach (['MatinSE1', 'MatinSE2', 'AmidiSE3', 'AmidiSE4'] as $sessionType)
-           <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases"  wire:click="getidCase('{{ $day.$sessionType.$group->id }}')"  id="{{$day.$sessionType.$group->id }}"  >
+           @php
+               $sessionFound = false ;
+           @endphp
+
                    @foreach ($sissions as $sission)
                        @if ($sission->day === $day && $sission->group_id === $group->id && $sission->day_part === substr($sessionType, 0, 5) && $sission->dure_sission === substr($sessionType, 5))
-                          {{ $sission->sission_type }}<br />{{ $sission->class_name }}<br />{{ $sission->user_name }} <br />{{ preg_replace('/^\d+/' , ' ' , $sission->module_name )}}
+                       @php
+                       $sessionFound = true ;
+                       @endphp
                        @endif
                    @endforeach
-               </td>
+                 <td  style="background-color :  {{$sessionFound ? 'rgba(12, 72, 166, 0.3);' : ''}}" data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases"  wire:click="getidCase('{{ $day.$sessionType.$group->id }}')"  id="{{$day.$sessionType.$group->id }}"  >
+                     @if ($sessionFound)
+                     {{ $sission->sission_type }}
+                     <br />{{ $sission->user_name }}
+                     <br />{{ preg_replace('/^\d+/' , ' ' , $sission->module_name )}}
+
+                     <br />{{ $sission->class_name }}
+                     <br />{{ $sission->typeSalle }}
+                     @endif
+                 </td>
            @endforeach
        @endforeach
    </tr>
@@ -329,7 +353,7 @@
                 @foreach ($sissions as $sission)
                     @if ($sission->day === $day && $sission->user_id === $formateur->id && $sission->day_part === substr($sessionType, 0, 5) && $sission->dure_sission === substr($sessionType, 5))
                         @php
-                            $details = $sission->sission_type . '<br>' . $sission->class_name . '<br>' . $sission->group_name . '<br>' .preg_replace('/^\d+/', '', $sission->module_name) ;
+                            $details = $sission->sission_type . '<br>' . $sission->class_name . '<br>'. $sission->typeSalle.'<br>'. $sission->group_name . '<br>' .preg_replace('/^\d+/', '', $sission->module_name) ;
                             $uniqueDetails = [];
                             foreach (explode('<br>', $details) as $word) {
                                 if (!in_array($word, $sessionWords)) {

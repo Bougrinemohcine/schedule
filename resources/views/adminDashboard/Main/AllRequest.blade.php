@@ -27,38 +27,39 @@
                 border: 1px solid #ddd;
                 text-align: center;
             }
-            td{
-            height: 70px;
 
-        }
+            td {
+                height: 70px;
+
+            }
 
             th {
                 background-color: #f2f2f2;
             }
-            thead tr.day{
+
+            thead tr.day {
                 font-size: 18px;
                 /* font-weight: bold; */
-                padding:30px
+                padding: 30px
             }
-          thead tr.se-row {
+
+            thead tr.se-row {
                 height: 30px !important;
                 width: 30px;
                 margin: 0px;
                 padding: 0px;
                 font-size: 16px
             }
-
         </style>
-         @livewireStyles
+        @livewireStyles
     </head>
+
     <body>
         <livewire:tous-les-demandes />
         @livewireScripts
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <x-livewire-alert::scripts />
     </body>
+
     </html>
-</x-Headers>
-
-
-
+    </x-Headers>

@@ -16,7 +16,7 @@
                 aria-label="Close"></button>
         </div>
         {{-- <form wire:submit.prevent="createSession"> --}}
-            <form wire:submit.prevent=' '>
+            <form wire:submit.prevent='UpdateSession'>
             <div class="modal-body">
                 <div style="display: flex">
                     {{-- branches --}}
@@ -101,10 +101,10 @@
                     @if (!$checkValues[0]->typeSalle)
                     <select wire:model="salleclassTyp" class="form-select"
                         aria-label="Default select example">
-                        <option selected>les Types</option>
+                        <option selected> Type Salle</option>
                         @if ($classType)
                             @foreach ($classType as $classTyp)
-                                <option value="{{ $classTyp->id }}">
+                                <option value="{{ $classTyp->class_room_types }}">
                                     {{ $classTyp->class_room_types }}</option>
                             @endforeach
                         @endif
@@ -119,7 +119,7 @@
                     @if (!$checkValues[0]->typeSession)
                     <select wire:model="TypeSesion" class="form-select"
                         aria-label="Default select example">
-                        <option selected>Types</option>
+                        <option selected>Type  Séance</option>
                         <option value="presentielle">Presentielle</option>
                         <option value="teams">Teams</option>
                         <option value="EFM">EFM</option>

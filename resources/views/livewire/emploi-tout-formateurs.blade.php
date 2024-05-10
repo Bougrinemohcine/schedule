@@ -48,6 +48,16 @@
             margin-top:5px
         }
         }
+
+        #SearchInput{
+            width: 45% !important;
+        }
+
+        @media screen and (max-width: 600px){
+            #SearchInput{
+            width: 100% !important;
+        }
+        }
     </style>
 
     <h2>Schedule Table</h2>
@@ -56,8 +66,8 @@
     <div class="table-responsive">
         <h3 class="hide" style="margin: auto ; width :fit-content;">Emploi Global hebdomadaire</h3>
         @if($tableEmploi[0]->toutFormateur == '1')
-        <div class="input-group rounded">
-            <input wire:model='SearchValue' style="max-width:400px" type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+        <div class="input-group rounded" id="SearchInput">
+            <input wire:model='SearchValue'  type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
             <span class="input-group-text border-0" id="search-addon">
               <i class="fas fa-search"></i>
             </span>
@@ -162,6 +172,7 @@
                                $foundSession = false;
                                $groupes = [];
                                $salleValue ;
+                               $typeSalle ;
                                $typeValue ;
                                $ModelValue ;
                            @endphp
@@ -174,6 +185,7 @@
                                        $foundSession = true;
                                        $groupes[] = $sission->group_name;
                                        $salleValue = $sission->class_name ;
+                                       $typeSalle = $sission->typeSalle ;
                                        $typeValue = $sission->sission_type ;
                                        $ModelValue = $sission->module_name ;
                                    @endphp
@@ -181,10 +193,11 @@
                            @endforeach
                            <td wire:click="updateCaseStatus({{ $foundSession ? 'false' : 'true' }})"
                                colspan="1" rowspan="1"  data-bs-toggle="modal"  data-bs-target="#exampleModal"
+                               style="!important;height: 50px !important; overflow: hidden ; background-color:{{ $foundSession ? 'rgba(12, 72, 166, 0.3)' :  ''}}"
                                class="TableCases" id="{{ $day.$sessionType.$formateur->id }}">
                                @if ($foundSession)
                                    {{ $typeValue}}</br>
-                                   {{ $salleValue }}</br>
+                                   {{ $salleValue ."\n". $typeSalle }}</br>
                                    {{ implode(' - ', $groupes) }}</br>
                                    {{ preg_replace('/^\d/', ' ', $ModelValue) }}
                                @endif

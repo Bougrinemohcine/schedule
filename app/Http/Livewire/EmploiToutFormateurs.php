@@ -57,7 +57,7 @@ class EmploiToutFormateurs extends Component
     public $SearchValue;
     public $branches ;
     public $tableEmploi ;
-    public $isActive = true ;
+
 
 
 
@@ -82,11 +82,14 @@ class EmploiToutFormateurs extends Component
 
 
 
+
     public $isCaseEmpty = true;
+
 
     public function updateCaseStatus($isEmpty )
     {
         $this->isCaseEmpty = $isEmpty;
+
 
     }
 
@@ -142,14 +145,34 @@ class EmploiToutFormateurs extends Component
                         foreach ($this->selectedGroups as $group) {
                             $item->update(['group_id' => $group]);
                         }
+
+                        $this->alert('success', 'Vous modifiez le Formateur de cette séance.',[
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,]);
                     }
 
                     if ($this->salle !== null) {
                         $item->update(['class_room_id' => $this->salle]);
+                        $this->alert('success', 'Vous modifiez la salle de cette séance.',[
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,]);
                     }
 
                     if ($this->TypeSesion !== null) {
                         $item->update(['sission_type' => $this->TypeSesion]);
+                        $this->alert('success', 'Vous modifiez le type de cette séance.',[
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,]);
+                    }
+                    if ($this->salleclassTyp !== null) {
+                        $item->update(['typeSalle'=> $this->salleclassTyp]);
+                        $this->alert('success', 'Vous modifiez le type de Salle.',[
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,]);
                     }
                 }
             } else {
@@ -166,6 +189,7 @@ class EmploiToutFormateurs extends Component
                         'validate_date' => null,
                         'main_emploi_id' => session()->get('id_main_emploi'),
                         "demand_emploi_id" => null,
+                        'typeSalle'=>$this->salleclassTyp,
                         'message' => null,
                         'sission_type' => $this->TypeSesion,
                         'status_sission' => 'Accepted',

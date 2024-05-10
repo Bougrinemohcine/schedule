@@ -60,6 +60,9 @@ class FormateurRequests extends Component
     public $daysPart;
     public $seancesPart;
     public $comment;
+    public $statusseace;
+    public $seance;
+    public $seanceFirst;
 
 
     protected $listeners = [
@@ -101,6 +104,18 @@ class FormateurRequests extends Component
     {
         $this->isCaseEmpty = $isEmpty;
         $this->receivedVariable = $variable . Auth::id();
+        $idcase = $this->receivedVariable;
+            $day = substr($idcase, 0, 3);
+            $day_part = substr($idcase, 3, 5);
+            $user_id = Auth::id();
+            $dure_sission = substr($idcase, 8, 3);
+            $this->seanceFirst = Sission::select('status_sission')
+            ->where('main_emploi_id', $this->emploiID)
+            ->where('user_id', Auth::id())
+            ->where('day', $day)
+            ->where('day_part', $day_part)
+            ->where('dure_sission', $dure_sission)
+            ->get();
         $this->formateurId = Auth::id();
         $this->brancheId = null;
         $this->formateur = null;
@@ -287,9 +302,11 @@ class FormateurRequests extends Component
             ->distinct()
             ->pluck('year');
 
+        $MainUser = User::where('role', 'admin')->first();
+
 
             $this->checkValues = Setting::select('typeSession', 'branch', 'year', 'module', 'formateur', 'salle', 'typeSalle')
-            ->where('userId', 1)
+            ->where('userId', $MainUser->id)
             ->get();
 
 

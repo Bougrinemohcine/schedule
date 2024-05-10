@@ -272,20 +272,33 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">Close</button>
-                            @if ($isCaseEmpty == false)
-                                <button data-bs-dismiss="modal" wire:click="DeleteSession" aria-label="Close"
-                                type="button" class="btn btn-danger">supprimer</button>
-                            @endif
-                        <button data-bs-dismiss="modal" wire:click="UpdateSession" aria-label="Close"
-                            type="submit" class="btn btn-success">
-                            @if ($isCaseEmpty == false)
-                                Update
-
-                            @else
-                                Save
-                            @endif
+                            data-bs-dismiss="modal">Close
                         </button>
+
+                        @if($seanceFirst !== null && $seanceFirst->isNotEmpty())
+                            @php
+                                $thevalue = $seanceFirst[0]->status_sission;
+                            @endphp
+                            @if ($thevalue !== 'Accepted')
+                                @if ($isCaseEmpty == false)
+                                    <button data-bs-dismiss="modal" wire:click="DeleteSession" aria-label="Close"
+                                    type="button" class="btn btn-danger">supprimer</button>
+                                @endif
+                                <button data-bs-dismiss="modal" wire:click="UpdateSession" aria-label="Close"
+                                type="submit" class="btn btn-success">
+                                @if ($isCaseEmpty == false)
+                                    Update
+
+                                @else
+                                    Save
+                                @endif
+                            </button>
+                            @endif
+                        @else
+                            <button data-bs-dismiss="modal" wire:click="UpdateSession" aria-label="Close"
+                            type="submit" class="btn btn-success">Save</button>
+                        @endif
+
 
                     </div>
                 </form>

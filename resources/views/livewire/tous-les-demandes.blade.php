@@ -181,28 +181,42 @@
                                     <div class="modal-body">
                                         <div style="display: flex">
                                             {{-- branches --}}
-                                            @if (!$checkValues[0]->branch)
-                                            <select wire:model='brancheId'  class="form-select "  aria-label="Default select example">
-                                                <option > Filiére</option>
-                                                @if ($baranches)
-                                                @foreach ($baranches as $baranche)
-                                                <option value="{{ $baranche->id }}">{{ $baranche->name }}</option>
-                                                @endforeach
-                                                @endif
-                                                </select >
-                                                @endif
-                                                {{-- year --}}
+                                            @if($selectedType!=='Group')
 
-                                                @if (!$checkValues[0]->year)
-                                                <select wire:model='selectedYear'  class="form-select "  aria-label="Default select example">
-                                                    <option > année </option>
-                                                    @if ($yearFilter)
-                                                    @foreach ($yearFilter as $item)
-                                                    <option value="{{ $item }}">{{ $item}}</option>
+                                                @if (!$checkValues[0]->branch)
+                                                <select wire:model='brancheId'  class="form-select "  aria-label="Default select example">
+                                                    <option > Filiére</option>
+                                                    @if ($baranches)
+                                                    @foreach ($baranches as $baranche)
+                                                    <option value="{{ $baranche->id }}">{{ $baranche->name }}</option>
                                                     @endforeach
                                                     @endif
-                                                </select >
-                                                @endif
+                                                    </select >
+                                                    @endif
+                                                    {{-- year --}}
+
+                                                    @if (!$checkValues[0]->year)
+                                                    <select wire:model='selectedYear'  class="form-select "  aria-label="Default select example">
+                                                        <option > année </option>
+                                                        @if ($yearFilter)
+                                                        @foreach ($yearFilter as $item)
+                                                        <option value="{{ $item }}">{{ $item}}</option>
+                                                        @endforeach
+                                                        @endif
+                                                    </select >
+                                                    @endif
+                                            @endif
+                                            @if($selectedType==='Group')
+                                            <select wire:model='formateur' class="form-select"
+                                                aria-label="Default select example">
+
+                                                    <option selected>Formateurs</option>
+                                                        @foreach ($Group_has_formateurs as $formateur)
+                                                            <option value="{{ $formateur->id }}">
+                                                                {{ $formateur->user_name }}</option>
+                                                        @endforeach
+                                            </select>
+                                            @endif
                                                 {{-- module  content --}}
                                             @if (!$checkValues[0]->module)
                                             <select wire:model="module" class="form-select "
@@ -221,29 +235,31 @@
                                         <div style="display: block">
 
                                         {{-- Groupes --}}
+                                        @if($selectedType!=='Group')
 
-                                        @if ($groupes->isNotEmpty())
+                                            @if ($groupes->isNotEmpty())
+                                                <div class="mb-3">
+                                                    <h6 style="margin: 10px;">Groupes</h6>
+                                                    <div style="width: 100%;" class="checkboxContainer">
+                                                        @foreach ($groupes as $group)
+                                                            <span style="display: block">
+                                                                <input class="modulesoption" type="checkbox" wire:model="selectedGroups.{{ $group->id }}" value="{{ $group->id }}">
+                                                                <label>{{ $group->group_name }}</label>
+                                                            </span>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @else
+
                                             <div class="mb-3">
                                                 <h6 style="margin: 10px;">Groupes</h6>
-                                                <div style="width: 100%;" class="checkboxContainer">
-                                                    @foreach ($groupes as $group)
-                                                        <span style="display: block">
-                                                            <input class="modulesoption" type="checkbox" wire:model="selectedGroups.{{ $group->id }}" value="{{ $group->id }}">
-                                                            <label>{{ $group->group_name }}</label>
-                                                        </span>
-                                                    @endforeach
+                                                <div style="width: 100%;" style="" class="checkboxContainer ">
+                                                No groupe trouver !
                                                 </div>
                                             </div>
-                                        @else
-
-                                        <div class="mb-3">
-                                            <h6 style="margin: 10px;">Groupes</h6>
-                                            <div style="width: 100%;" style="" class="checkboxContainer ">
-                                            No groupe trouver !
-                                            </div>
-                                        </div>
+                                            @endif
+                                            <br>
                                         @endif
-                                        <br>
 
                                             {{-- salle --}}
                                             @if (!$checkValues[0]->salle)

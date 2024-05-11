@@ -47,7 +47,6 @@
                         <!-- Display seance part in the bottom row -->
                         <th>{{ $seance_part }}</th>
                     @endforeach
-
                 </tr>
             </thead>
             <tbody>
@@ -81,56 +80,80 @@
                             }
                         @endphp
                         <th>{{ $day }}</th>
+
                         <!-- Loop through each seance part -->
-
                         @foreach ($seancesPart as $seance_part)
-                            @php $seanceFound = false;
-                            if ($seance_part == 'SE1') {
-                                $day_part = 'MatinSE1';
-                            }elseif ($seance_part == 'SE2') {
-                                $day_part = 'MatinSE2';
-                            }elseif ($seance_part == 'SE3') {
-                                $day_part = 'AmidiSE3';
-                            }elseif ($seance_part == 'SE4') {
-                                $day_part = 'AmidiSE4';
-                            }
-                           @endphp
+                            @php
+                                $seanceFound = false;
+                                $groupNames = [];
+                                $salleValue = '';
+                                $typeSalle = '';
+                                $typeValue = '';
+                                $ModelValue = '';
+                                $color = '';
+                                if ($seance_part == 'SE1') {
+                                    $day_part = 'MatinSE1';
+                                } elseif ($seance_part == 'SE2') {
+                                    $day_part = 'MatinSE2';
+                                } elseif ($seance_part == 'SE3') {
+                                    $day_part = 'AmidiSE3';
+                                } elseif ($seance_part == 'SE4') {
+                                    $day_part = 'AmidiSE4';
+                                }
+                            @endphp
+
+                            <!-- Loop through each session -->
                             @foreach ($allSeances as $AllSeance)
-                                @php
-                                    $color = '';
-                                    if ($AllSeance->status_sission === 'Pending') {
-                                        $color = 'orange';
-                                    } elseif ($AllSeance->status_sission === 'Accepted') {
-                                        $color = 'green';
-                                    } elseif ($AllSeance->status_sission === 'Cancelled') {
-                                        $color = 'red';
-                                    }
-
-                                @endphp
                                 @if ($AllSeance->day == $day_of_week && $AllSeance->dure_sission == $seance_part)
-                                    @php $seanceFound = true; @endphp
-                                    <td wire:click="updateCaseStatus({{ $seanceFound ? 'false' : 'true' }},'{{ $day_of_week . $day_part }}')" data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
-                                        data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
-                                        data-seanceId="{{ $AllSeance->id }}" class="Cases"
-                                        style="color: {{ $color }}">
-                                        {{ $AllSeance->sission_type }}<br>
-                                        {{ $AllSeance->group->group_name }} <br>
-                                        {{ $AllSeance->class_room->class_name }}
-                                    </td>
+                                    @php
+                                        $seanceFound = true;
+                                        $groupNames[] = $AllSeance->group->group_name;
+                                        $salleValue = $AllSeance->class_room->class_name;
+                                        $typeSalle = $AllSeance->class_room->typeSalle;
+                                        $typeValue = $AllSeance->sission_type;
+                                        $ModelValue = $AllSeance->module_name;
 
+                                        // Set color based on session status
+                                        switch ($AllSeance->status_sission) {
+                                            case 'Pending':
+                                                $color = 'orange';
+                                                break;
+                                            case 'Accepted':
+                                                $color = 'green';
+                                                break;
+                                            case 'Cancelled':
+                                                $color = 'red';
+                                                break;
+                                            default:
+                                                $color = '';
+                                                break;
+                                        }
+                                    @endphp
                                 @endif
                             @endforeach
-                            @if (!$seanceFound)
+
+                            <!-- Display session information -->
+                            @if ($seanceFound)
                                 <td wire:click="updateCaseStatus({{ $seanceFound ? 'false' : 'true' }},'{{ $day_of_week . $day_part }}')" data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
-                                data-day="{{ $day_of_week }}" data-seance="{{ $seance_part }}"
-                                    class="Cases">
+                                    class="Cases" style="color: {{$color}}">
+                                    {{ $typeValue }}<br>
+                                    {{ $salleValue . ' - ' . $typeSalle }}<br>
+                                    {{ implode(', ', $groupNames) }}<br>
+                                    {{ preg_replace('/^\d/', ' ', $ModelValue) }}
                                 </td>
+                            @else
+                                <!-- Display an empty cell if no session found -->
+                                <td wire:click="updateCaseStatus({{ $seanceFound ? 'false' : 'true' }},'{{ $day_of_week . $day_part }}')" data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
+                                    class="Cases"></td>
                             @endif
                         @endforeach
                     </tr>
                 @endforeach
             </tbody>
         </table>
+
+
+
         <br>
     </div>
     @if (session('success'))

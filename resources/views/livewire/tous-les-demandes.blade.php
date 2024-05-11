@@ -179,118 +179,114 @@
                                 </div>
                                 <form wire:submit.prevent="UpdateSession">
                                     <div class="modal-body">
-                                        {{-- branches  --}}
-                                        @if ($selectedType !== 'Group')
+                                        <div style="display: flex">
+                                            {{-- branches --}}
                                             @if (!$checkValues[0]->branch)
-                                                <select wire:model='brancheId' class="form-select "
-                                                    aria-label="Default select example">
-                                                    <option>Filiére</option>
-                                                    @if ($baranches)
-                                                        @foreach ($baranches as $baranche)
-                                                            <option value="{{ $baranche->id }}">{{ $baranche->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            @endif
+                                            <select wire:model='brancheId'  class="form-select "  aria-label="Default select example">
+                                                <option > Filiére</option>
+                                                @if ($baranches)
+                                                @foreach ($baranches as $baranche)
+                                                <option value="{{ $baranche->id }}">{{ $baranche->name }}</option>
+                                                @endforeach
+                                                @endif
+                                                </select >
+                                                @endif
+                                                {{-- year --}}
 
-                                            @if (!$checkValues[0]->year)
-                                                <select wire:model='selectedYear' class="form-select "
-                                                    aria-label="Default select example">
-                                                    <option>année</option>
+                                                @if (!$checkValues[0]->year)
+                                                <select wire:model='selectedYear'  class="form-select "  aria-label="Default select example">
+                                                    <option > année </option>
                                                     @if ($yearFilter)
-                                                        @foreach ($yearFilter as $item)
-                                                            <option value="{{ $item }}">{{ $item }}
-                                                            </option>
-                                                        @endforeach
+                                                    @foreach ($yearFilter as $item)
+                                                    <option value="{{ $item }}">{{ $item}}</option>
+                                                    @endforeach
                                                     @endif
-                                                </select>
+                                                </select >
+                                                @endif
+                                                {{-- module  content --}}
+                                            @if (!$checkValues[0]->module)
+                                            <select wire:model="module" class="form-select "
+                                            aria-label="Default select example">
+                                            <option selected>Modules</option>
+                                            @if ($modules)
+                                                @foreach ($modules as $module)
+                                                    <option value="{{ $module->id }}">
+                                                        {{ preg_replace('/^\d+/' , '' ,$module->id )}}</option>
+                                                @endforeach
                                             @endif
+                                        </select>
                                         @endif
 
-                                        <div style="display: flex">
+                                        </div>
+                                        <div style="display: block">
 
-                                            {{-- Formateur --}}
-                                            @if ($selectedType === 'Group')
-                                                <select wire:model='formateur' class="form-select"
-                                                    aria-label="Default select example">
-                                                    <option selected>Formateurs</option>
-                                                    @foreach ($Group_has_formateurs as $formateur)
-                                                        <option value="{{ $formateur->id }}">
-                                                            {{ $formateur->user_name }}</option>
+                                        {{-- Groupes --}}
+
+                                        @if ($groupes->isNotEmpty())
+                                            <div class="mb-3">
+                                                <h6 style="margin: 10px;">Groupes</h6>
+                                                <div style="width: 100%;" class="checkboxContainer">
+                                                    @foreach ($groupes as $group)
+                                                        <span style="display: block">
+                                                            <input class="modulesoption" type="checkbox" wire:model="selectedGroups.{{ $group->id }}" value="{{ $group->id }}">
+                                                            <label>{{ $group->group_name }}</label>
+                                                        </span>
                                                     @endforeach
-                                                </select>
-                                            @else
-                                                <select wire:model="group" class="form-select"
-                                                    aria-label="Default select example">
-                                                    <option value="" selected>Groupes</option>
-                                                    @if (!$groupes->isEmpty())
-                                                        @foreach ($groupes as $grp)
-                                                            <option value="{{ $grp->id }}">{{ $grp->group_name }}
-                                                            </option>
-                                                        @endforeach
-                                                    @else
-                                                        <option>Pas de groupe trouvé <i style="color:black"
-                                                                class="mdi mdi-alert-rhombus"></i></option>
-                                                    @endif
-                                                </select>
-                                            @endif
+                                                </div>
+                                            </div>
+                                        @else
 
-                                            {{-- module  content --}}
-                                            @if (!$checkValues[0]->module)
-                                                <select wire:model="module" class="form-select "
-                                                    aria-label="Default select example">
-                                                    <option selected>Modules</option>
-                                                    @if ($modules)
-                                                        @foreach ($modules as $module)
-                                                            <option value="{{ $module->id }}">
-                                                                {{ preg_replace('/^\d+/', '', $module->id) }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            @endif
+                                        <div class="mb-3">
+                                            <h6 style="margin: 10px;">Groupes</h6>
+                                            <div style="width: 100%;" style="" class="checkboxContainer ">
+                                            No groupe trouver !
+                                            </div>
+                                        </div>
+                                        @endif
+                                        <br>
 
                                             {{-- salle --}}
                                             @if (!$checkValues[0]->salle)
-                                                <select wire:model="salle" class="form-select"
-                                                    aria-label="Default select example">
-                                                    <option selected>les salles</option>
-                                                    @if ($salles)
-                                                        @foreach ($salles as $salle)
-                                                            <option value="{{ $salle->id }}">
-                                                                {{ $salle->class_name }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
+                                            <select wire:model="salle" class="form-select"
+                                                aria-label="Default select example">
+                                                <option selected>les salles</option>
+                                                @if (!empty($salles))
+                                                    @foreach ($salles as $salle)
+                                                        <option value="{{ $salle->id }}">
+                                                            {{ $salle->class_name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
                                             @endif
                                         </div>
                                         {{-- tyope session --}}
                                         <div style="display: flex;justify-content: space-between">
                                             @if (!$checkValues[0]->typeSalle)
-                                                <select wire:model="salleclassTyp" class="form-select"
-                                                    aria-label="Default select example">
-                                                    <option selected>les Types</option>
-                                                    @if ($classType)
-                                                        @foreach ($classType as $classTyp)
-                                                            <option value="{{ $classTyp->id }}">
-                                                                {{ $classTyp->class_room_types }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
+                                            <select wire:model="salleclassTyp" class="form-select"
+                                                aria-label="Default select example">
+                                                <option selected> Type Salle</option>
+                                                @if ($classType)
+                                                    @foreach ($classType as $classTyp)
+                                                        <option value="{{ $classTyp->class_room_types }}">
+                                                            {{ $classTyp->class_room_types }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
                                             @endif
+
                                             {{-- id case --}}
-                                            <input type="hidden" value="{{ $receivedVariable }}">
+                                            <input type="hidden"   value="{{$receivedVariable}}" >
                                         </div>
                                         {{-- day part && type sission --}}
                                         <div style="display: flex">
                                             @if (!$checkValues[0]->typeSession)
-                                                <select wire:model="TypeSesion" class="form-select"
-                                                    aria-label="Default select example">
-                                                    <option selected>Types</option>
-                                                    <option value="presentielle">Presentielle</option>
-                                                    <option value="teams">Teams</option>
-                                                </select>
+                                            <select wire:model="TypeSesion" class="form-select"
+                                                aria-label="Default select example">
+                                                <option selected>Type  Séance</option>
+                                                <option value="presentielle">Presentielle</option>
+                                                <option value="teams">Teams</option>
+                                                <option value="EFM">EFM</option>
+                                            </select>
                                             @endif
                                         </div>
                                     </div>

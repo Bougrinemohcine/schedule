@@ -134,7 +134,6 @@ class EmploiToutFormateurs extends Component
                 'dure_sission' => $dure_sission,
             ])->get();
 
-            // dd($session);
             if ($session->isNotEmpty()) {
                 foreach ($session as $item) {
                     if ($this->module !== null) {

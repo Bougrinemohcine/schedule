@@ -150,46 +150,48 @@ class TousLesDemandes extends Component
     }
 
     public function Accepte()
-    {
-        $day = substr($this->receivedVariable, 0, 3);
-        $day_part = substr($this->receivedVariable, 3, 5);
-        $group_id = substr($this->receivedVariable, 11);
-        $user_id = substr($this->receivedVariable, 11);
-        $dure_sission = substr($this->receivedVariable, 8, 3);
+{
+    $day = substr($this->receivedVariable, 0, 3);
+    $day_part = substr($this->receivedVariable, 3, 5);
+    $group_id = substr($this->receivedVariable, 11);
+    $user_id = substr($this->receivedVariable, 11);
+    $dure_sission = substr($this->receivedVariable, 8, 3);
 
-        $sessionsQuery = Session::where([
-            'main_emploi_id' => $this->selectedValue,
-            'day' => $day,
-            'day_part' => $day_part,
-            'dure_sission' => $dure_sission,
-        ]);
+    $sessionsQuery = sission::where([
+        'main_emploi_id' => $this->selectedValue,
+        'day' => $day,
+        'day_part' => $day_part,
+        'dure_sission' => $dure_sission,
+    ]);
 
-        if ($this->selectedType === "Group") {
-            $sessionsQuery->where('group_id', $group_id);
-        } else {
-            $sessionsQuery->where('user_id', $this->formateurId);
-        }
+    if ($this->selectedType === "Group") {
+        $sessionsQuery->where('group_id', $group_id);
+    } else {
+        $sessionsQuery->where('user_id', $this->formateurId);
+    }
 
-        $session = $sessionsQuery->first();
+    $sessions = $sessionsQuery->get();
 
-        if ($session) {
+    if ($sessions->isNotEmpty()) {
+        foreach ($sessions as $session) {
             $session->status_sission = 'Accepted';
             $session->save();
-
-            $this->alert('success', 'Session accepted successfully.', [
-                'position' => 'center',
-                'timer' => 3000,
-                'toast' => true,
-            ]);
-        } else {
-            $this->alert('error', 'Session not found.', [
-                'position' => 'center',
-                'timer' => 3000,
-                'toast' => true,
-            ]);
         }
 
+        $this->alert('success', 'Sessions accepted successfully.', [
+            'position' => 'center',
+            'timer' => 3000,
+            'toast' => true,
+        ]);
+    } else {
+        $this->alert('error', 'No sessions found to accept.', [
+            'position' => 'center',
+            'timer' => 3000,
+            'toast' => true,
+        ]);
     }
+}
+
     //--------------------------------------------------------------- NEWADD
 
     public function receiveidEmploiid($variable)

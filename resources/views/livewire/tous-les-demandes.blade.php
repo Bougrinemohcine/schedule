@@ -449,9 +449,26 @@
                                             data-bs-target="#exampleModal" class="TableCases"
                                             id="{{ $day . $sessionType . $formateur->id }}">
                                             @if ($foundSession)
-                                                {{ $typeValue }}<br>
-                                                {{ $salleValue }}<br>
-                                                {{ implode(' - ', $groupes) }}<br>
+                                                    @if(count($groupes) >= 2)
+                                                    @php
+                                                        // Extract party string
+                                                        $partyString = substr($groupes[0], 0, -3);
+                                                    @endphp
+                                                    {{ $partyString }} |
+                                                    @foreach ($groupes as $index => $groupName)
+                                                        @php
+                                                            // Extract party int
+                                                            $partyInt = substr($groupName, -3);
+                                                        @endphp
+                                                        {{ $partyInt }}
+                                                        @if($index != count($groupes) - 1)
+                                                            , <!-- Add comma if it's not the last party int -->
+                                                        @endif
+                                                    @endforeach
+                                                @else
+                                                    {{ implode(',', $groupes) }}
+                                                @endif
+                                                <br>
                                                 {{ preg_replace('/^\d/', ' ', $ModelValue) }}
                                             @endif
                                         </td>

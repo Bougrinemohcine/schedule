@@ -114,11 +114,11 @@ class FormateurRequestController extends Controller
 
                     $sission->save();
                     // Notify admin about the new request emploi
-                    $MainUser = User::where('role', 'admin')->first();
-                    $comment = $item['message'];
-                    $type = 'seance';
-                    $FormateurRequest = Auth::user()->user_name;
-                    Notification::send($MainUser, new RequestEmploiNotification($type, $sission->id, $FormateurRequest, $mainEmploiId, $comment, $sission->status_sission));
+                    // $MainUser = User::where('role', 'admin')->first();
+                    // $comment = $item['message'];
+                    // $type = 'seance';
+                    // $FormateurRequest = Auth::user()->user_name;
+                    // Notification::send($MainUser, new RequestEmploiNotification($type, $sission->id, $FormateurRequest, $mainEmploiId, $comment, $sission->status_sission));
                     Log::info('Sission created:', ['data' => $item]);
                 }
                 return response()->json(['sucess' => 'Toutes les données ont été soumises avec succès.', 'status' => 200]);
@@ -173,65 +173,65 @@ class FormateurRequestController extends Controller
     }
 
 
-    public function createRequestEmploi(Request $request)
-    {
-        try {
-            // Validate the incoming request data
-            $validatedData = $request->validate([
-                'mainEmploiId' => 'required|integer',
-                'comment' => 'nullable|string',
-            ]);
+    // public function createRequestEmploi(Request $request)
+    // {
+    //     try {
+    //         // Validate the incoming request data
+    //         $validatedData = $request->validate([
+    //             'mainEmploiId' => 'required|integer',
+    //             'comment' => 'nullable|string',
+    //         ]);
 
-            // Retrieve the validated employment ID and comment from the request data
-            $mainEmploiId = $validatedData['mainEmploiId'];
-            $comment = $validatedData['comment'];
+    //         // Retrieve the validated employment ID and comment from the request data
+    //         $mainEmploiId = $validatedData['mainEmploiId'];
+    //         $comment = $validatedData['comment'];
 
-            // Get the authenticated user's ID
-            $user_id = Auth::id();
+    //         // Get the authenticated user's ID
+    //         $user_id = Auth::id();
 
-            // Check if a request already exists for the user and employment ID
-            $existingRequest = RequestEmploi::where('user_id', $user_id)
-                ->where('main_emploi_id', $mainEmploiId)
-                ->first();
-            $requestExists = $existingRequest ? true : false;
+    //         // Check if a request already exists for the user and employment ID
+    //         $existingRequest = RequestEmploi::where('user_id', $user_id)
+    //             ->where('main_emploi_id', $mainEmploiId)
+    //             ->first();
+    //         $requestExists = $existingRequest ? true : false;
 
-            if ($existingRequest) {
-                // If a request already exists, update it
-                $existingRequest->update([
-                    'date_request' => now(),
-                    'comment' => $comment,
-                ]);
-                // Notify admin about the new request emploi
-                $MainUser = User::where('role', 'admin')->first();
-                $FormateurRequest = Auth::user()->user_name;
-                $type = 'emploi';
+    //         if ($existingRequest) {
+    //             // If a request already exists, update it
+    //             $existingRequest->update([
+    //                 'date_request' => now(),
+    //                 'comment' => $comment,
+    //             ]);
+    //             // Notify admin about the new request emploi
+    //             $MainUser = User::where('role', 'admin')->first();
+    //             $FormateurRequest = Auth::user()->user_name;
+    //             $type = 'emploi';
 
-                Notification::send($MainUser, new RequestEmploiNotification($type, $existingRequest->id, $FormateurRequest, $mainEmploiId, $comment, ''));
-                return response()->json(['message' => 'Request emploi updated successfully.', 'status' => 400, 'requestExists' => $requestExists]);
-            } else {
-                // If no request exists, create a new one
-                $requestEmploi = new RequestEmploi([
-                    'date_request' => now(),
-                    'comment' => $comment,
-                    'user_id' => $user_id,
-                    'main_emploi_id' => $mainEmploiId,
-                ]);
-                $requestEmploi->save();
+    //             Notification::send($MainUser, new RequestEmploiNotification($type, $existingRequest->id, $FormateurRequest, $mainEmploiId, $comment, ''));
+    //             return response()->json(['message' => 'Request emploi updated successfully.', 'status' => 400, 'requestExists' => $requestExists]);
+    //         } else {
+    //             // If no request exists, create a new one
+    //             $requestEmploi = new RequestEmploi([
+    //                 'date_request' => now(),
+    //                 'comment' => $comment,
+    //                 'user_id' => $user_id,
+    //                 'main_emploi_id' => $mainEmploiId,
+    //             ]);
+    //             $requestEmploi->save();
 
-                // Notify admin about the new request emploi
-                $MainUser = User::where('role', 'admin')->first();
-                $FormateurRequest = Auth::user()->user_name;
-                $type = 'emploi';
+    //             // Notify admin about the new request emploi
+    //             $MainUser = User::where('role', 'admin')->first();
+    //             $FormateurRequest = Auth::user()->user_name;
+    //             $type = 'emploi';
 
-                Notification::send($MainUser, new RequestEmploiNotification($type, $requestEmploi->id, $FormateurRequest, $mainEmploiId, $comment, ''));
+    //             Notification::send($MainUser, new RequestEmploiNotification($type, $requestEmploi->id, $FormateurRequest, $mainEmploiId, $comment, ''));
 
-                return response()->json(['message' => 'Request emploi created successfully.', 'status' => 300, 'requestExists' => $requestExists]);
-            }
-        } catch (\Exception $e) {
-            // Return error response in case of any exceptions
-            return response()->json(['message' => 'Error creating or updating request emploi.', 'status' => 500, 'error' => $e->getMessage()]);
-        }
-    }
+    //             return response()->json(['message' => 'Request emploi created successfully.', 'status' => 300, 'requestExists' => $requestExists]);
+    //         }
+    //     } catch (\Exception $e) {
+    //         // Return error response in case of any exceptions
+    //         return response()->json(['message' => 'Error creating or updating request emploi.', 'status' => 500, 'error' => $e->getMessage()]);
+    //     }
+    // }
     public function settings()
     {
         // Retrieve the authenticated user

@@ -82,6 +82,8 @@ class FormateurRequests extends Component
              // Fetch all main emplois
 
              // Fetch initial seances data
+             $this->selectedGroups = [];
+
              $this->handleEmploiChange($this->emploiID);
          }else{
             $this->emploiID = $this->emploiID;
@@ -232,7 +234,6 @@ class FormateurRequests extends Component
         }
         $this->mount();
     }
-
     public function UpdateSession()
     {
         try {
@@ -242,12 +243,39 @@ class FormateurRequests extends Component
             $dure_sission = substr($idcase, 8, 3);
             $user_id = Auth::id();
             $requestEmploiId = RequestEmploi::where('user_id', $user_id)
-            ->where('main_emploi_id', $this->emploiID)
-            ->value('id');
+                ->where('main_emploi_id', $this->emploiID)
+                ->value('id');
 
             if (!$requestEmploiId) {
                 $this->alert('error', 'Tu dois créer une demande d\'emploi pour cet emploi d\'abord.');
-            }else{
+            } else {
+
+                if ($this->salle === null) {
+                    $this->alert('error', 'Vous devriez sélectionner la salle.', [
+                        'position' => 'center',
+                        'timer' => 3000,
+                        'toast' => true,
+                    ]);
+                    return;
+                }
+
+                if ($this->TypeSesion === null) {
+                    $this->alert('error', 'Vous devriez sélectionner le type de cette séance.', [
+                        'position' => 'center',
+                        'timer' => 3000,
+                        'toast' => true,
+                    ]);
+                    return;
+                }
+
+                if (empty($this->selectedGroups)) {
+                    $this->alert('error', 'Vous devriez sélectionner le Groupe de cette séance.', [
+                        'position' => 'center',
+                        'timer' => 3000,
+                        'toast' => true,
+                    ]);
+                    return;
+                }
                 $session = Sission::where([
                     'main_emploi_id' => $this->emploiID,
                     'day' => $day,
@@ -255,7 +283,6 @@ class FormateurRequests extends Component
                     'user_id' => $user_id,
                     'dure_sission' => $dure_sission,
                 ])->get();
-
                 if ($session->isNotEmpty()) {
                     foreach ($session as $item) {
                         if ($this->module !== null) {
@@ -267,7 +294,7 @@ class FormateurRequests extends Component
                                 $item->update(['group_id' => $group]);
                             }
 
-                            $this->alert('success', 'Vous modifiez le Formateur de cette séance.',[
+                            $this->alert('success', 'Vous modifiez le Groupe de cette séance.',[
                                 'position' => 'center',
                                 'timer' => 3000,
                                 'toast' => true,]);
@@ -296,7 +323,7 @@ class FormateurRequests extends Component
                                 'toast' => true,]);
                         }
                     }
-                    $this->mount();
+
                 } else {
                     foreach ($this->selectedGroups as $group) {
                         Sission::create([
@@ -318,49 +345,52 @@ class FormateurRequests extends Component
                         ]);
                     }
 
+
                     $this->mount();
-                    $this->selectedGroups = [];
                     $this->alert('success', 'Vous créez une nouvelle session', [
                         'position' => 'center',
                         'timer' => 3000,
                         'toast' => true,
                     ]);
                 }
+                $comment = '';
+                    $type = 'seance';
+                    $MainUser = User::where('role', 'admin')->first();
+                    Notification::send($MainUser, new RequestEmploiNotification($type,$requestEmploiId, Auth::user()->user_name,$this->emploiID, $comment,''));
             }
             $this->mount();
-            $this->emit('fresh');
-        } catch (\Illuminate\Database\QueryException $e) {
-
-                    if (strpos($e->getMessage(), "Column 'main_emploi_id' cannot be null") !== false) {
-                        $this->alert('error', 'Vous devriez sélectionner la date de début.', [
-                            'position' => 'center',
-                            'timer' => 3000,
-                            'toast' => true,
-                        ]);
-                    } elseif (strpos($e->getMessage(), "Column 'user_id' cannot be null") !== false) {
-                        $this->alert('error', 'Vous devriez sélectionner le formateur.', [
-                            'position' => 'center',
-                            'timer' => 3000,
-                            'toast' => true,
-                        ]);
-                    } elseif (strpos($e->getMessage(), "Column 'class_room_id' cannot be null") !== false) {
-                        $this->alert('error', 'Vous devriez sélectionner la salle.', [
-                            'position' => 'center',
-                            'timer' => 3000,
-                            'toast' => true,
-                        ]);
-                    } else {
-                        // Generic error handling
-                        $this->alert('error', $e->errorInfo[2], [
-                            'position' => 'center',
-                            'timer' => 3000,
-                            'toast' => true,
-                        ]);
-                        return redirect()->back()->withErrors(['insertion_error' => $e->errorInfo[2]]);
-                    }
-                }
-
+        $this->emit('fresh');
+    } catch (\Illuminate\Database\QueryException $e) {
+        if (strpos($e->getMessage(), "Column 'main_emploi_id' cannot be null") !== false) {
+            $this->alert('error', 'Vous devriez sélectionner la date de début.', [
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+            ]);
+        } elseif (strpos($e->getMessage(), "Column 'user_id' cannot be null") !== false) {
+            $this->alert('error', 'Vous devriez sélectionner le formateur.', [
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+            ]);
+        } elseif (strpos($e->getMessage(), "Column 'class_room_id' cannot be null") !== false) {
+            $this->alert('error', 'Vous devriez sélectionner la salle.', [
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+            ]);
+        } else {
+            // Generic error handling
+            $this->alert('error', $e->errorInfo[2], [
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+            ]);
+            return redirect()->back()->withErrors(['insertion_error' => $e->errorInfo[2]]);
+        }
     }
+}
+
 
     public function render()
     {$this->mainEmplois = main_emploi::all();

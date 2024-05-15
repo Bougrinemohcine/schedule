@@ -428,6 +428,7 @@
                                                     $salleValue = $sission->class_name;
                                                     $typeValue = $sission->sission_type;
                                                     $ModelValue = $sission->module_name;
+
                                                     if ($sission->status_sission) {
                                                         # code...
                                                         if ($sission->status_sission === 'Pending') {
@@ -449,6 +450,8 @@
                                             data-bs-target="#exampleModal" class="TableCases"
                                             id="{{ $day . $sessionType . $formateur->id }}">
                                             @if ($foundSession)
+                                            {{ $typeValue }}<br>
+                                            {{ $salleValue }}<br>
                                                     @if(count($groupes) >= 2)
                                                     @php
                                                         // Extract party string
@@ -468,6 +471,7 @@
                                                 @else
                                                     {{ implode(',', $groupes) }}
                                                 @endif
+
                                                 <br>
                                                 {{ preg_replace('/^\d/', ' ', $ModelValue) }}
                                             @endif

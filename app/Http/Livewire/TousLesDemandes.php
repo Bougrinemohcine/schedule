@@ -222,59 +222,103 @@ class TousLesDemandes extends Component
                 'day_part' => $day_part,
                 'dure_sission' => $dure_sission,
             ]);
-                $sessionQuery->where('user_id', $user_id);
+            $sessionQuery->where('user_id', $user_id);
             $session = $sessionQuery->first();
 
             if ($session) {
-                $updates = [];
+                if ($this->TypeSesion === 'teams') {
+                        $session->update(['class_room_id' => $this->salle]);
+                        $this->alert('success', 'Vous modifiez la salle de cette séance.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    if ($this->TypeSesion !== null) {
+                        $session->update(['sission_type' => $this->TypeSesion]);
+                        $this->alert('success', 'Vous modifiez le type de cette séance.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                    if ($this->salleclassTyp !== null) {
+                        $session->update(['typeSalle' => $this->salleclassTyp]);
+                        $this->alert('success', 'Vous modifiez le type de Salle.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                    if ($this->module !== null) {
+                        $session->update(['module_id' => $this->module]);
+                    }
 
-                if ($this->module !== null) {
-                    $updates['module_id'] = $this->module;
-                }
+                    if (!empty($this->selectedGroups)) {
+                        foreach ($this->selectedGroups as $group) {
+                            $session->update(['group_id' => $group]);
+                        }
 
-                if (!empty($this->selectedGroups)) {
-                    $updates['group_id'] = $this->selectedGroups;
-                    $this->alert('success', 'Vous modifiez le Formateur de cette séance.', [
+                        $this->alert('success', 'Vous modifiez le Formateur de cette séance.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                }elseif(!empty($this->salle)){
+                    if ($this->salle !== null) {
+                        $session->update(['class_room_id' => $this->salle]);
+                        $this->alert('success', 'Vous modifiez la salle de cette séance.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                    if ($this->TypeSesion !== null) {
+                        $session->update(['sission_type' => $this->TypeSesion]);
+                        $this->alert('success', 'Vous modifiez le type de cette séance.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                    if ($this->salleclassTyp !== null) {
+                        $session->update(['typeSalle' => $this->salleclassTyp]);
+                        $this->alert('success', 'Vous modifiez le type de Salle.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                    if ($this->module !== null) {
+                        $session->update(['module_id' => $this->module]);
+                    }
+
+                    if (!empty($this->selectedGroups)) {
+                        foreach ($this->selectedGroups as $group) {
+                            $session->update(['group_id' => $group]);
+                        }
+
+                        $this->alert('success', 'Vous modifiez le Formateur de cette séance.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                } elseif (empty($this->salle)) {
+                    $this->alert('error', 'Vous devriez sélectionner la salle.', [
                         'position' => 'center',
                         'timer' => 3000,
                         'toast' => true,
                     ]);
+                    return;
                 }
 
-                if ($this->salle !== null) {
-                    $updates['class_room_id'] = $this->salle;
-                    $this->alert('success', 'Vous modifiez la salle de cette séance.', [
-                        'position' => 'center',
-                        'timer' => 3000,
-                        'toast' => true,
-                    ]);
-                }
 
-                if ($this->TypeSesion !== null) {
-                    $updates['sission_type'] = $this->TypeSesion;
-                    $this->alert('success', 'Vous modifiez le type de cette séance.', [
-                        'position' => 'center',
-                        'timer' => 3000,
-                        'toast' => true,
-                    ]);
-                }
 
-                if ($this->salleclassTyp !== null) {
-                    $updates['typeSalle'] = $this->salleclassTyp;
-                    $this->alert('success', 'Vous modifiez le type de Salle.', [
-                        'position' => 'center',
-                        'timer' => 3000,
-                        'toast' => true,
-                    ]);
-                }
 
-                $session->update($updates);
-                $this->alert('success', 'Vous créez une nouvelle session', [
-                    'position' => 'center',
-                    'timer' => 3000,
-                    'toast' => true,
-                ]);
+
             } else {
+                if($this->TypeSesion === 'teams'){
                     foreach ($this->selectedGroups as $group) {
                         Sission::create([
                             'day' => $day,
@@ -293,14 +337,48 @@ class TousLesDemandes extends Component
                             'sission_type' => $this->TypeSesion,
                             'status_sission' => 'Accepted',
                         ]);
+                        $this->selectedGroups = [];
+                        $this->alert('success', 'Vous créez une nouvelle session', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
                     }
-
-                    $this->selectedGroups = [];
-                    $this->alert('success', 'Vous créez une nouvelle session', [
+                }elseif(!empty($this->salle)){
+                    foreach ($this->selectedGroups as $group) {
+                        Sission::create([
+                            'day' => $day,
+                            'day_part' => $day_part,
+                            'dure_sission' => $dure_sission,
+                            'module_id' => $this->module,
+                            'group_id' => $group,
+                            'establishment_id' => session()->get('establishment_id'),
+                            'user_id' => $this->formateurId,
+                            'class_room_id' => $this->salle,
+                            'validate_date' => null,
+                            'main_emploi_id' => session()->get('id_main_emploi'),
+                            "demand_emploi_id" => null,
+                            'typeSalle' => $this->salleclassTyp,
+                            'message' => null,
+                            'sission_type' => $this->TypeSesion,
+                            'status_sission' => 'Accepted',
+                        ]);
+                        $this->selectedGroups = [];
+                        $this->alert('success', 'Vous créez une nouvelle session', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                }elseif(empty($this->salle)){
+                    $this->alert('error', 'Vous devriez sélectionner la salle.', [
                         'position' => 'center',
                         'timer' => 3000,
                         'toast' => true,
                     ]);
+                    return;
+                }
+
             }
         }else{
             $sessionData = [
@@ -326,10 +404,27 @@ class TousLesDemandes extends Component
                 'group_id' => $group_id,
                 'dure_sission' => $dure_sission,
             ])->first();
-            if ($session) {
-                $session->update($sessionData);
-            } else {
-                sission::create($sessionData);
+            if($this->TypeSesion === 'teams'){
+
+                if ($session) {
+                    $session->update($sessionData);
+                } else {
+                    sission::create($sessionData);
+                }
+            }elseif(!empty($this->salle)){
+
+                if ($session) {
+                    $session->update($sessionData);
+                } else {
+                    sission::create($sessionData);
+                }
+            }elseif(empty($this->salle)){
+                $this->alert('error', 'Vous devriez sélectionner la salle.', [
+                    'position' => 'center',
+                    'timer' => 3000,
+                    'toast' => true,
+                ]);
+                return;
             }
         }
 
@@ -567,16 +662,15 @@ class TousLesDemandes extends Component
 
         // Fetch sissions data
         $sissions = DB::table('sissions')
-    ->select('sissions.*', 'modules.id as module_name', 'groups.group_name', 'users.*', 'class_rooms.class_name')
-    ->leftJoin('modules', 'modules.id', '=', 'sissions.module_id')
-    ->join('groups', 'groups.id', '=', 'sissions.group_id')
-    ->join('users', 'users.id', '=', 'sissions.user_id')
-    ->join('class_rooms', 'class_rooms.id', '=', 'sissions.class_room_id')
-    ->where('sissions.establishment_id', $establishment_id)
-    ->where('sissions.main_emploi_id', $this->selectedValue)
-    ->get();
+        ->select('sissions.*', 'modules.id as module_name', 'groups.group_name', 'users.*', 'class_rooms.class_name')
+        ->leftJoin('modules', 'modules.id', '=', 'sissions.module_id')
+        ->join('groups', 'groups.id', '=', 'sissions.group_id')
+        ->join('users', 'users.id', '=', 'sissions.user_id')
+        ->leftJoin('class_rooms', 'class_rooms.id', '=', 'sissions.class_room_id')
+        ->where('sissions.establishment_id', $establishment_id)
+        ->where('sissions.main_emploi_id', $this->selectedValue)
+        ->get();
 ;
-
         // Fetch groups data
         $groupsQuery = group::join('formateur_has_groups as f', 'f.group_id', '=', 'groups.id')
             ->where('groups.establishment_id', $establishment_id)

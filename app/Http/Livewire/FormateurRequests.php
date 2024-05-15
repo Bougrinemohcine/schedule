@@ -65,7 +65,7 @@ class FormateurRequests extends Component
     public $seance;
     public $seanceFirst;
     public $tableEmploi;
-    public $isSessionUpdated = false;
+    public $isSessionUpdated ;
 
 
     protected $listeners = [
@@ -113,6 +113,8 @@ class FormateurRequests extends Component
 
     public function updateCaseStatus($isEmpty, $variable)
     {
+        $this->isSessionUpdated = false;
+
         $this->isCaseEmpty = $isEmpty;
         $this->receivedVariable = $variable . Auth::id();
         $idcase = $this->receivedVariable;

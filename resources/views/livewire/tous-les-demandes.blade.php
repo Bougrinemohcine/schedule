@@ -386,7 +386,11 @@
                                             id="{{ $day . $sessionType . $group->id }}">
                                             @if ($foundSession)
                                                 {{ $typeValue }}<br>
-                                                {{ $salleValue }}<br>
+                                                @if($salleValue)
+                                                    {{ $salleValue }}
+                                                @else
+                                                    SALLE
+                                                @endif<br>
                                                 {{ implode(' - ', $formateurs) }}<br>
                                                 {{ preg_replace('/^\d/', ' ', $ModelValue) }}
                                             @endif
@@ -451,7 +455,11 @@
                                             id="{{ $day . $sessionType . $formateur->id }}">
                                             @if ($foundSession)
                                             {{ $typeValue }}<br>
-                                            {{ $salleValue }}<br>
+                                            @if($salleValue)
+                                                {{ $salleValue }}
+                                            @else
+                                                SALLE
+                                            @endif<br>
                                                     @if(count($groupes) >= 2)
                                                     @php
                                                         // Extract party string

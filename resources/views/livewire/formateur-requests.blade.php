@@ -145,8 +145,12 @@
                                     @php
                                         $seanceFound = true;
                                         $groupNames[] = $AllSeance->group->group_name;
-                                        $salleValue = $AllSeance->class_room->class_name;
-                                        $typeSalle = $AllSeance->class_room->typeSalle;
+                                        // $typeSalle = $AllSeance->class_room_id->typeSalle;
+                                        if($AllSeance->class_room_id !== null){
+                                            $salleValue = $AllSeance->class_room->class_name;
+                                        }else{
+                                            $salleValue = '';
+                                        }
                                         $typeValue = $AllSeance->sission_type;
                                         $ModelValue = $AllSeance->module_name;
 
@@ -174,7 +178,11 @@
                             <td wire:click="updateCaseStatus({{ $seanceFound ? 'false' : 'true' }},'{{ $day_of_week . $day_part }}')" data-emploi="{{ $emploiID }}" data-part="{{ $day_part }}"
                             class="Cases" style="color: {{$color}}">
                             {{ $typeValue }}<br>
-                            {{ $salleValue . $typeSalle }}<br>
+                            @if($salleValue)
+                                                    {{ $salleValue }}
+                                                @else
+                                                    SALLE
+                                                @endif<br>
                             @if(count($groupNames) >= 2)
                                 @php
                                     // Extract party string

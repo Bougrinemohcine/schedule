@@ -23,8 +23,8 @@
             th,
             td {
                 height: 40px;
-                width: 460px !important;
-                border: 1px solid #ddd;
+                width: 400px !important;
+                border: 1.5px solid #2c2c2c;
                 text-align: center;
             }
             td{
@@ -45,6 +45,12 @@
                 padding: 0px;
                 font-size: 16px
             }
+
+            td span {
+            display: block ;
+            font-size: 14px !important;
+            color: black !important;
+        }
         </style>
          @livewireStyles
     </head>

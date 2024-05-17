@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB ;
 use App\Models\group ;
 use App\Models\group_has_module;
 use App\Models\module ;
-use DeepCopy\Filter\Filter;
 use Illuminate\Auth\Events\Validated;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -49,7 +48,7 @@ class UpdateGroupes extends Component
             $this->validate([
                 'group_name' => 'required',
                 'selectedBranch' => 'required',
-                
+
             ]);
 
             $group = group::find($this->groupID);

@@ -52,7 +52,7 @@
 
 
     Route::get('/', function () {
-        return view('auth.login');
+        return view('auth.Login');
     })->name('login');
     Route::get('/create-account', [auth_controller::class, 'index'])->name('create-account');
     Route::post('/insert', [auth_controller::class, 'create_account'])->name('insert');
@@ -168,6 +168,7 @@
         Route::get('/dashboardFormateur', [formateurController::class, 'showHomepage'])->name('dashboard_formateur');
         Route::get('/settingsFormateur', [FormateurRequestController::class, 'settings'])->name('settings_formateur');
         Route::post('/update_settings', [FormateurRequestController::class, 'updateSettings'])->name('update_settings');
+        Route::post('/update_password', [FormateurRequestController::class, 'updatePassword'])->name('update_password');
 
 
         // request Emploi

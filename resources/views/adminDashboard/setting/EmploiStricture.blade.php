@@ -48,11 +48,15 @@
             visibility: hidden;
         }
     </style>
-<h4>les Strictures des emplois</h4>
-<form action="">
+<h4 style="margin-top: 20px;">les Strictures des emplois</h4>
+<form style="margin:0px  0px 0px 40px" action="">
     @csrf
     <div>
         <h5>Pour Chaque Groupe</h5>
+        <div>
+            <img src="{{ asset('assets/images/Emploi/groupEmploi4.png') }}" >
+            <input name="groupe" value="4" type="radio">
+        </div>
         <div>
             <img src="{{ asset('assets/images/Emploi/formaGroup1.png') }}" >
             <input name="groupe" value="1" type="radio">
@@ -72,10 +76,16 @@
     {{-- for each formateur --}}
     <div>
         <h5>Pour Chaque Formateur</h5>
+
+        <div>
+            <img src="{{ asset('assets/images/Emploi/strictrureFormateur4.png') }}" >
+            <input name="formateur" value="4" type="radio">
+        </div>
         <div>
             <img src="{{ asset('assets/images/Emploi/formaFormateur1.png') }}" >
             <input name="formateur" value="1" type="radio">
         </div>
+
 
         <div>
             <img src="{{ asset('assets/images/Emploi/formaFormateur2.png') }}" >
@@ -122,7 +132,6 @@
     fetch('/admin/Emplois-Stracture')
         .then(resp => resp.json())
         .then(data => {
-            // console.log(data[0].groupe)
             radioGroups.forEach(item => {
                 switch (item.name) {
                     case 'groupe':

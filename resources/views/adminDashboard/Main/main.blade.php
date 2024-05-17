@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
         <title>Schedule Table</title>
+        
 
         <style>
             body {
@@ -16,17 +17,18 @@
             table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-top: 20px;
+
                 table-layout: fixed;
                 word-wrap: break-word;
+                color: black !important;
             }
 
             th,
             td {
 
                 height: 40px;
-                width: 520px !important;
-                border: 1px solid #ddd;
+                width: 400px !important;
+                border: 1.5px solid #272727;
                 text-align: center;
             }
             td{
@@ -37,10 +39,10 @@
                 background-color: #f2f2f2;
             }
 
-            thead tr.day {
+            thead tr .day {
                 font-size: 18px;
                 /* font-weight: bold; */
-                padding: 30px
+                /* padding: 30px */
             }
 
             thead tr.se-row {
@@ -49,6 +51,16 @@
                 margin: 0px;
                 padding: 0px;
                 font-size: 16px
+            }
+            td span {
+            display: block ;
+            font-size: 14px !important;
+            color: black !important;
+        }
+        thead  {
+
+                position: sticky ;
+                top: 0px ;
             }
 
         </style>

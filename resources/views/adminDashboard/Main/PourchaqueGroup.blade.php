@@ -27,10 +27,15 @@
             th,
             td {
 
-                height: 40px;
-                width: 450px !important;
-                border: 1px solid #ddd;
+                height: 70px;
+                width: 400px !important;
+                border: 1.5px solid #3a3a3a;
+                color:#3a3a3a  ;
                 text-align: center;
+            }
+            td span {
+                display: block ;
+                color: black;
             }
 
             th {
@@ -38,8 +43,8 @@
             }
             thead tr.day{
                 font-size: 18px;
-                /* font-weight: bold; */
-                padding:30px
+                padding:30px ;
+                color: black;
             }
           thead tr.se-row {
                 height: 30px !important;

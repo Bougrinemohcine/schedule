@@ -1,8 +1,8 @@
 <x-HeaderMenuAdmin>
 
 
-    <div style="width:80%;margin-x:auto">
-        <form method='POST' action="{{route("update-module" , ['id'=>$module->id])}}">
+    <div style="margin-top:20px">
+        <form class="w-25" method='POST' action="{{route("update-module" , ['id'=>$module->id])}}">
             @if(session('success'))
             <div id="liveAlertPlaceholder" class="alert alert-success">
                 {{ session('success') }}

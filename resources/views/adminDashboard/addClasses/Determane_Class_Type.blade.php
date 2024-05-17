@@ -5,10 +5,9 @@
 
 
             <form method="post" action="{{route('insert-class-with-types')}}">
-                <div>
-
+                  <div style="margin: 20px 0px 0px 20px">
                      @if($errors->any())
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger w-5">
                         <ul>
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -77,8 +76,8 @@
                 <thead>
                     <tr>
 
-                      <th scope="col">class name</th>
-                      <th scope="col">class type</th>
+                      <th scope="col">Nom de Salle</th>
+                      <th scope="col">Salle type</th>
                       <th scope="col">actions</th>
 
                     </tr>
@@ -104,6 +103,6 @@
     {{-- {{$classes_with_types['class_name']}} --}}
 
         </div>
-  
+
 
 </x-Headers>

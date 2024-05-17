@@ -2,6 +2,25 @@
 
 
     <style>
+         .Mon{
+            background-color: RGBa(80, 159, 236,0.2) !important;
+        }
+        .Tue{
+            background-color: rgb(255, 224, 178) !important;
+        }
+        .Wed{
+            background-color: rgb(200, 230, 201) !important;
+        }
+        .Thu{
+            background-color: rgb(255, 205, 210) !important;
+        }
+        .Fri{
+            background-color: rgb(232, 234, 246) !important;
+        }
+        .Sat{
+            background-color: rgb(178, 235, 242) !important;
+        }
+
         .checkboxContainer {
             background-color: white;
             border-radius: 7px;
@@ -38,9 +57,7 @@
             flex-direction: column ;
 
         }
-        .searchDev{
-            width: 100vw ;
-        }
+
         .selectDiv{
             width: 70vw !important;
             margin-left:0px !important ;
@@ -49,14 +66,24 @@
     }
 
     .dateContent{
-            width: 85vw ;
+
+            max-width: 90vw ;
             display: flex ;
-            justify-content: space-between
+            justify-content: space-between ;
+            margin: auto ;
         }
-        @media screen and (max-width:600px){
+        .dateSE {
+            display: block
+        }
+        @media screen and (max-width:1116px){
+            .dateSE{
+                display: none ;
+            }
+        }
+        @media screen and (max-width:650px){
             .dateContent{
             margin-top: 15px ;
-            width: 95vw ;
+            width: 75vw ;
             display: flex ;
             flex-direction: column
         }
@@ -72,11 +99,45 @@
             width: 45% !important;
         }
 
-        @media screen and (max-width: 600px){
+        @media screen and (max-width: 650px){
             #SearchInput{
             width: 100% !important;
         }
         }
+        /* New code  */
+        #SearchInputContainer{
+            display: flex ;
+            max-width: 340px !important;
+            position: absolute ;
+            z-index: 10000001;
+            top: -5.5rem ;
+            left: 16rem ;
+
+        }
+
+
+        .iconContainer {
+            color: white ;
+            display: none;
+            font-size:28px ;
+            position: absolute ;
+            top:-5.6rem ;
+            left :75% ;
+            transform:translate('0%' , '80%') ;
+            z-index:30033 ;
+            cursor: pointer;
+        }
+
+        @media screen and (max-width: 650px){
+            #SearchInputContainer{
+           display: none
+        }
+        .iconContainer{
+            display: block ;
+        }
+        }
+
+
 
 
     </style>
@@ -85,42 +146,66 @@
     @php
 
 @endphp
-    <h2>Schedule Table</h2>
 
+<div class=" iconContainer rounded">
+    <div class="mdi mdi-magnify-remove-outline tbn" data-bs-toggle="modal" data-bs-target="#exampleModal333"></div>
+</div>
 
-    <div class="table-responsive">
-        <div class="ResponceUI element-to-remove" style="max-width:60rem ;  display:flex; justify-content:flex-start ; position: fixed">
+ {{-- modal Search --}}
+<div wire:ignore class="modal fade" id="exampleModal333" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Search Formateur</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <input id='searchInput12'   type="search" class="form-control rounded searchDev " placeholder="Search Formateur" aria-label="Search" aria-describedby="search-addon" />
 
-            <div   class="input-group rounded">
-                <input id='searchInput'   type="search" class="form-control rounded searchDev " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                <span class="input-group-text border-0" id="search-addon">
-                  <i class="fas fa-search"></i>
-                </span>
-            </div>
-            <div class="selectDiv" style=";height: 47px ;width:360px ;margin-left: 15px">
-
-            <select  style="box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;" wire:model="formateurId" id="selectOptions" class="form-control " name="">
-                <option >Formateur</option>
+            <select  style="box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;" wire:model="formateurId" id="selectOptions12" class="form-control " name="">
+                <option >Formateurs</option>
                 @foreach ($formateurs as $formateur)
                    <option class="form-control"  value="{{$formateur->id}}">{{$formateur->user_name}} </option>
                 @endforeach
             </select>
-            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">fermer</button>
+
+        </div>
       </div>
-      <br/>
-      <br/>
-      <br/>
-      <br></br>
+    </div>
+  </div>
+
+{{-- modal Search --}}
+<div id="SearchInputContainer" class=" rounded">
+    <input id='searchInput'   type="search" class="form-control rounded searchDev hide " placeholder="Search Formateur" aria-label="Search" aria-describedby="search-addon" />
+
+<div class="selectDiv" style="width:360px ;margin-left: 15px">
+<select  style="box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;" wire:model="formateurId" id="selectOptions" class="form-control hide" name="">
+    <option >Formateurs</option>
+    @foreach ($formateurs as $formateur)
+       <option class="form-control"  value="{{$formateur->id}}">{{$formateur->user_name}} </option>
+    @endforeach
+</select>
+</div>
+</div>
+<br>
+<br>
+    <div class="table-responsive">
+
+
+
 
         <table  id="tbl_exporttable_to_xls" style="overflow:scroll ;" class="col-md-12 ">
 
             <div class="dateContent">
                 @if ($this->checkValues[0]->modeRamadan)
-                <h4 style="marign-top:15px " >
+                <h4 style="marign-top:15px "  class="dateSE">
                     SE1 = 08:30 - 10:20 SE2 = 10:25 - 12:15 SE3 = 12:45 - 14:35 SE4 = 14:40 - 16:30
                 </h4>
                 @else
-                <h4> SE1 = 08:30 - 11:20 SE2 = 11:30 - 13:30 SE3 = 13:30 - 16:20 SE4 = 16:30 - 18:30 </h4>
+                <h4 class="dateSE"> SE1 = 08:30 - 11:20 SE2 = 11:30 - 13:30 SE3 = 13:30 - 16:20 SE4 = 16:30 - 18:30 </h4>
                 @endif
 
 
@@ -230,13 +315,13 @@
                     style="background-color:{{ $sessionFound ? "rgba(12, 72, 166, 0.3)" :  ''}} ; height: 130px !important"
                     wire:click="updateCaseStatus({{ $sessionFound ? 'false' : 'true' }})"
                     data-bs-toggle="modal"
-                    class="tdClass Cases" data-bs-target="#exampleModal" id="{{ $day.$sessionType }}">
+                    class="tdClass Cases {{$day}}" data-bs-target="#exampleModal" id="{{ $day.$sessionType }}">
                         @if ($sessionFound)
-                            {{$formateur}} <br/>
-                            {{ implode(' - ', $groupes) }}<br/>
-                            {{$SalleValue . "\n" . $typeSalle}}<br/>
-                            {{$Typevalue}} <br/>
-                            {{$ModuleValue}}
+                          <span>  {{$formateur}}</span>
+                          <span>  {{ implode(' - ', $groupes) }}</span>
+                          <span>  {{$SalleValue . "\n" . $typeSalle}}</span>
+                         <span>   {{$Typevalue}}</span>
+                          <span>  {{$ModuleValue}}</span>
                         @endif
                     </td>
                 @endforeach
@@ -246,8 +331,10 @@
 
 @elseif ($tableEmploi[0]->formateur == '2')
         @include('livewire.PourFormateur')
-@else
+@elseif ($tableEmploi[0]->formateur == '3')
         @include('livewire.PourFormateur3')
+@else
+        @include('livewire.PourFormateur1')
 @endif
         @include('livewire.FormateurModule')
         </table>
@@ -328,6 +415,31 @@
                 document.addEventListener("DOMContentLoaded", function() {
   const searchInput = document.getElementById("searchInput");
   const selectOptions = document.getElementById("selectOptions");
+
+  // Event listener for input changes in the search input
+  searchInput.addEventListener("input", function() {
+    const searchValue = searchInput.value.toLowerCase();
+
+    // Loop through all options in the select input
+    Array.from(selectOptions.options).forEach(option => {
+      const optionText = option.text.toLowerCase();
+
+      // Check if the option text contains the search value
+      if (optionText.includes(searchValue)) {
+        option.style.display = ""; // Show the option
+      } else {
+        option.style.display = "none"; // Hide the option
+      }
+    });
+  });
+});
+
+
+               // input
+
+                document.addEventListener("DOMContentLoaded", function() {
+  const searchInput = document.getElementById("searchInput12");
+  const selectOptions = document.getElementById("selectOptions12");
 
   // Event listener for input changes in the search input
   searchInput.addEventListener("input", function() {

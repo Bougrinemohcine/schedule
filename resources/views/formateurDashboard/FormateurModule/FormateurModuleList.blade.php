@@ -1,5 +1,6 @@
 <x-HeaderMenuFormateur>
 <div class="container-fluid">
+    
     <div class="main-content">
         <div class="page-content">
             <div class="row">
@@ -41,7 +42,9 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+ 
 <script>
     function ExportToExcel(type, fn, dl) {
        var elt = document.getElementById('FormateurModulesTable');
@@ -50,5 +53,7 @@
          XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
          XLSX.writeFile(wb, fn || ('FormateurModulesTable.' + (type || 'xlsx')));
     }
+    
+
 </script>
 </x-HeaderMenuFormateur>

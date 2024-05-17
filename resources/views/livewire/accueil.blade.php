@@ -39,7 +39,7 @@
 
 
                 <label style=" float:left " for="dateStart">date </label>
-                <div class="col-6 ">
+                <div class="col-6 w-50 w-md-100 ">
                     <input name="dateStart" id="dateStart" type="date" class="form-control col-6"
                         placeholder="mm/dd/yyyy" value="{{ session()->get('datestart') }}"
                         data-date-container="#datepicker1" data-provide="datepicker">
@@ -52,7 +52,7 @@
                     </label>
                 </div>
 
-                <select id='date-select' class="form-select"  name="selectedValue">
+                <select id='date-select' class="form-select w-50 w-md-100"  name="selectedValue">
                     <option value="" selected disabled>Select emploi</option>
                     @foreach( $Main_emplois as $Main_emploi)
                         <option value="{{ $Main_emploi->id }}">{{ $Main_emploi->datestart }} to {{ $Main_emploi->dateend }}</option>

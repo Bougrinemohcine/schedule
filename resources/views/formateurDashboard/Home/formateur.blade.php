@@ -47,7 +47,7 @@ if ($userImage) {
                                 </div>
 
                                 <div class="col-md-6">
-                                    <h6 class="text-muted"  style="color: black !important">
+                                    <h6 class="text-muted" style="color: black !important">
                                         Nombres des seances
                                     </h6>
                                     @php
@@ -60,30 +60,34 @@ if ($userImage) {
                             </div>
                             <div class="row mt-4 border border-start-0 border-end-0 p-3">
                                 <div class="col-md-6">
-                                    <h6 class="text-muted"  style="color: orange !important">
+                                    <h6 class="text-muted" style="color: orange !important">
                                         Nombres des seances en attends
                                     </h6>
                                     @php
                                         $user = Auth::user();
-                                        $DemandesList = \App\Models\sission::where('user_id', $user->id)->where('status_sission','Pending')->count();
+                                        $DemandesList = \App\Models\sission::where('user_id', $user->id)
+                                            ->where('status_sission', 'Pending')
+                                            ->count();
                                     @endphp
                                     <h5 class="mb-0">{{ $DemandesList }}</h5>
                                 </div>
                                 <div class="col-md-6">
-                                    <h6 class="text-muted"  style="color: green !important">
+                                    <h6 class="text-muted" style="color: green !important">
                                         Nombres des seances accepte
                                     </h6>
                                     @php
                                         $user = Auth::user();
-                                        $DemandesList = \App\Models\sission::where('user_id', $user->id)->where('status_sission','Accepted')->count();
+                                        $DemandesList = \App\Models\sission::where('user_id', $user->id)
+                                            ->where('status_sission', 'Accepted')
+                                            ->count();
                                     @endphp
                                     <h5 class="mb-0">{{ $DemandesList }}</h5>
                                 </div>
 
-                               
+
 
                             </div>
-                           
+
 
                         </div>
 
@@ -251,4 +255,5 @@ if ($userImage) {
 
 
     </div>
+    
 </x-HeaderMenuFormateur>

@@ -1,5 +1,23 @@
 <div>
     <style>
+         .Mon{
+            background-color: RGBa(80, 159, 236,0.2) !important;
+        }
+        .Tue{
+            background-color: rgb(255, 224, 178) !important;
+        }
+        .Wed{
+            background-color: rgb(200, 230, 201) !important;
+        }
+        .Thu{
+            background-color: rgb(255, 205, 210) !important;
+        }
+        .Fri{
+            background-color: rgb(232, 234, 246) !important;
+        }
+        .Sat{
+            background-color: rgb(178, 235, 242) !important;
+        }
         .checkboxContainer {
             background-color: white;
             border-radius: 7px;
@@ -32,14 +50,18 @@
         .dateContent{
             width: 85vw ;
             display: flex ;
-            justify-content: space-between
+            justify-content: space-between ;
+            position: absolute ;
+            top: -2.5rem ;
+            color: white ;
         }
         @media screen and (max-width:600px){
             .dateContent{
-            margin-top: 15px ;
+                background-color: red ;
+              top: -10rem ;
             width: 95vw ;
-            display: flex ;
-            flex-direction: column
+            display: none
+
         }
         .hide{
             display: none ;
@@ -58,49 +80,141 @@
             width: 100% !important;
         }
         }
+        .SEvalues{
+                display: block
+            }
+        @media screen and (max-width:1200px){
+            .SEvalues{
+                display: none
+            }
+        }
+
+
+        #SearchInputContainer{
+            display: block ;
+            max-width: 340px !important;
+            position: absolute ;
+            z-index: 10000001;
+            top: -5.5rem ;
+            left: 16rem ;
+
+        }
+
+        @media screen and (max-width: 600px){
+            #SearchInputContainer{
+           display: none
+        }
+        }
+
+        .tableContainer{
+            width: 100% !important;
+            height:100% !important;
+            overflow: scroll;
+            position: absolute ;
+            bottom: 0px ;
+            margin:0px 0px 0px 0px;
+
+               }
+
+
+
+               .iconContainer {
+            color: white ;
+            display: none;
+            font-size:28px ;
+            position: absolute ;
+            top:-5.6rem ;
+            left :75% ;
+            transform:translate('0%' , '80%') ;
+            z-index:30033 ;
+            cursor: pointer;
+        }
+
+        @media screen and (max-width: 600px){
+            #SearchInputContainer{
+           display: none
+        }
+        .iconContainer{
+            display: block ;
+        }
+        }
     </style>
 
-    <h2>Schedule Table</h2>
 
 
-    <div class="table-responsive">
-        <h3 class="hide" style="margin: auto ; width :fit-content;">Emploi Global hebdomadaire</h3>
+<div style=" height:90vh ; "  >
         @if($tableEmploi[0]->toutFormateur == '1')
-        <div class="input-group rounded" id="SearchInput">
-            <input wire:model='SearchValue'  type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-            <span class="input-group-text border-0" id="search-addon">
-              <i class="fas fa-search"></i>
-            </span>
+        <style>
+            th:first-child {
+            left: 0;
+            z-index: 1;
+        }
+        td:first-child {
+            position: sticky;
+            top: 110px ;
+            left: 0;
+            background-color: #f2f2f2;
+            z-index: 1;
+        }
+        </style>
+          <div class=" iconContainer rounded">
+            <div class="mdi mdi-magnify-remove-outline tbn" data-bs-toggle="modal" data-bs-target="#exampleModal333"></div>
         </div>
 
-        <table id="tbl_exporttable_to_xls" style="overflow:scroll" class="col-md-12 ">
+         {{-- modal Search --}}
+        <div wire:ignore class="modal fade" id="exampleModal333" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Search Groupe</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input wire:model='SearchValue'  type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">fermer</button>
 
-            <div class="dateContent">
-                @if ($this->checkValues[0]->modeRamadan)
-                <h4 style="marign-top:15px " >
-                    SE1 = 08:30 - 10:20 SE2 = 10:25 - 12:15 SE3 = 12:45 - 14:35 SE4 = 14:40 - 16:30
+                </div>
+              </div>
+            </div>
+          </div>
+
+        {{-- modal Search --}}
+        <div id="SearchInputContainer" class=" rounded">
+            <input wire:model='SearchValue'  type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+        </div>
+        <div class="dateContent">
+            @if ($this->checkValues[0]->modeRamadan)
+            <h4 class="SEvalues" style="marign-top:15px " >
+                SE1 = 08:30 - 10:20 SE2 = 10:25 - 12:15 SE3 = 12:45 - 14:35 SE4 = 14:40 - 16:30
+            </h4>
+            @else
+            <h4 class="SEvalues">  SE1 = 08:30 - 11:20 SE2 = 11:30 - 13:30 SE3 = 13:30 - 16:20 SE4 = 16:30 - 18:30 </h4>
+            @endif
+
+
+
+                @if (!$dataEmploi->isEmpty())
+                <h4 class='data' style="float: right; ">
+                    @foreach ($dataEmploi as $item)
+                        Du: {{ $item->datestart }} au {{ $item->dateend }}
+                    @endforeach
                 </h4>
                 @else
-                <h4> SE1 = 08:30 - 11:20 SE2 = 11:30 - 13:30 SE3 = 13:30 - 16:20 SE4 = 16:30 - 18:30 </h4>
+                <h4 class='data' style="float: right;  padding: 0px 5px 0px 5px;
+                 border-radius: 3px; background-color: #dc3545; color: white;">
+                    Il faut créer un emploi
+                </h4>
                 @endif
 
 
+        </div>
 
-                    @if (!$dataEmploi->isEmpty())
-                    <h4 class='data' style="float: right; ">
-                        @foreach ($dataEmploi as $item)
-                            Du: {{ $item->datestart }} au {{ $item->dateend }}
-                        @endforeach
-                    </h4>
-                    @else
-                    <h4 class='data' style="float: right;  padding: 0px 5px 0px 5px;
-                     border-radius: 3px; background-color: #dc3545; color: white;">
-                        Il faut créer un emploi
-                    </h4>
-                    @endif
+        <div  class="tableContainer">
+        <table id="tbl_exporttable_to_xls" style="overflow:scroll ; " class="col-md-12 ">
 
 
-             </div>
               {{-- first table --}}
 
                         <thead>
@@ -194,11 +308,11 @@
                            <td wire:click="updateCaseStatus({{ $foundSession ? 'false' : 'true' }})"
                                colspan="1" rowspan="1"  data-bs-toggle="modal"  data-bs-target="#exampleModal"
                                style="!important;height: 50px !important; overflow: hidden ; background-color:{{ $foundSession ? 'rgba(12, 72, 166, 0.3)' :  ''}}"
-                               class="TableCases" id="{{ $day.$sessionType.$formateur->id }}">
+                               class="TableCases {{$day}}" id="{{ $day.$sessionType.$formateur->id }}">
                                @if ($foundSession)
-                                   {{ $typeValue}}</br>
-                                   {{ $salleValue ."\n". $typeSalle }}</br>
-                                   {{ implode(' - ', $groupes) }}</br>
+                                <span>   {{ $typeValue}}</span>
+                                   <span>{{ $salleValue ."\n". $typeSalle }}</span>
+                                <span>   {{ implode(' - ', $groupes) }}</span>
                                    {{ preg_replace('/^\d/', ' ', $ModelValue) }}
                                @endif
                            </td>
@@ -217,12 +331,13 @@
 
 
     </div>
+</div>
+</div>
 
-    <button onclick="ExportToExcel('xlsx')" class=" btn  btn-primary mt-5">télécharger</button>
+
+    <button onclick="ExportToExcel('xlsx')" class=" btn  btn-primary mt-5 w-25">télécharger</button>
       <!-- Button trigger modal -->
-<button type="button" class="btn btn-danger mt-5 col-3" data-bs-toggle="modal" data-bs-target="#exampleModal1">
-    Supprimer tout
-  </button>
+<button type="button" class="btn btn-danger mt-5 col-3" data-bs-toggle="modal" data-bs-target="#exampleModal1">   Supprimer tout </button>
   <!-- Modal for delete-->
   <div wire:ignore class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">

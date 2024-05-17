@@ -1,13 +1,13 @@
 <x-HeaderMenuAdmin>
-<h3> Ajouter les Filières</h3>
+<h3 style="margin-top:10px ;"> Ajouter les Filières</h3>
 @if(session('success'))
-<div id="liveAlertPlaceholder" class="alert alert-success">
+<div id="liveAlertPlaceholder" class="alert alert-success w-25">
     {{ session('success') }}
 </div>
 @endif
 @if ($errors->any())
 @foreach ($errors->all() as $error )
-<div class="alert alert-danger">{{$error}}</div>
+<div class="alert alert-danger w-25">{{$error}}</div>
 @endforeach
 @endif
 

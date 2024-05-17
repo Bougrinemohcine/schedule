@@ -3,7 +3,7 @@
 
 
 
-        <div>
+        <div style="margin: 20px 0px 0px 20px">
             @if($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -15,18 +15,18 @@
         @endif
             <form method="post" action="{{route('insert-class-type')}}">
                 @csrf
-                <label for=""> add class types that you have in your establishments</label>
-                 <input class="form-control" type="text" name="add_class_type" >
+                <label for=""> Les types des Salles</label>
+                 <input class="form-control w-25" type="text" name="add_class_type" >
 
-                 <button type="submit" class="btn btn-success">save</button>
+                 <button type="submit" class="btn btn-success">Enregistrer</button>
             </form>
 
-            <h3>class type</h3>
+            <h3> les Types des Salles</h3>
    <table class="table table-striped">
     <thead>
         <tr>
 
-          <th scope="col">type</th>
+          <th scope="col">les types</th>
           <th scope="col">actions</th>
         </tr>
       </thead>

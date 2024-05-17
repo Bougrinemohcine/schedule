@@ -1,64 +1,148 @@
 <div>
     <style>
+         .Mon{
+            background-color: RGBa(80, 159, 236,0.2) !important;
+        }
+        .Tue{
+            background-color: rgb(255, 224, 178) !important;
+        }
+        .Wed{
+            background-color: rgb(200, 230, 201) !important;
+        }
+        .Thu{
+            background-color: rgb(255, 205, 210) !important;
+        }
+        .Fri{
+            background-color: rgb(232, 234, 246) !important;
+        }
+        .Sat{
+            background-color: rgb(178, 235, 242) !important;
+        }
           .dateContent{
             width: 85vw ;
             display: flex ;
-            justify-content: space-between
+            justify-content: space-between ;
+            position: absolute ;
+            top: -2.5rem ;
+            color: white ;
+        }
+        .SEvalues{
+                display: block
+            }
+        @media screen and (max-width:1200px){
+            .SEvalues{
+                display: none
+            }
         }
         @media screen and (max-width:600px){
             .dateContent{
-            margin-top: 15px ;
+
             width: 95vw ;
             display: flex ;
             flex-direction: column
-        }
-        .hide{
-            display: none ;
         }
         .data{
             margin-top:5px
         }
         }
 
-        #SearchInput{
-            width: 45% !important;
+        #SearchInputContainer{
+            display: block ;
+            max-width: 340px !important;
+            position: absolute ;
+            z-index: 10000001;
+            top: -5.5rem ;
+            left: 18rem ;
+
+        }
+        .iconContainer {
+            color: white ;
+            display: none;
+            font-size:28px ;
+            position: absolute ;
+            top:-5.6rem ;
+            left :75% ;
+            transform:translate('0%' , '80%') ;
+            z-index:30033 ;
+            cursor: pointer;
+        }
+        @media screen and (max-width: 600px){
+            #SearchInputContainer{
+           display: none
+        }
+        .iconContainer{
+            display: block ;
+        }
+        }
+        .tableContainer{
+            width: 100% !important;
+            height:100% !important;
+            overflow: scroll;
+            position: absolute ;
+            bottom: 0px ;
+            margin: 0px ;
         }
 
-        @media screen and (max-width: 600px){
-            #SearchInput{
-            width: 100% !important;
-        }
-        }
+
 
     </style>
+
     @php
 
 @endphp
-    <h2>Schedule Table</h2>
 
 
-    <div  class="table-responsive">
-        <h3 class="hide" style="margin: auto ; width :fit-content;">Emploi Global hebdomadaire</h3>
-        @if($tableEmploi[0]->toueGroupe == '1')
-        <div id="SearchInput" class="input-group rounded">
-            <input wire:model='SearchValue' style="max-width:400px" type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-            <span class="input-group-text border-0" id="search-addon">
-              <i class="fas fa-search"></i>
-            </span>
-        </div>
+    {{-- <div  class="table-responsive   "> --}}
+        <div style=" height:90vh"  >
+            @if($tableEmploi[0]->toueGroupe == '1')
+            <style>
+                th:first-child {
+                left: 0;
+                z-index: 1;
+            }
+            td:first-child {
+                position: sticky;
+                top: 110px ;
+                left: 0;
+                background-color: #f2f2f2;
+                z-index: 1;
+            }
+            </style>
+             <div class=" iconContainer rounded">
+                <div class="mdi mdi-magnify-remove-outline tbn" data-bs-toggle="modal" data-bs-target="#exampleModal333"></div>
+            </div>
 
+             {{-- modal Search --}}
+            <div wire:ignore class="modal fade" id="exampleModal333" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Search Groupe</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input wire:model='SearchValue'  type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">fermer</button>
 
+                    </div>
+                  </div>
+                </div>
+              </div>
 
+            {{-- modal Search --}}
+            <div id="SearchInputContainer" class=" rounded">
+                <input wire:model='SearchValue'  type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+            </div>
 
-
-        <table id="tbl_exporttable_to_xls" style="overflow:scroll" class="col-md-12 ">
             <div class="dateContent">
                 @if ($this->checkValues[0]->modeRamadan)
-                <h4 style="marign-top:15px " >
+                <h4 class="SEvalues" style="marign-top:15px " >
                     SE1 = 08:30 - 10:20 SE2 = 10:25 - 12:15 SE3 = 12:45 - 14:35 SE4 = 14:40 - 16:30
                 </h4>
                 @else
-                <h4> SE1 = 08:30 - 11:20 SE2 = 11:30 - 13:30 SE3 = 13:30 - 16:20 SE4 = 16:30 - 18:30 </h4>
+                <h4 class="SEvalues"> SE1 = 08:30 - 11:20 SE2 = 11:30 - 13:30 SE3 = 13:30 - 16:20 SE4 = 16:30 - 18:30 </h4>
                 @endif
 
 
@@ -79,11 +163,18 @@
 
              </div>
 
+        <div  class="tableContainer">
+
+
+
+        <table id="test_table"  class="col-md-12 ">
+
+
             <thead>
 
 
                 <tr class="day">
-                    <th style="width: 140px !important"  rowspan="3">Groups Name</th>
+                    <th style="width: 105px !important"  rowspan="3">Groups Name</th>
                     <th colspan="4">Lundi</th>
                     <th colspan="4">Mardi</th>
                     <th colspan="4">Mercredi</th>
@@ -142,7 +233,7 @@
                 @endphp
                 @foreach ($groups as $group)
                 <tr>
-                    <td>{{ $group->group_name }}</td>
+                    <td style="width: 130px ;" class="groupNAmeCase">{{ $group->group_name }}</td>
                     @foreach ($dayWeek as $day)
                         @foreach (['MatinSE1', 'MatinSE2', 'AmidiSE3', 'AmidiSE4'] as $sessionType)
                             @php
@@ -160,13 +251,13 @@
                                         colspan="1" rowspan="1"
                                         data-bs-toggle="modal"
                                         data-bs-target="#exampleModal"
-                                        class="TableCases"
+                                        class="TableCases {{$day}}"
                                         style="background-color:{{ $isActive ? 'rgba(12, 72, 166, 0.3)' :  ''}} ;"
                                         id="{{ $day.$sessionType.$group->id }}">
-                                        {{ $sission->sission_type }}<br>
-                                        {{ $sission->class_name }}<br>
-                                        {{ $sission->typeSalle }}<br>
-                                        {{ $sission->user_name }}<br>
+                                       <span> {{ $sission->sission_type }}</span>
+                                        <span>{{ $sission->class_name }}</span>
+                                      <span>  {{ $sission->typeSalle }}</span>
+                                      <span>  {{ $sission->user_name }}</span>
                                         {{ preg_replace('/^\d/' , ' ' , $sission->module_name ) }}
                                     </td>
                                     @break
@@ -177,8 +268,7 @@
                                     colspan="1" rowspan="1"
                                     data-bs-toggle="modal"
                                     data-bs-target="#exampleModal"
-                                    class="TableCases"
-                                    {{-- style="white-space: nowrap;" --}}
+                                    class="TableCases {{$day}}"
                                     id="{{ $day.$sessionType.$group->id }}">
                                 </td>
                             @endif
@@ -193,15 +283,20 @@
             </tbody>
         </table>
 
+    </div>
+     </div>
         @else
                 @include('livewire.tout-groupes22')
                 @endif
     </div>
+</div>
 
-    <button id="sheetjsexport" onclick="ExportToExcel('xlsx')" class=" btn  btn-primary mt-5">  télécharger</button>
 
+<div style="margin: 10px ;">
+    <button id="generate-excel"  class=" btn w-25 btn-primary mt-5">  télécharger</button>
       <!-- Button trigger modal -->
 <button type="button" class="btn btn-danger mt-5 col-3" data-bs-toggle="modal" data-bs-target="#exampleModal1"> Supprimer tout</button>
+</div>
   <!-- Modal for delete-->
   <div wire:ignore class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -222,18 +317,30 @@
   </div>
 
 
-  <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+  {{-- <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script> --}}
   <script type="text/javascript" >
 
-  function ExportToExcel(type, fn, dl) {
-         var elt = document.getElementById('tbl_exporttable_to_xls');
-         var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-         return dl ?
-           XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-           XLSX.writeFile(wb, fn || ('Schedule.' + (type || 'xlsx')));
-      }
+//   function ExportToExcel(type, fn, dl) {
+//          var elt = document.getElementById('tbl_exporttable_to_xls');
+//          var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+//          return dl ?
+//            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+//            XLSX.writeFile(wb, fn || ('Schedule.' + (type || 'xlsx')));
+//       }
 
 
+         $("document").ready(function () {
+        excel = new ExcelGen({
+
+            "src_id" : "test_table",
+            "show_header" : "true"
+
+        });
+
+        $("#generate-excel").click(function () {
+            excel.generate();
+        });
+    });
 
 
 

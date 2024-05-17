@@ -12,7 +12,7 @@ class ShowgroupAffected extends Controller
     function Show (){
         $user_id = Auth::id(); // Retrieve the logged-in formateur's ID
         $groupsList = formateur_has_group::where('formateur_id', $user_id)->get();
-        return view('formateurDashboard.Formateurgroupe.FormateurgroupeList',['groupsList'=> $groupsList]);
+        return view('formateurDashboard.FormateurGroupe.formateurGroupeList',['groupsList'=> $groupsList]);
     }
     function ShowInHomegroupAndModuleAffected (){
         $user_id = Auth::id(); // Retrieve the logged-in formateur's ID

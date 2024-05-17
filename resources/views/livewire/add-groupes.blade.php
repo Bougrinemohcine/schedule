@@ -1,4 +1,4 @@
-<div>
+<div style="margin:20px 0px 0px 20px">
     <style>
         .checkboxContainer {
             background-color: white;
@@ -58,7 +58,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="mb-3">
+                            <div wire:ignore class="mb-3">
                                 <h6 style="margin:10px">Modules</h6>
                                 <div style="border: 1.2px solid #eee; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;" class="checkboxContainer mb-lg-3 col-lg-9">
                                     @foreach ($modules as $module)
@@ -85,7 +85,7 @@
         </div>
 
         {{-- table --}}
-        <div wire:ignore>
+        <div wire:ignore.self>
             <h3>Groupes</h3>
             <table class="table table-striped" style="font-size: 19px; font-weight:300; width: 70vw;">
                 <thead>
@@ -93,9 +93,9 @@
                         <th scope="col">#</th>
                         <th scope="col">Groupe</th>
                         <th scope="col">Code Filiére</th>
-                        <th scope="col">Filière</th>
+                        <th colspan="">Filière</th>
                         <th scope="col">Niveau</th>
-                        <th scope="col">Actions</th>
+                        <th style="width: 300px ;overflow: hidden;" colspan="4">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -105,22 +105,22 @@
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $group['group_name'] }}</td>
                         <td>{{ preg_replace('/^\d+/' , "" ,$group['branch_id'])}}</td>
-                        <td>{{ $group['branch_id'] }}</td>
+                        <td>{{ $group['branch'] }}</td>
                         <td>{{ $group['year'] }}</td>
-                        <td colspan="">
-                            <!-- Modal trigger button -->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop_{{ $group['group_id'] }}">Voir plus</button>
-                            <td>
-                                <button type="button" id="{{$group['group_id']}}"  class="btn btn-primary EditButton" data-bs-toggle="modal" data-bs-target="#exampleModal99{{$group['group_id']}}">
-                                    Modifier
-                                </button>
-                            </td>
+                        <td style="display: flex ;overflow: hidden ;">
+                            <!-- Modal trigger button for viewing more details -->
+                            {{-- <button wire:ignore.self type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop_{{$group['group_id'] }}">Voir plus</button> --}}
+                             <button wire:ignore.self type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop_{{ $group['group_id'] }}">Voir plus</button>
+                            <!-- Modal trigger button for editing -->
+                            <button wire:ignore.self type="button" id="EditButton_{{$group['group_id']}}" class="btn btn-primary EditButton"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal99{{$group['group_id']}}">Modifier</button>
                         </td>
                     </tr>
                     @endforeach
                     @endif
                 </tbody>
             </table>
+
 
             {{--start Edit Model  --}}
             @foreach ($groups as $group)

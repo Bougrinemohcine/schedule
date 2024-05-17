@@ -43,7 +43,6 @@ class branchController extends Controller
             return redirect()->route('addbranch')->withErrors(['error' => "Un Filière avec le même code existe déjà."]);
         }
 
-        // $str= Str::random(6);
         // Create branch record
         $branch = branch::create([
             'id' => $establishment_id.$request->id,
@@ -82,10 +81,10 @@ class branchController extends Controller
         }
 
         public function updateBarnch(Request $request ,$id){
-            $str= Str::random(6);
+            // $str= Str::random(6);
             $establishment_id = session()->get('establishment_id');
             branch::where('id', $id)->update([
-                'id' => $establishment_id.$str.$request->id,
+                'id' => $establishment_id.$request->id,
                 'name' => $request->name
             ]);
            return redirect()->route('addbranch')->with('success', "Vous avez mis à jour la filière.") ;

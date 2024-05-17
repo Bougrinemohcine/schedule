@@ -12,7 +12,7 @@
                                     class="table table-striped table-bordered dt-responsive nowrap">
                                     <thead>
                                         <tr>
-                                            <th >ID Du groupe</th>
+                                            <th>ID Du groupe</th>
                                             <th>Nom Du groupe</th>
                                             <th>Branch</th>
                                             <th>Year</th>

@@ -394,11 +394,11 @@ body[data-layout="horizontal"] .footer {
 }
 
 .main-content {
-    margin-right: var(--bs-sidebar-width);
+    /* margin-right: var(--bs-sidebar-width); */
     overflow: hidden;
 }
 .main-content .content {
-    padding: 0 15px 10px 15px;
+    /* padding: 0 15px 10px 15px; */
     margin-top: var(--bs-header-height);
 }
 
@@ -508,7 +508,7 @@ body[data-layout="horizontal"] .footer {
     }
 }
 .vertical-collpsed .main-content {
-    margin-right: var(--bs-sidebar-collapsed-width);
+    /* margin-right: var(--bs-sidebar-collapsed-width); */
 }
 .vertical-collpsed .navbar-brand-box {
     width: var(--bs-sidebar-collapsed-width) !important;
@@ -755,7 +755,7 @@ body[data-sidebar-size="small"] .vertical-menu {
     text-align: center;
 }
 body[data-sidebar-size="small"] .main-content {
-    margin-right: 180px;
+    /* margin-right: 180px; */
 }
 body[data-sidebar-size="small"] .footer {
     right: 180px;
@@ -1297,7 +1297,7 @@ body[data-layout="horizontal"][data-layout-size="boxed"] .navbar-header {
     body[data-layout="detached"] .main-content {
         position: relative;
         min-height: 100vh;
-        padding-bottom: 60px;
+        /* padding-bottom: 60px; */
     }
     body[data-layout="detached"] .page-title-box {
         padding-bottom: 24px;
@@ -1406,10 +1406,10 @@ body[data-layout="detached"]
 }
 /*!
  * Waves v0.7.6
- * http://fian.my.id/Waves 
- * 
- * Copyright 2014-2018 Alfiana E. Sibuea and other contributors 
- * Released under the MIT license 
+ * http://fian.my.id/Waves
+ *
+ * Copyright 2014-2018 Alfiana E. Sibuea and other contributors
+ * Released under the MIT license
  * https://github.com/fians/Waves/blob/master/LICENSE */
 .waves-effect {
     position: relative;
@@ -3227,7 +3227,7 @@ input[switch="dark"]:checked + label {
         width: 100%;
     }
 }
-/* 
+/*
 Datatable
 */
 div.dataTables_wrapper div.dataTables_filter {

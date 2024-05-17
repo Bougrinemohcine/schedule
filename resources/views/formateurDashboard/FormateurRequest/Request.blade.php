@@ -9,7 +9,7 @@
          @livewireStyles
          <style>
             select#date-select {
-                width: 20%;
+                width: 60%;
             }
         </style>
     </head>

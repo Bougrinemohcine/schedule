@@ -1,21 +1,33 @@
+<style>
+    .groupNamecases{
+        position: sticky;
+                top: 110px ;
+                left: 0;
+                background-color: #f2f2f2;
+                z-index: 1;
+    }
+</style>
+<div style=" height:90vh ; "  >
+    <div class="dateContent">
+
+        @if (!$dataEmploi->isEmpty())
+        <h4 style="float: right; margin-top: 15px;">
+            @foreach ($dataEmploi as $item)
+                Du: {{ $item->datestart }} au {{ $item->dateend }}
+            @endforeach
+        </h4>
+        @else
+        <h4 style="float: right; margin-top: 15px; padding: 0px 5px 0px 5px; border-radius: 3px; background-color: #dc3545; color: white;">
+            Il faut créer un emploi
+        </h4>
+        @endif
+
+
+</div>
+    <div  class="tableContainer">
 <table id="tbl_exporttable_to_xls"  style="overflow:scroll" class="col-md-12 table-primary">
     <thead>
-        <div style="display: flex ;justify-content:space-between ;marign-top:15px ">
 
-                @if (!$dataEmploi->isEmpty())
-                <h4 style="float: right; margin-top: 15px;">
-                    @foreach ($dataEmploi as $item)
-                        Du: {{ $item->datestart }} au {{ $item->dateend }}
-                    @endforeach
-                </h4>
-                @else
-                <h4 style="float: right; margin-top: 15px; padding: 0px 5px 0px 5px; border-radius: 3px; background-color: #dc3545; color: white;">
-                    Il faut créer un emploi
-                </h4>
-                @endif
-
-
-            </div>
 <tr class="day">
     <th style="width: 200px !important" colspan="2" rowspan="3">Nom  de Formateur </th>
     <th colspan="4">Lundi</th>
@@ -131,7 +143,7 @@
         @endphp
         @foreach ($formateurs as $formateur)
         <tr>
-            <td style="height: 50px !important; overflow: hidden;" rowspan="{{ count($sessionData) }}">{{ $formateur->user_name }}</td>
+            <td class="groupNamecases" style="height: 50px !important; overflow: hidden;" rowspan="{{ count($sessionData) }}">{{ $formateur->user_name }}</td>
             @foreach ($sessionData as $item)
                 <td style="height: 50px !important; overflow: hidden">{{ $item }}</td>
                 @php
@@ -164,12 +176,12 @@
                             @endif
                         @endforeach
                         @if (!$sessionFound)
-                            <td wire:click="updateCaseStatus(true , true)" style="height: 50px !important; overflow: hidden" colspan="1" rowspan="1" data-bs-toggle="modal" data-bs-target="#exampleModal" class="TableCases" id="{{ $day . $sessionType . $formateur->id }}"></td>
+                            <td wire:click="updateCaseStatus(true , true)" style="height: 50px !important; overflow: hidden" colspan="1" rowspan="1" data-bs-toggle="modal" data-bs-target="#exampleModal" class="TableCases {{$day}}" id="{{ $day . $sessionType . $formateur->id }}"></td>
                             @else
                             <td wire:click="updateCaseStatus(false , true)"
-                            style="!important;height: 50px !important; overflow: hidden ; background-color:{{ $isActive ? 'rgba(12, 72, 166, 0.3)' :  ''}}"
+                            style="!important;height: 50px !important; overflow: hidden ; "
                             colspan="1" rowspan="1" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                            class="TableCases" id="{{ $day . $sessionType . $formateur->id }}">
+                            class="TableCases {{$day}}" id="{{ $day . $sessionType . $formateur->id }}">
                                 @if ($item === 'Groupe')
                                     {{ implode(' - ' , $groupesValue) }}
                                 @elseif ($item === 'Module')
@@ -192,4 +204,6 @@
 </tbody>
 
 </table>
+</div>
+</div>
 

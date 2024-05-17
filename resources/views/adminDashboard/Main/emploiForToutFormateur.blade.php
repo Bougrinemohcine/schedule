@@ -14,7 +14,6 @@
             table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-top: 20px;
                 table-layout: fixed;
                 word-wrap: break-word;
             }
@@ -23,8 +22,8 @@
             td {
 
                 height: 40px;
-                width: 460px !important;
-                border: 1px solid #ddd;
+                width: 400px !important;
+                border: 2px solid #292828;
                 text-align: center;
             }
             td{
@@ -47,6 +46,16 @@
                 padding: 0px;
                 font-size: 16px
             }
+            td span {
+            display: block ;
+            font-size: 14px !important;
+            color: black !important;
+        }
+            thead  {
+
+position: sticky ;
+top: 0px ;
+}
 
         </style>
          @livewireStyles

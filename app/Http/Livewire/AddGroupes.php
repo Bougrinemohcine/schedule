@@ -33,9 +33,7 @@ class AddGroupes extends Component
     public $oldyear ;
     public $oldBranch ;
 
-    protected $listeners = ['componentRefreshed' => 'FNrefresh' ,
-    'GetIdGroupe' => 'GetIdGroupe' ,
-'updateGroup'=>'$refresh'];
+    protected $listeners = ['componentRefreshed' => '$refresh' , 'GetIdGroupe' => 'GetIdGroupe' ,'updateGroup'=>'$refresh'];
     public function FNrefresh(){
         $this->reset();
     }
@@ -43,6 +41,7 @@ class AddGroupes extends Component
     public function GetIdGroupe($idGroup){
         $this->Idgroup =$idGroup ;
     }
+
  // insert groups
 public function create()
 {
@@ -168,13 +167,15 @@ public function create()
             $dataGroupsWithBranchAndModules = DB::table('groups')
             ->join('groupe_has_modules as ghm', 'ghm.group_id', '=', 'groups.id')
             ->join('modules as m', 'm.id', '=', 'ghm.module_id')
-            ->select('groups.id as group_id', 'groups.group_name', 'groups.year', 'groups.barnch_id', 'm.id as module_name')
+            ->join('branches as br' , 'br.id' , '=' , 'groups.barnch_id')
+            ->select('groups.id as group_id', 'groups.group_name', 'groups.year', 'groups.barnch_id', 'br.name as branch_name','m.id as module_name')
             ->where('groups.establishment_id', $establishment);
             // Query to fetch groups without any branches or modules
             $dataGroupsWithoutBranchAndModules = DB::table('groups')
             ->leftJoin('groupe_has_modules as ghm', 'ghm.group_id', '=', 'groups.id')
             ->leftJoin('modules as m', 'm.id', '=', 'ghm.module_id')
-            ->select('groups.id as group_id', 'groups.group_name', 'groups.year', 'groups.barnch_id', 'm.id as module_name')
+            ->leftJoin('branches as br' , 'br.id' , '=' , 'groups.barnch_id')
+            ->select('groups.id as group_id', 'groups.group_name', 'groups.year', 'groups.barnch_id', 'br.name as branch_name','m.id as module_name')
             ->where('groups.establishment_id', $establishment)
             ->whereNull('groups.barnch_id')
             ->orwhereNull('m.id');
@@ -189,6 +190,7 @@ public function create()
                 'group_name' => $group[0]->group_name,
                 'year' => $group[0]->year,
                 'branch_id' => $group[0]->barnch_id,
+                'branch'=> $group[0]->branch_name ,
                 'modules' => $modules,
             ];
             })->values()->all();

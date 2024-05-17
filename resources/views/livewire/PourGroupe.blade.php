@@ -51,7 +51,7 @@
                 @if ($sission->day === $abbreviations[$day] && $sission->dure_sission === $dure)
                     <td wire:click='updateCaseStatus(false)'
                     style="background-color:rgba(12, 72, 166, 0.3) ;" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                    class="Cases casesNewtamplate"
+                    class="Cases casesNewtamplate {{ $abbreviations[$day]}}"
                     id="{{ $abbreviations[$day] . (in_array($dure, ['SE1', 'SE2']) ? 'Matin' : 'Amidi') . $dure }}">
                         @if ($item === 'Groupe')
                             {{ $sission->group_name }}
@@ -72,7 +72,7 @@
                 @endif
             @endforeach
             @if (!$sessionFound)
-                <td wire:click='updateCaseStatus(true)' data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases casesNewtamplate" id="{{ $abbreviations[$day] . (in_array($dure, ['SE1', 'SE2']) ? 'Matin' : 'Amidi') . $dure }}">
+                <td wire:click='updateCaseStatus(true)' data-bs-toggle="modal" data-bs-target="#exampleModal" class="Cases casesNewtamplate {{$abbreviations[$day]}}" id="{{ $abbreviations[$day] . (in_array($dure, ['SE1', 'SE2']) ? 'Matin' : 'Amidi') . $dure }}">
                 </td>
             @endif
         @endforeach
@@ -90,38 +90,5 @@
 
 
 
-    <script>
 
-        const elementToRemove = document.querySelector('.element-to-remove');
-
-
-        function removeElement() {
-
-            elementToRemove.style.display = 'none';
-
-            window.removeEventListener('scroll', handleScroll);
-
-            window.addEventListener('scroll', handleScrollTop);
-        }
-
-
-        function handleScroll() {
-
-            if (window.scrollY > 100) {
-
-                removeElement();
-            }
-        }
-
-        function handleScrollTop() {
-            if (window.scrollY === 0) {
-                elementToRemove.style.display = 'block';
-                elementToRemove.style.display = 'flex';
-                window.removeEventListener('scroll', handleScrollTop);
-
-                window.addEventListener('scroll', handleScroll);
-            }
-        }
-        window.addEventListener('scroll', handleScroll);
-    </script>
 </tbody>

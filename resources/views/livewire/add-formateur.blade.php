@@ -44,7 +44,7 @@
     </style>
     {{-- create formateur  --}}
    <!-- Button trigger modal -->
-<button style="margin-bottom:8px" type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#exampleModal7">
+<button style="margin-bottom:8px ; marign-top:20px ;" type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#exampleModal7">
     Create formateur Account
   </button>
   <div wire:ignore.self  class="modal fade" id="exampleModal7" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -222,8 +222,8 @@
                                                 </td>
                                                 <td>
 
-                                                    <button  id='{{$formateur->id}}' type="button" class="btn btn-primary catchEvent" data-bs-toggle="modal" data-bs-target="#staticBackdrop_{{$formateur->id}}" >View plus</button>
-                                                    <button  id='{{$formateur->id}}' type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#exampleModal_{{$formateur->id}}" >Modifier</button>
+                                                    <button  id='viewBtn_{{$formateur->id}}' type="button" class="btn btn-primary catchEvent" data-bs-toggle="modal" data-bs-target="#staticBackdrop_{{$formateur->id}}" >View plus</button>
+                                                    <button  id='editBtn_{{$formateur->id}}' type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#exampleModal_{{$formateur->id}}" >Modifier</button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -288,7 +288,8 @@
 
 Array.from(buttons).forEach(button => {
     button.addEventListener('click', function() {
-        const IdFormateur = button.getAttribute('id');
+        const IdFormateur = button.getAttribute('id').replace('viewBtn_' , "");
+        console.log(IdFormateur);
         fetch('/admin/reserve/' + IdFormateur, { method: "GET" })
             .then((response) => response.json())
             .then((data) => {

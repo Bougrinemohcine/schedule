@@ -142,9 +142,9 @@
                     <tr class="day">
                         <th style="width: 140px !important" rowspan="3">
                             @if ($selectedType === 'Formateur')
-                                Nome formateurs
+                                Nom formateurs
                             @else
-                                Nome Groupes
+                                Nom Groupes
                             @endif
                         </th>
                         <th colspan="4">Lundi</th>
@@ -270,29 +270,7 @@
 </div>
 <button onclick="ExportToExcel('xlsx')" class=" btn  btn-primary mt-5">
     telecharger</button>
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-danger col-3 mt-5" data-bs-toggle="modal" data-bs-target="#exampleModal1">
-    Supprimer tout
-</button>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Êtes-vous sûr(e)?</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Voulez-vous supprimer toutes les sessions de ce emploi ?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">fermer</button>
-                <button type="button" wire:click='deleteAllSessions' class="btn btn-danger">Oui Supprimer
-                    l'emploi</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script type="text/javascript">
@@ -310,39 +288,7 @@
             XLSX.writeFile(wb, fn || ('Schedule.' + (type || 'xlsx')));
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const handleDomChanges = function(mutationsList, observer) {
-
-            // console.log( document.querySelectorAll('.TableCases'));
-            let elements = document.querySelectorAll('[data-bs-toggle="modal"]');
-            elements.forEach(element => {
-                element.addEventListener('click', function() {
-                    Livewire.emit('receiveVariable', element.id);
-                    console.log(element.id)
-                });
-            });
-        };
-        const observerConfig = {
-            childList: true,
-            subtree: true
-        };
-        const observer = new MutationObserver(handleDomChanges);
-        observer.observe(document.body, observerConfig);
-    })
-
-
-    document.addEventListener('livewire:load', function() {
-        const selectElement = document.getElementById('date-select');
-        let elements = document.querySelectorAll('[data-bs-toggle="modal"], .Cases');
-        elements.forEach(element => {
-            element.addEventListener('click', function() {
-                if (element.classList.contains('Cases')) {
-                    Livewire.emit('receiveVariable', element.id);
-                    console.log(element.id);
-                }
-            });
-        });
-    });
+ 
 </script>
 
 

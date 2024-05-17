@@ -1,7 +1,7 @@
 <x-HeaderMenuAdmin>
 
 
-<div style="display: flex">
+<div style="display: flex ;margin:20px 0px 0px 20px">
 
    <div>
     @if($errors->any())
@@ -21,14 +21,14 @@
     <form method='POST' action="{{route('insertClasses')}}">
         @csrf
         <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label">class Name (number)</label>
+          <label for="exampleInputEmail1" class="form-label">Nom de Salle (number)</label>
           <input type="text"name='class_name' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
         </div>
 
-        <button type="submit" class="btn btn-success">save</button>
+        <button type="submit" class="btn btn-success">Enregistrer</button>
       </form>
    {{-- table --}}
-   <h3>classes</h3>
+   <h3>Les Salles</h3>
    <table class="table table-striped">
     <thead>
         <tr>

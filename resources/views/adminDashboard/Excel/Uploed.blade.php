@@ -133,7 +133,7 @@
 {{ session('success') }}
 </div>
 @endif
-<div class="loader1"></div>
+<div  style="margin-top:20px ; " class="loader1"></div>
         <form action="{{ route('UploedFileExcel') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div for="images" class="drop-container" id="dropcontainer">

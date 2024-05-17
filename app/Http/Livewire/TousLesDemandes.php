@@ -312,11 +312,6 @@ class TousLesDemandes extends Component
                     ]);
                     return;
                 }
-
-
-
-
-
             } else {
                 if($this->TypeSesion === 'teams'){
                     foreach ($this->selectedGroups as $group) {
@@ -728,3 +723,6 @@ class TousLesDemandes extends Component
         return view('livewire.tous-les-demandes', ['seance' => $seance, 'allseances' => $allseances]);
     }
 }
+
+
+

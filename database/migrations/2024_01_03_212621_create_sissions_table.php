@@ -72,7 +72,7 @@ return new class extends Migration
                 ->onUpdate('cascade');
 
             $table->string('message')->nullable();
-            $table->enum('sission_type', ['TEAMS', 'PRESENTIELLE','EFM'])->nullable();
+            $table->enum('sission_type', ['TEAMS', 'PRESENTIEL','EFM'])->nullable();
             $table->enum('status_sission', ["Pending", "Accepted", "Cancelled"])->default("Pending");
 
         });

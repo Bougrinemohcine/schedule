@@ -311,7 +311,16 @@
                                class="TableCases {{$day}}" id="{{ $day.$sessionType.$formateur->id }}">
                                @if ($foundSession)
                                 <span>   {{ $typeValue}}</span>
-                                   <span>{{ $salleValue ."\n". $typeSalle }}</span>
+                                <span>
+                                    @if($salleValue)
+                                        {{ $salleValue }}
+                                    @else
+                                        SALLE
+                                    @endif
+                                    <br>
+                                    {{ "\n" . $typeSalle }}
+                                </span>
+
                                 <span>   {{ implode(' - ', $groupes) }}</span>
                                    {{ preg_replace('/^\d/', ' ', $ModelValue) }}
                                @endif

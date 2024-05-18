@@ -299,7 +299,7 @@
                                             <select wire:model="TypeSesion" class="form-select"
                                                 aria-label="Default select example">
                                                 <option selected>Type  Séance</option>
-                                                <option value="presentielle">Presentielle</option>
+                                                <option value="PRESENTIEL">Presentielle</option>
                                                 <option value="teams">Teams</option>
                                                 <option value="EFM">EFM</option>
                                             </select>

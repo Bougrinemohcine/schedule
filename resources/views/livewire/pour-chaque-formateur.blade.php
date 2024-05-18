@@ -319,7 +319,15 @@
                         @if ($sessionFound)
                           <span>  {{$formateur}}</span>
                           <span>  {{ implode(' - ', $groupes) }}</span>
-                          <span>  {{$SalleValue . "\n" . $typeSalle}}</span>
+                          <span>
+                            @if($SalleValue)
+                                {{ $SalleValue }}
+                            @else
+                                SALLE
+                            @endif
+                            <br>
+                            {{ "\n" . $typeSalle }}
+                        </span>
                          <span>   {{$Typevalue}}</span>
                           <span>  {{$ModuleValue}}</span>
                         @endif

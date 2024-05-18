@@ -104,95 +104,171 @@ class PourChaqueFormateur extends Component
 
     public function UpdateSession()
     {
-       
         try {
             $idcase = $this->receivedVariable;
             $day = substr($idcase, 0, 3);
             $day_part = substr($idcase, 3, 5);
             $dure_sission = substr($idcase, 8, 3);
 
-
-
-            $session = Sission::where([
+            $sessionQuery = Sission::where([
                 'main_emploi_id' => session()->get('id_main_emploi'),
                 'day' => $day,
                 'day_part' => $day_part,
-                'user_id' => $this->formateurId ,
+                'user_id' => $this->formateurId,
                 'dure_sission' => $dure_sission,
-            ])->get();
+            ]);
 
+            // dd($session);
+            $session = $sessionQuery->first();
 
-            if ($session->isNotEmpty()) {
-                foreach ($session as $item) {
-                    if ($this->module !== null) {
-                        $item->update(['module_id' => $this->module]);
-                        $this->alert('success', 'Vous modifiez le module de cette séance.',[
-                                            'position' => 'center',
-                                            'timer' => 3000,
-                                            'toast' => true,]);
-                    }
-
-                    if ($this->selectedGroups !== null ) {
-                        foreach($this->selectedGroups as $group) {
-                            $item->update(['group_id' => $group]);
-                        }
-                            $this->alert('success', 'Vous modifiez le Formateur de cette séance.',[
-                                'position' => 'center',
-                                'timer' => 3000,
-                                'toast' => true,]);
-                    }
-
-                    if ($this->salle !== null) {
-                        $item->update(['class_room_id' => $this->salle]);
-                        $this->alert('success', 'Vous modifiez la salle de cette séance.',[
+            if ($session) {
+                if ($this->TypeSesion === 'teams') {
+                        $session->update(['class_room_id' => $this->salle]);
+                        $this->alert('success', 'Vous modifiez la salle de cette séance.', [
                             'position' => 'center',
                             'timer' => 3000,
-                            'toast' => true,]);
-                    }
-
+                            'toast' => true,
+                        ]);
                     if ($this->TypeSesion !== null) {
-                        $item->update(['sission_type' => $this->TypeSesion]);
-                        $this->alert('success', 'Vous modifiez le type de cette séance.',[
+                        $session->update(['sission_type' => $this->TypeSesion]);
+                        $this->alert('success', 'Vous modifiez le type de cette séance.', [
                             'position' => 'center',
                             'timer' => 3000,
-                            'toast' => true,]);
+                            'toast' => true,
+                        ]);
+                    }
+                    if ($this->salleclassTyp !== null) {
+                        $session->update(['typeSalle' => $this->salleclassTyp]);
+                        $this->alert('success', 'Vous modifiez le type de Salle.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                    if ($this->module !== null) {
+                        $session->update(['module_id' => $this->module]);
                     }
 
-                    if ($this->salleclassTyp !== null) {
-                        $item->update(['typeSalle' => $this->salleclassTyp]);
-                        $this->alert('success', 'Vous modifiez le type de Salle.',[
+                    if (!empty($this->selectedGroups)) {
+                        foreach ($this->selectedGroups as $group) {
+                            $session->update(['group_id' => $group]);
+                        }
+
+                        $this->alert('success', 'Vous modifiez le Formateur de cette séance.', [
                             'position' => 'center',
                             'timer' => 3000,
-                            'toast' => true,]);
+                            'toast' => true,
+                        ]);
                     }
+                }elseif(!empty($this->salle)){
+                    if ($this->salle !== null) {
+                        $session->update(['class_room_id' => $this->salle]);
+                        $this->alert('success', 'Vous modifiez la salle de cette séance.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                    if ($this->TypeSesion !== null) {
+                        $session->update(['sission_type' => $this->TypeSesion]);
+                        $this->alert('success', 'Vous modifiez le type de cette séance.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                    if ($this->salleclassTyp !== null) {
+                        $session->update(['typeSalle' => $this->salleclassTyp]);
+                        $this->alert('success', 'Vous modifiez le type de Salle.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                    if ($this->module !== null) {
+                        $session->update(['module_id' => $this->module]);
+                    }
+
+                    if (!empty($this->selectedGroups)) {
+                        foreach ($this->selectedGroups as $group) {
+                            $session->update(['group_id' => $group]);
+                        }
+
+                        $this->alert('success', 'Vous modifiez le Formateur de cette séance.', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                    }
+                } elseif (empty($this->salle)) {
+                    $this->alert('error', 'Vous devriez sélectionner la salle.', [
+                        'position' => 'center',
+                        'timer' => 3000,
+                        'toast' => true,
+                    ]);
+                    return;
                 }
             } else {
-
-                foreach($this->selectedGroups as $group) {
-                    $sission = sission::create([
-                                    'day'=>substr($idcase,0,3),
-                                    'day_part'=>substr($idcase,3,5),
-                                    'dure_sission'=>substr($idcase,8,3),
-                                    'module_id'=> $this->module,
-                                    'group_id'=> $group ,
-                                    'establishment_id'=>session()->get('establishment_id'),
-                                    'user_id'=>$this->formateurId,
-                                    'class_room_id'=>$this->salle,
-                                    'validate_date'=>null,
-                                    'main_emploi_id'=>session()->get('id_main_emploi'),
-                                    "demand_emploi_id"=>null,
-                                    'message'=>null,
-                                    'typeSalle'=>$this->salleclassTyp,
-                                    'sission_type'=>$this->TypeSesion,
-                                    'status_sission'=>'Accepted',
-                                ]);
-                                if($sission){
-                                    $this->alert('success', 'Vous créez une nouvelle session',[
-                                        'position' => 'center',
-                                        'timer' => 3000,
-                                        'toast' => true,]);
-                                }
-                     }
+                if($this->TypeSesion === 'teams'){
+                    foreach ($this->selectedGroups as $group) {
+                           Sission::create([
+                            'day' => $day,
+                            'day_part' => $day_part,
+                            'dure_sission' => $dure_sission,
+                            'module_id' => $this->module,
+                            'group_id' => $group,
+                            'establishment_id' => session()->get('establishment_id'),
+                            'user_id' => $this->formateurId,
+                            'class_room_id' => $this->salle,
+                            'validate_date' => null,
+                            'main_emploi_id' => session()->get('id_main_emploi'),
+                            "demand_emploi_id" => null,
+                            'typeSalle'=>$this->salleclassTyp,
+                            'message' => null,
+                            'sission_type' => $this->TypeSesion,
+                            'status_sission' => 'Accepted',
+                        ]);
+                    }
+                         $this->selectedGroups = [];
+                         $this->alert('success', 'Vous créez une nouvelle session', [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                        ]);
+                }elseif(!empty($this->salle)){
+                    foreach ($this->selectedGroups as $group) {
+                        Sission::create([
+                         'day' => $day,
+                         'day_part' => $day_part,
+                         'dure_sission' => $dure_sission,
+                         'module_id' => $this->module,
+                         'group_id' => $group,
+                         'establishment_id' => session()->get('establishment_id'),
+                         'user_id' => $this->formateurId,
+                         'class_room_id' => $this->salle,
+                         'validate_date' => null,
+                         'main_emploi_id' => session()->get('id_main_emploi'),
+                         "demand_emploi_id" => null,
+                         'typeSalle'=>$this->salleclassTyp,
+                         'message' => null,
+                         'sission_type' => $this->TypeSesion,
+                         'status_sission' => 'Accepted',
+                     ]);
+                 }
+                      $this->selectedGroups = [];
+                      $this->alert('success', 'Vous créez une nouvelle session', [
+                         'position' => 'center',
+                         'timer' => 3000,
+                         'toast' => true,
+                     ]);
+                }elseif(empty($this->salle)){
+                    $this->alert('error', 'Vous devriez sélectionner la salle.', [
+                        'position' => 'center',
+                        'timer' => 3000,
+                        'toast' => true,
+                    ]);
+                    return;
+                }
 
             }
 
@@ -293,11 +369,11 @@ class PourChaqueFormateur extends Component
         $salles = class_room::where('id_establishment', $establishment_id)->get();
 
         $sessions = DB::table('sissions')
-        ->select('sissions.*', 'modules.id as module_name', 'users.user_name','groups.group_name', 'class_rooms.class_name')
+        ->select('sissions.*', 'modules.id as module_name', 'groups.group_name', 'users.*', 'class_rooms.class_name')
         ->leftJoin('modules', 'modules.id', '=', 'sissions.module_id')
         ->join('groups', 'groups.id', '=', 'sissions.group_id')
-        ->join('users' , 'users.id' ,'=' , "sissions.user_id")
-        ->join('class_rooms', 'class_rooms.id', '=', 'sissions.class_room_id')
+        ->join('users', 'users.id', '=', 'sissions.user_id')
+        ->leftJoin('class_rooms', 'class_rooms.id', '=', 'sissions.class_room_id')
         ->where('sissions.establishment_id', $establishment_id)
         ->where('sissions.main_emploi_id', session()->get('id_main_emploi'))
         ->where('sissions.status_sission', 'Accepted')

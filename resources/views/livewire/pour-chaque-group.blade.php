@@ -247,7 +247,7 @@
                                     <td wire:click='updateCaseStatus(false)' data-bs-toggle="modal"
                                     style="background-color:rgba(12, 72, 166, 0.3) ;"
                                      class="tdClass Cases {{$day}}" data-bs-target="#exampleModal" id="{{ $day . $sessionType }}">
-                                       {{$sission->group_name}}<br> {{ $sission->sission_type }}<br>{{ $sission->class_name }} <br>{{ $sission->typeSalle }} <br>{{ $sission->user_name }}<br>{{ preg_replace('/^\d+/', '', $sission->module_name) }}
+                                       {{$sission->group_name}}<br> {{ $sission->sission_type }}<br> @if($sission->class_name) {{ $sission->class_name }}  @else SALLE @endif <br>{{ $sission->typeSalle }} <br>{{ $sission->user_name }}<br>{{ preg_replace('/^\d+/', '', $sission->module_name) }}
                                     </td>
                                     @php
                                         $sessionFound = true;
@@ -496,7 +496,7 @@
 
 
 
-// auther input Searsh 
+// auther input Searsh
 
                       // input
 

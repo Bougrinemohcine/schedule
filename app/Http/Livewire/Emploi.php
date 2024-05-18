@@ -172,7 +172,7 @@ class Emploi extends Component
                 ]);
                 return;
             }
-        
+
 
         $this->emit('fresh');
     } catch (\Exception $e) {
@@ -247,11 +247,11 @@ class Emploi extends Component
         ->get();
 
         $sissions = DB::table('sissions')
-        ->select('sissions.*', 'modules.id as module_name', 'groups.group_name', 'users.user_name', 'class_rooms.class_name')
+        ->select('sissions.*', 'modules.id as module_name', 'groups.group_name', 'users.*', 'class_rooms.class_name')
         ->leftJoin('modules', 'modules.id', '=', 'sissions.module_id')
         ->join('groups', 'groups.id', '=', 'sissions.group_id')
         ->join('users', 'users.id', '=', 'sissions.user_id')
-        ->join('class_rooms', 'class_rooms.id', '=', 'sissions.class_room_id')
+        ->leftJoin('class_rooms', 'class_rooms.id', '=', 'sissions.class_room_id')
         ->where('sissions.establishment_id', $establishment_id)
         ->where('sissions.status_sission', 'Accepted')
         ->where('sissions.main_emploi_id', session()->get('id_main_emploi'))

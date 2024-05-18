@@ -176,7 +176,7 @@
             display: block ;
             font-size: 14px !important;
             color: black !important;
-            
+
         }
         td{
              color: black !important;
@@ -475,7 +475,7 @@
                    <span>  {{ $sission->sission_type }}</span>
                    <span>  {{ $sission->user_name }}</span>
                     <span> {{ preg_replace('/^\d+/' , ' ' , $sission->module_name )}}</span>
-                    <span> {{ $sission->class_name }}</span>
+                    <span> @if($sission->class_name) {{ $sission->class_name }} @else SALLE @endif</span>
                     <span> {{ $sission->typeSalle }}</span>
                      @endif
                  </td>
@@ -497,16 +497,22 @@
                 @foreach ($sissions as $sission)
                     @if ($sission->day === $day && $sission->user_id === $formateur->id && $sission->day_part === substr($sessionType, 0, 5) && $sission->dure_sission === substr($sessionType, 5))
                         @php
-                            $details = $sission->sission_type . '<br>' . $sission->class_name . '<br>'. $sission->typeSalle.'<br>'. $sission->group_name . '<br>' .preg_replace('/^\d+/', '', $sission->module_name) ;
-                            $uniqueDetails = [];
-                            foreach (explode('<br>', $details) as $word) {
-                                if (!in_array($word, $sessionWords)) {
-                                    $uniqueDetails[] = $word;
-                                    $sessionWords[] = $word;
-                                }
-                            }
-                            echo implode('<br>', $uniqueDetails);
-                        @endphp
+    $details = $sission->sission_type . '<br>'
+             . ($sission->class_name ? $sission->class_name : 'SALLE') . '<br>'
+             . $sission->typeSalle . '<br>'
+             . $sission->group_name . '<br>'
+             . preg_replace('/^\d+/', '', $sission->module_name);
+
+    $uniqueDetails = [];
+    foreach (explode('<br>', $details) as $word) {
+        if (!in_array($word, $sessionWords)) {
+            $uniqueDetails[] = $word;
+            $sessionWords[] = $word;
+        }
+    }
+    echo implode('<br>', $uniqueDetails);
+@endphp
+
                     @endif
                 @endforeach
             </td>
@@ -546,7 +552,7 @@
         <button type="button" class="btn btn-danger col-3 mt-5" data-bs-toggle="modal" data-bs-target="#exampleModal1"> Supprimer tout</button>
     </div>
 
- 
+
 
     <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
     <script type="text/javascript" >

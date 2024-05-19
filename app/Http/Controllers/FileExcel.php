@@ -19,6 +19,11 @@ use App\Models\module_has_formateur;
 use App\Models\group_has_module;
 use App\Models\branch;
 use App\Models\formateur_has_branche;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\RequestEmploiNotification;
+
+use Illuminate\Support\Facades\Auth;
+
 class FileExcel extends Controller
 {
     public function index(){
@@ -219,6 +224,8 @@ class FileExcel extends Controller
                         'establishment_id'=>$establishment_id,
                         'id'=>$formateur['matricule']
                     ]);
+                    
+                    
 
                     // assigne branch
                     foreach( $formateur['branches'] as $branch){
@@ -243,6 +250,10 @@ class FileExcel extends Controller
                     };
 
             }
+           
+            $type = 'createAccount';
+            $mainUsers = User::where('role', 'formateur')->get();
+            Notification::send($mainUsers, new RequestEmploiNotification($type,'', Auth::user()->user_name,'','',''));
           }
           unlink(storage_path('app/' . $filePath));
         return redirect()->route('UploedFileExcelView')->with(['success'=>'Vous avez configuré les paramètres de votre compte avec succès.']);

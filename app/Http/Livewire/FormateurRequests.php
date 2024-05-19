@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Auth;
 use function PHPUnit\Framework\isEmpty;
 
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Notification;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Support\Facades\Notification;
 use App\Notifications\RequestEmploiNotification;
 
 class FormateurRequests extends Component
@@ -66,6 +66,8 @@ class FormateurRequests extends Component
     public $seanceFirst;
     public $tableEmploi;
     public $isSessionUpdated ;
+    public $allSeances ;
+    public $existingRequest ;
 
 
     protected $listeners = [

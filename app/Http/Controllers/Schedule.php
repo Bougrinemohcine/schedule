@@ -13,6 +13,8 @@ use App\Models\sission;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\RequestEmploiNotification;
 class Schedule extends Controller
 {
     public function index(){
@@ -60,6 +62,9 @@ class Schedule extends Controller
                 'dateend' => $dateEnd,
                 'establishment_id' => $establishment_id,
             ]);
+            $type = 'createEmplois';
+            $mainUsers = User::where('role', 'formateur')->get();
+            Notification::send($mainUsers, new RequestEmploiNotification($type,'', Auth::user()->user_name,'','',''));
 
 
             if ($main_emploi) {

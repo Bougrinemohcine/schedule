@@ -34,28 +34,41 @@ class RequestEmploiNotification extends Notification
     }
 
     public function toArray($notifiable)
-    {
-        // Déterminez le type de notification en fonction de la présence de seance_id
-        if ($this->type == 'seance') {
-            // Pour la notification de création de séance
-            return [
-                'type' => 'seance',
-                'Request_id' => $this->Request_id,
-                'FormateurRequest' => $this->FormateurRequest,
-                'RequestCommentaire' => $this->RequestCommentaire,
-                'mainEmploiId' => $this->mainEmploiId,
-                'statusSission' => $this->statusSission,
-            ];
-        } else {
-            // Pour la notification de demande d'emploi
-            return [
-                'type' => 'emploi',
-                'Request_id' => $this->Request_id,
-                'FormateurRequest' => $this->FormateurRequest,
-                'RequestCommentaire' => $this->RequestCommentaire,
-                'mainEmploiId' => $this->mainEmploiId,
-            ];
-        }
+{
+    // Déterminez le type de notification en fonction de la présence de seance_id
+    if ($this->type == 'seance') {
+        // Pour la notification de création de séance
+        return [
+            'type' => 'seance',
+            'Request_id' => $this->Request_id,
+            'FormateurRequest' => $this->FormateurRequest,
+            'RequestCommentaire' => $this->RequestCommentaire,
+            'mainEmploiId' => $this->mainEmploiId,
+            'statusSission' => $this->statusSission,
+        ];
+    } elseif ($this->type == 'createAccount') {
+        // Pour la notification de création de compte
+        return [
+            'type' => 'createAccount',
+            'AdminUsername' => $this->FormateurRequest,
+        ];
+    } elseif ($this->type == 'createEmplois') {
+        // Pour la notification de création de compte
+        return [
+            'type' => 'createEmplois',
+            'AdminUsername' => $this->FormateurRequest,
+        ];
+    } else {
+        // Pour la notification de demande d'emploi
+        return [
+            'type' => 'emploi',
+            'Request_id' => $this->Request_id,
+            'FormateurRequest' => $this->FormateurRequest,
+            'RequestCommentaire' => $this->RequestCommentaire,
+            'mainEmploiId' => $this->mainEmploiId,
+        ];
     }
+}
+
 }
 

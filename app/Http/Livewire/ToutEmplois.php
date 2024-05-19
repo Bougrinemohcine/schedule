@@ -76,8 +76,120 @@ public function receiveidEmploiid($variable){
      session(['idEmploiSelected' => $variable]);
 }
 
+public function UpdateSession()
+{
+    try {
+        $idcase = $this->receivedVariable;
+        $day = substr($idcase, 0, 3);
+        $day_part = substr($idcase, 3, 5);
+        $group_id = substr($idcase, 11);
+        $user_id = substr($idcase, 11);
+        $dure_sission = substr($idcase, 8, 3);
+
+        $sessionData = [
+            'day' => $day,
+            'day_part' => $day_part,
+            'dure_sission' => $dure_sission,
+            'module_id' => $this->module,
+            'establishment_id' => session()->get('establishment_id'),
+            'class_room_id' => $this->salle,
+            'main_emploi_id' => session()->get('idEmploiSelected'),
+            'demand_emploi_id' => null,
+            'message' => null,
+            'typeSalle' => $this->salleclassTyp,
+            'sission_type' => $this->TypeSesion,
+            'status_sission' => 'Accepted',
+        ];
+
+        if ($this->selectedType === "Group") {
+            // For group side
+            $sessionData['group_id'] = $group_id;
+            $sessionData['user_id'] = $this->formateur;
+
+            $session = Sission::where([
+                'main_emploi_id' => session()->get('idEmploiSelected'),
+                'day' => $day,
+                'day_part' => $day_part,
+                'group_id' => $group_id,
+                'dure_sission' => $dure_sission,
+            ])->first();
+
+        } else {
+            // For formateur side
+            $sessionData['group_id'] = $this->group;
+            $sessionData['user_id'] = $user_id;
+            $session = Sission::where([
+                'main_emploi_id' => session()->get('idEmploiSelected'),
+                'day' => $day,
+                'day_part' => $day_part,
+                'user_id' => $user_id,
+                'dure_sission' => $dure_sission,
+            ])->first();
+        }
+
+        if($this->TypeSesion === 'teams'){
+
+            if ($session) {
+                $session->update($sessionData);
+            } else {
+                sission::create($sessionData);
+            }
+        }elseif(!empty($this->salle)){
+
+            if ($session) {
+                $session->update($sessionData);
+            } else {
+                sission::create($sessionData);
+            }
+        }elseif(empty($this->salle)){
+            $this->alert('error', 'Vous devriez sélectionner la salle.', [
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+            ]);
+            return;
+        }
+
+        $this->emit('fresh');
+    } catch (\Exception $e) {
+        $this->alert('error', 'il y a un problème' , [
+            'position' => 'center',
+            'timer' => 3000,
+            'toast' => true,
+        ]);
 
 
+    }
+}
+
+public function DeleteSession()
+{
+    $idcase = $this->receivedVariable;
+    $day = substr($idcase, 0, 3);
+    $day_part = substr($idcase, 3, 5);
+    $group_id = substr($idcase, 11);
+    $user_id = substr($idcase, 11);
+    $dure_sission = substr($idcase,8,3);
+
+ if ($this->selectedType === "Group") {
+  sission::where([
+     'main_emploi_id' => Session::get('idEmploiSelected'),
+     'day' => $day,
+     'day_part' => $day_part,
+     'group_id' => $group_id,
+     'dure_sission' => $dure_sission
+ ])->delete();
+  }else{
+    sission::where([
+        'main_emploi_id' => Session::get('idEmploiSelected'),
+        'day' => $day,
+        'day_part' => $day_part,
+        'user_id' => $user_id,
+        'dure_sission' => $dure_sission
+    ])->delete();
+  }
+
+}
 
 
     // Method to update selected type emploi group or formateur

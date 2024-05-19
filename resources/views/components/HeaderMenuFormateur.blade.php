@@ -118,13 +118,21 @@
                                                     <h6 class="m-0"> Notifications </h6>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <a href="#!" class="small"> View All</a>
+                                                    <a href="{{ route('markAsRead') }}" class="small green"><i
+                                                            class="fas fa-eye"></i>
+                                                        Mark All As Read</a>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <a href="{{ route('Clear') }}" class="small danger"><i
+                                                            class="fas fa-trash-alt"></i>
+                                                        Clear</a>
                                                 </div>
                                             </div>
                                         </div>
-                                        @foreach (Auth::user()->unreadNotifications as $Notification)
+                                        @foreach (Auth::user()->Notifications as $Notification)
                                             <div data-simplebar style="max-height: 230px;">
-                                                <a href="" class="text-reset notification-item">
+                                                <a href="{{ route('AllRequest') }}"
+                                                    class="text-reset notification-item">
                                                     <div class="d-flex align-items-start">
                                                         <div class="avatar-xs me-3">
                                                             <span
@@ -133,23 +141,39 @@
                                                             </span>
                                                         </div>
                                                         <div class="flex-1">
-                                                            <h6 class="mt-0 mb-1">
-                                                                {{ $Notification->data['FormateurRequest'] }}</h6>
-                                                            <div class="font-size-12 text-muted">
-                                                                <p class="mb-1">
-                                                                    {{ $Notification->data['RequestCommentaire'] }}</p>
-                                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i>
-                                                                    {{ $Notification->created_at->diffForHumans() }}
-                                                                </p>
-                                                            </div>
+                                                            @if ($Notification->data['type'] === 'createAccount')
+                                                                <h6 class="mt-0 mb-1">
+                                                                    {{ $Notification->data['AdminUsername'] }} a vous
+                                                                    cree un compte </h6>
+                                                                <div class="font-size-12 text-muted">
+                                                                    <p class="mb-1">
+                                                                        Bienvenu {{ Auth::user()->user_name }}
+                                                                    </p>
+                                                                    <p class="mb-0"><i
+                                                                            class="mdi mdi-clock-outline"></i>
+                                                                        {{ $Notification->created_at->diffForHumans() }}
+                                                                    </p>
+                                                                </div>
+                                                            @elseif ($Notification->data['type'] === 'createEmplois')
+                                                                <h6 class="mt-0 mb-1">
+                                                                    {{ $Notification->data['AdminUsername'] }} a 
+                                                                    cree un nouvelle emplois du temps </h6>
+                                                                <div class="font-size-12 text-muted">
+                                                                    <p class="mb-1">
+                                                                         vous pouvez commencer votre demande
+                                                                    </p>
+                                                                    <p class="mb-0"><i
+                                                                            class="mdi mdi-clock-outline"></i>
+                                                                        {{ $Notification->created_at->diffForHumans() }}
+                                                                    </p>
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </a>
-
-
-
                                             </div>
                                         @endforeach
+
                                         <div class="p-2 border-top d-grid">
                                             <a class="btn btn-sm btn-link font-size-14 " href="javascript:void(0)">
                                                 <i class="mdi mdi-arrow-right-circle me-1"></i> View More..

@@ -52,7 +52,8 @@ if ($userImage) {
                                     </h6>
                                     @php
                                         $user = Auth::user();
-                                        $seancesList = \App\Models\sission::where('user_id', $user->id)->count();
+                                        $emploi = \App\Models\main_emploi::where('establishment_id',$user->establishment_id)->orderBy('id', 'desc')->first();
+                                        $seancesList = \App\Models\sission::where('user_id', $user->id)->where('main_emploi_id',$emploi->id)->count();
                                     @endphp
                                     <h5 class="mb-0">{{ $seancesList }}</h5>
                                 </div>
@@ -65,7 +66,10 @@ if ($userImage) {
                                     </h6>
                                     @php
                                         $user = Auth::user();
+                                        $emploi = \App\Models\main_emploi::where('establishment_id',$user->establishment_id)->orderBy('id', 'desc')->first();
+
                                         $DemandesList = \App\Models\sission::where('user_id', $user->id)
+                                        ->where('main_emploi_id',$emploi->id)
                                             ->where('status_sission', 'Pending')
                                             ->count();
                                     @endphp
@@ -77,7 +81,10 @@ if ($userImage) {
                                     </h6>
                                     @php
                                         $user = Auth::user();
+                                        $emploi = \App\Models\main_emploi::where('establishment_id',$user->establishment_id)->orderBy('id', 'desc')->first();
+
                                         $DemandesList = \App\Models\sission::where('user_id', $user->id)
+                                        ->where('main_emploi_id',$emploi->id)
                                             ->where('status_sission', 'Accepted')
                                             ->count();
                                     @endphp
@@ -255,5 +262,5 @@ if ($userImage) {
 
 
     </div>
-    
+
 </x-HeaderMenuFormateur>
